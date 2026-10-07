@@ -1,0 +1,7 @@
+analyzer:
+  errors:
+    dead_code: error
+  exclude:
+    - build/**
+    - android/**
+    - web/**

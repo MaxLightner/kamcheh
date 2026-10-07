@@ -1,0 +1,24 @@
+name: Demo web
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Flutter from official repository
+        run: |
+          git clone --depth 1 --branch 3.47.6 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test test/kamcheh_test.dart
+      - run: flutter build web --no-web-resources-cdn
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kamcheh-demo-web
+          path: build/web

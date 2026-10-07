@@ -1,0 +1,28 @@
+name: sakhtyar
+description: Construction network app prototype
+publish_to: none
+version: 0.1.0+1
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
+  image_picker: ^1.2.3
+  share_plus: ^13.3.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+  fonts:
+    - family: Vazirmatn
+      fonts:
+        - asset: assets/fonts/Vazirmatn-Regular.ttf
+        - asset: assets/fonts/Vazirmatn-Bold.ttf
+          weight: 700
