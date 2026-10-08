@@ -446,6 +446,7 @@ extension WorkUi on _AppShellState {
       ]),
       section('پیشنهادهای دریافتی'),
       small('مبلغ‌های با واحد متفاوت قابل مقایسه مستقیم نیستند.'),
+      const SizedBox(height:12),
       DropdownButtonFormField<PriceUnit>(
           key: ValueKey('sort-$selectedRequest-$bidSortUnit'),
           initialValue: bidSortUnit,
