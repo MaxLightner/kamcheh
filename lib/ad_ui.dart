@@ -545,7 +545,7 @@ extension AdUi on _AppShellState {
               onPressed: () => update(() => deletedAds.remove(ad.id)))));
   }
 
-  List<Widget> myAdsView() {
+  List<Widget> legacyMyAdsView() {
     final own = createdAds.where((ad) => !deletedAds.contains(ad.id)).toList();
     return [
       miniTabs([

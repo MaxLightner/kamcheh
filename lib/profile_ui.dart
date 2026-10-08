@@ -57,9 +57,9 @@ extension ProfileUi on _AppShellState {
       ensureAccess(() => togglePersonBookmark(ad), activity: false);
       return;
     }
-    update(() => savedPeople.containsKey(ad.owner)
-        ? savedPeople.remove(ad.owner)
-        : savedPeople[ad.owner] = ad);
+    update(() => savedPeople.containsKey(findProfile(ad)?.id ?? ad.owner)
+        ? savedPeople.remove(findProfile(ad)?.id ?? ad.owner)
+        : savedPeople[findProfile(ad)?.id ?? ad.owner] = ad);
   }
 
   Future<void> ensureAccess(VoidCallback action, {bool activity = true}) async {
@@ -112,7 +112,6 @@ extension ProfileUi on _AppShellState {
 
   void logout() {
     update(() {
-      if (page == 'request') rememberAdDraft();
       activePhone = null;
       workspace = AccountWorkspace();
       clearAdComposer();
@@ -209,7 +208,7 @@ extension ProfileUi on _AppShellState {
           () => editMyProfile(completing: !myProfile.complete)),
       menuRow(
           'آگهی‌های من',
-          '${fa(createdAds.where((ad) => !deletedAds.contains(ad.id)).length)} آگهی · ویرایش و مدیریت',
+          '${fa(workStore.needs.values.where((n) => n.ownerId == actorId && !n.archived).length)} درخواست · ویرایش و مدیریت',
           Icons.list_alt_outlined,
           () => go('myAds')),
       menuRow(
@@ -219,6 +218,10 @@ extension ProfileUi on _AppShellState {
           () => go('team')),
       menuRow('حساب‌های نمونه', 'آزمایش دعوت و تأیید با دو حساب',
           Icons.switch_account_outlined, switchDemoAccount),
+      menuRow('برآورد مصالح', 'بتن، ملات و کاشی', Icons.calculate_outlined,
+          () => go('estimate')),
+      menuRow('گزارش‌های من', 'گزارش‌های همین حساب', Icons.flag_outlined,
+          () => go('reports')),
       menuRow('قراردادهای من', 'آرشیو خصوصی و قرارداد مستقل',
           Icons.description_outlined, () => go('contracts')),
       menuRow('تنظیمات', 'نمایش اطلاعات پروفایل', Icons.settings_outlined,
@@ -306,14 +309,10 @@ extension ProfileUi on _AppShellState {
             icon: const Icon(Icons.add_photo_alternate_outlined, size: 19),
             label: const Text('افزودن عکس')),
         section('بازخورد همکاری‌ها'),
-        if (activePhone == samplePhone)
-          panel([
-            const Text('داربست رضایی · همکاری اجرا',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            small('محل کار آماده بود و هماهنگی طبق توافق انجام شد.')
-          ])
-        else
-          small('هنوز بازخورد همکاری ثبت نشده است.'),
+        ...profileFeedback(myProfile),
+        button('اشتراک پروفایل من',
+            () => shareItem(profileCard(myProfile), profile: true),
+            outlined: true, icon: Icons.share_outlined),
         menuRow('آگهی‌های من', 'نیازها و خدمات منتشرشده',
             Icons.list_alt_outlined, () => go('myAds')),
       ];

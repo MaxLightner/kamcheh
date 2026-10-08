@@ -144,7 +144,11 @@ class VisitRecord {
 
 class WorkReview {
   WorkReview(this.peer, this.contextId, this.subject, this.outcome, this.text,
-      this.punctuality, this.quality);
+      this.punctuality, this.quality,
+      {this.subjectProfileId, this.authorProfileId, DateTime? at})
+      : createdAt = at ?? DateTime.now();
+  final String? subjectProfileId, authorProfileId;
+  final DateTime createdAt;
   final String peer, contextId, subject, outcome, text;
   final int punctuality;
   final int? quality;

@@ -13,23 +13,35 @@ import 'location_map.dart';
 import 'dart:ui' as ui;
 import 'user_profile.dart';
 import 'core.dart';
+import 'contract_document.dart';
+import 'estimate.dart';
+import 'file_delivery.dart';
+import 'dart:convert';
+import 'package:file_selector/file_selector.dart';
+import 'work_repository.dart';
+import 'demo_store.dart';
 
 part 'network_ui.dart';
 part 'home_ui.dart';
 part 'ad_ui.dart';
 part 'profile_ui.dart';
 part 'kamcheh_ui.dart';
+part 'stages_ui.dart';
+part 'work_ui.dart';
+part 'work_persistence.dart';
 
 const red = Color(0xFFAF282B);
 const ink = Color(0xFF222329);
 const muted = Color(0xFF777B84);
 const line = Color(0xFFE9EAED);
 
-void main() => runApp(const SakhtyarApp());
+void main() => runApp(const SakhtyarApp(persistDemo: true));
 
 class SakhtyarApp extends StatelessWidget {
-  const SakhtyarApp({super.key, this.startWithDemoAccount = false});
+  const SakhtyarApp(
+      {super.key, this.startWithDemoAccount = false, this.persistDemo = false});
   final bool startWithDemoAccount;
+  final bool persistDemo;
   @override
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -94,7 +106,9 @@ class SakhtyarApp extends StatelessWidget {
             ),
           ),
         ),
-        home: AppShell(startWithDemoAccount: startWithDemoAccount),
+        home: AppShell(
+            startWithDemoAccount: startWithDemoAccount,
+            persistDemo: persistDemo),
       );
 }
 
@@ -175,23 +189,25 @@ class Expense {
   final bool paid, income;
 }
 
-class ContractDraft {
-  ContractDraft(this.title, this.values);
-  final String title;
-  final Map<String, String> values;
-  String status = 'پیش‌نویس';
-  String? threadId;
-  final photos = <Uint8List>[];
-}
-
 class AppShell extends StatefulWidget {
-  const AppShell({super.key, this.startWithDemoAccount = false});
+  const AppShell(
+      {super.key, this.startWithDemoAccount = false, this.persistDemo = false});
   final bool startWithDemoAccount;
+  final bool persistDemo;
   @override
   State<AppShell> createState() => _AppShellState();
 }
 
 class _AppShellState extends State<AppShell> {
+  late final DemoWorkRepository workStore = seedWorkStore();
+  final demoStore = DemoStore();
+  bool loadingDemo = false, storageReady = false, storageFailed = false;
+  String? workEditingId, workChatId;
+  bool workCrew = false, showChatSearch = false;
+  String chatSearch = '';
+  PriceUnit? bidSortUnit;
+  final workPrivate = TextEditingController();
+  final reports = <DemoReport>[];
   String page = 'home', search = '', stage = 'دیوارچینی';
   FeedFilter feedFilter = const FeedFilter();
   bool showProfileFeed = false, onlyAvailable = false;
@@ -237,7 +253,11 @@ class _AppShellState extends State<AppShell> {
   List<WorkReview> get workReviews => workspace.workReviews;
   Map<String, String> get threadAdIds => workspace.threadAdIds;
   bool showExperience = true, showAvailability = true;
-  void update(VoidCallback action) => setState(action);
+  void update(VoidCallback action) {
+    setState(action);
+    persistWork();
+  }
+
   Set<String> get savedIds => workspace.savedIds;
   Set<String> get likedIds => workspace.likedIds;
   bool get saved => savedIds.contains(selectedAd.id);
@@ -276,6 +296,9 @@ class _AppShellState extends State<AppShell> {
   static const titles = {
     'home': 'آگهی‌های ساختمان',
     'professionals': 'افراد و اکیپ‌ها',
+    'estimate': 'برآورد مصالح',
+    'reports': 'گزارش‌های من',
+    'publicMissing': 'پروفایل',
     'rules': 'قوانین کمچه',
     'team': 'اعضا و دعوت‌ها',
     'pro': 'پروفایل حرفه‌ای',
@@ -300,7 +323,29 @@ class _AppShellState extends State<AppShell> {
   };
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.persistDemo) {
+      loadingDemo = true;
+      loadWork();
+    }
+    final incoming = Uri.base.queryParameters['profile'];
+    if (incoming != null) {
+      final p = profileRepository.profile(incoming);
+      if (p == null) {
+        page = 'publicMissing';
+      } else {
+        selectedAd = profileCard(p);
+        page = 'pro';
+      }
+      history.add(('home', 0));
+    }
+  }
+
+  @override
   void dispose() {
+    workPrivate.dispose();
+    if (storageReady) demoStore.close();
     for (final c in [
       description,
       people,
@@ -326,7 +371,7 @@ class _AppShellState extends State<AppShell> {
       notice('این بخش در نسخه اولیه فعال نیست.');
       return;
     }
-    if (value == 'team' && !signedIn) {
+    if (['team', 'reports'].contains(value) && !signedIn) {
       ensureAccess(() => go(value), activity: false);
       return;
     }
@@ -368,7 +413,6 @@ class _AppShellState extends State<AppShell> {
     }
     setState(() {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      if (page == 'request' && value != 'request') rememberAdDraft();
       history.add(value == 'chat' ? ('inbox', 3) : (page, tab));
       page = value;
       if (value == 'chat' || value == 'inbox') tab = 3;
@@ -378,7 +422,6 @@ class _AppShellState extends State<AppShell> {
 
   void back() => setState(() {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        if (page == 'request') rememberAdDraft();
         if (history.isEmpty) {
           page = ['home', 'activities', 'post', 'inbox', 'me'][tab];
         } else {
@@ -393,7 +436,11 @@ class _AppShellState extends State<AppShell> {
     go('detail');
   }
 
-  void openThread({Ad? ad}) {
+  void openThread({Ad? ad}) => gatedOpenThread(ad: ad);
+  Widget conversationBody() => durableConversation();
+  void sendMessage() => sendWorkMessage();
+  List<Widget> inbox() => workInbox();
+  void legacyOpenThread({Ad? ad}) {
     if (!canAct) {
       ensureAccess(() => openThread(ad: ad));
       return;
@@ -436,28 +483,8 @@ class _AppShellState extends State<AppShell> {
     );
   }
 
-  Future<void> createContract({String? peer, String? subject}) async {
-    if (!canAct) {
-      await ensureAccess(() => createContract(peer: peer, subject: subject));
-      return;
-    }
-    final title = await edit('موضوع قرارداد', subject ?? '',
-        hint: 'مثلاً اجرای داربست یا خرید مصالح');
-    if (title == null || title.isEmpty || !mounted) return;
-    setState(() {
-      drafts.add(ContractDraft(title, {
-        'طرفین':
-            peer == null ? 'نام و مشخصات طرفین را وارد کن' : '$myName · $peer',
-        'موضوع و محل': title,
-        'مبلغ و مدت': 'مبلغ، زمان شروع و مدت همکاری',
-        'شرایط توافق': 'تعهدات طرفین و شرایط توافق'
-      }));
-      contractIndex = drafts.length - 1;
-      if (peer != null && peer == threads[threadIndex].peer)
-        drafts.last.threadId = threads[threadIndex].id;
-    });
-    go('contract');
-  }
+  Future<void> createContract({String? peer, String? subject}) =>
+      createSimpleContract(peer: peer, subject: subject);
 
   Future<void> chooseRegion() async {
     final value = await showModalBottomSheet<AreaFilter>(
@@ -503,9 +530,7 @@ class _AppShellState extends State<AppShell> {
                       surfaceTintColor: Colors.white,
                       automaticallyImplyLeading: false,
                       title: Text(
-                        page == 'chat'
-                            ? threads[threadIndex].peer
-                            : titles[page] ?? 'کمچه',
+                        page == 'chat' ? chatPeerName : titles[page] ?? 'کمچه',
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
@@ -527,13 +552,14 @@ class _AppShellState extends State<AppShell> {
                                 onSelected: (v) {
                                   if (v == 'contract') {
                                     createContract(
-                                        peer: threads[threadIndex].peer,
-                                        subject: threads[threadIndex].subject);
+                                        peer: chatPeerName,
+                                        subject: chatSubject);
                                   } else if (v == 'appointment') {
                                     createVisit();
                                   } else {
-                                    openProfile(
-                                        peerAd(threads[threadIndex].peer));
+                                    final c = currentWorkChat;
+                                    if (c != null)
+                                      showWorkProfile(c.peer(actorId));
                                   }
                                 },
                                 itemBuilder: (_) => const [
@@ -552,16 +578,18 @@ class _AppShellState extends State<AppShell> {
                           : null,
                       shape: const Border(bottom: BorderSide(color: line)),
                     ),
-              body: page == 'chat'
-                  ? conversationBody()
-                  : SingleChildScrollView(
-                      key: ValueKey(page),
-                      padding: const EdgeInsets.fromLTRB(12, 10, 12, 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: body(),
-                      ),
-                    ),
+              body: loadingDemo
+                  ? const Center(child: CircularProgressIndicator())
+                  : page == 'chat'
+                      ? conversationBody()
+                      : SingleChildScrollView(
+                          key: ValueKey(page),
+                          padding: const EdgeInsets.fromLTRB(12, 10, 12, 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: body(),
+                          ),
+                        ),
               bottomNavigationBar: page == 'chat'
                   ? null
                   : NavigationBar(
@@ -622,6 +650,12 @@ class _AppShellState extends State<AppShell> {
         'settings' => settingsView(),
         'activities' => activities(),
         'me' => me(),
+        'estimate' => [const MaterialEstimator()],
+        'reports' => myReports(),
+        'publicMissing' => [
+            emptyState('پروفایل پیدا نشد',
+                'این شناسه در داده‌های این نسخه موجود نیست.')
+          ],
         'rules' => rulesView(),
         'team' => teamView(),
         'ownProfile' => ownProfile(),
@@ -881,7 +915,7 @@ class _AppShellState extends State<AppShell> {
           go('worker');
         }),
       ];
-  List<Widget> workerRequest() => adComposer();
+  List<Widget> workerRequest() => unifiedRequestForm();
   List<Widget> applicants() => requestDetails();
   List<Widget> worker() => profileView(workerMode: true);
 
@@ -1021,7 +1055,7 @@ class _AppShellState extends State<AppShell> {
       ];
   List<Widget> supplier() => profileView(supplierMode: true);
 
-  List<Widget> inbox() => [
+  List<Widget> legacyInbox() => [
         SizedBox(
             height: 40,
             child: TextField(
@@ -1094,7 +1128,7 @@ class _AppShellState extends State<AppShell> {
                   ])));
         }),
       ];
-  Widget conversationBody() {
+  Widget legacyConversationBody() {
     final t = threads[threadIndex];
     return Column(children: [
       Container(
@@ -1196,7 +1230,7 @@ class _AppShellState extends State<AppShell> {
           ),
         ),
       );
-  void sendMessage() {
+  void legacySendMessage() {
     if (!canAct) {
       ensureAccess(sendMessage);
       return;
@@ -1209,73 +1243,8 @@ class _AppShellState extends State<AppShell> {
     chat.clear();
   }
 
-  List<Widget> contract() => [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(child: small('نمونه: ${drafts[contractIndex].title}')),
-            const SizedBox(width: 8),
-            label(contractStatus, color: red),
-          ],
-        ),
-        const SizedBox(height: 16),
-        ...contractValues.entries.map(
-          (e) => panel([
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    e.key,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    final v = await edit(e.key, e.value);
-                    if (v != null && v.isNotEmpty)
-                      setState(() => contractValues[e.key] = v);
-                  },
-                  child: const Text('ویرایش'),
-                ),
-              ],
-            ),
-            Text(e.value, style: const TextStyle(fontSize: 13, height: 1.9)),
-          ]),
-        ),
-        panel([
-          section('پیوست‌های قرارداد'),
-          photoChooser(drafts[contractIndex].photos, () async {
-            final draft = drafts[contractIndex];
-            final photos = await selectPhotos(6 - draft.photos.length);
-            if (mounted) update(() => draft.photos.addAll(photos));
-          }, (i) => update(() => drafts[contractIndex].photos.removeAt(i))),
-          const SizedBox(height: 8),
-          small('خصوصی · فقط برای طرفین قرارداد')
-        ]),
-        button('ارسال برای بررسی و تأیید', () {
-          setState(() => contractStatus = 'منتظر تأیید');
-          notice('وضعیت نمونه تغییر کرد؛ ارسال و امضای واقعی فعال نیست.');
-        }),
-        button('ذخیره پیش‌نویس', () {
-          setState(() => contractStatus = 'پیش‌نویس ذخیره‌شده');
-          go('contracts');
-        }, outlined: true),
-      ];
-  List<Widget> contracts() => [
-        small('قراردادهای مستقل و مرتبط با همکاری‌ها'),
-        ...drafts.asMap().entries.map((entry) => panel([
-              label(entry.value.status, color: red),
-              const SizedBox(height: 6),
-              Text(entry.value.title,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              small(entry.value.values['طرفین']!),
-              button('مشاهده قرارداد', () {
-                contractIndex = entry.key;
-                go('contract');
-              }, outlined: true),
-            ])),
-        button('تنظیم قرارداد جدید', () => createContract(), icon: Icons.add),
-      ];
+  List<Widget> contract() => simpleContract();
+  List<Widget> contracts() => simpleContracts();
   List<Widget> activities() => requestBoard();
 
   Widget menuRow(
@@ -1302,7 +1271,10 @@ class _AppShellState extends State<AppShell> {
               ])));
   List<Widget> me() => accountView();
   List<Widget> ownProfile() => ownProfileView();
-  List<Widget> post() => postChooser();
+  List<Widget> post() => [
+        small('نیازت را ثبت کن؛ افراد مرتبط بازدید یا پیشنهاد می‌دهند.'),
+        button('ثبت درخواست جدید', () => startWorkRequest())
+      ];
 
   Widget option(
     String title,
@@ -1341,5 +1313,5 @@ class _AppShellState extends State<AppShell> {
           ),
         ),
       );
-  List<Widget> detail() => adDetailView();
+  List<Widget> detail() => workDetail();
 }

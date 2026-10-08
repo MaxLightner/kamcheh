@@ -44,11 +44,11 @@ extension KamchehUi on _AppShellState {
                 .toList()),
         if (p.photos.isEmpty) small('نمونه‌کاری ثبت نشده است.'),
         section('بازخورد'),
-        small('هنوز نظری ثبت نشده است.'),
+        ...profileFeedback(p),
         Row(children: [
           Expanded(
               child: button(
-                  savedPeople.containsKey(p.name) ? 'حذف نشان' : 'نشان کردن',
+                  savedPeople.containsKey(p.id) ? 'حذف نشان' : 'نشان کردن',
                   () => togglePersonBookmark(profileCard(p)),
                   outlined: true)),
           IconButton(

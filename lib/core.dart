@@ -4,7 +4,7 @@ import 'marketplace.dart';
 const rulesVersion = 'demo-2026-10-08';
 const rulesText = '''قوانین نسخه آزمایشی کمچه
 
-این نسخه برای آزمایش رابط و مسیرها با داده نمونه است. پیام، پیشنهاد، عضویت و قرارداد به اشخاص واقعی ارسال نمی‌شوند. اطلاعات این دمو در همان اجرای برنامه نگه داشته می‌شود.
+این نسخه برای آزمایش رابط و مسیرها با داده نمونه است. پیام، پیشنهاد، عضویت و قرارداد به اشخاص واقعی ارسال نمی‌شوند. اطلاعات این دمو روی همین دستگاه و مرورگر ذخیره می‌شود؛ میان دستگاه‌ها همگام نیست.
 
 اطلاعات پروفایل و نمونه‌کار باید متعلق به شما یا با اجازه صاحب آن باشد. شماره تأییدشده به معنای تأیید هویت، تخصص یا کیفیت کار نیست.
 
@@ -135,7 +135,10 @@ class DemoProfileRepository implements ProfileRepository {
         (l.status == TeamLinkStatus.active ||
             l.status == TeamLinkStatus.invited)))
       return 'این عضو قبلاً اضافه یا دعوت شده است.';
-    links.add(TeamLink('team-${++_next}', ownerId, memberId));
+    links.add(TeamLink(
+        'team-${DateTime.now().microsecondsSinceEpoch}-${++_next}',
+        ownerId,
+        memberId));
     notices.add(AccountNotice(
         memberId, '${profile(ownerId)!.name} برای عضویت دعوتت کرد.'));
     return null;

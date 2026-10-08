@@ -46,17 +46,12 @@ extension NetworkUi on _AppShellState {
         ...marketDemoAds.map(
             (a) => a.kind == AdKind.tender ? a.copyWith(kind: AdKind.need) : a)
       ];
-  List<Ad> get allAds => archivedAds
-      .where((ad) => activeListing(ad))
-      .where((ad) => !accountSpaces.values
-          .any((space) => space.deletedAds.contains(ad.id)))
-      .toList();
-  bool ownAd(Ad ad) => signedIn && createdAds.any((a) => a.id == ad.id);
-  Ad adFor(String id) => archivedAds.firstWhere((a) => a.id == id);
-  bool isClosed(Ad ad) => accountSpaces.values.any((space) =>
-      space.deletedAds.contains(ad.id) ||
-      space.closedAds.contains(ad.id) ||
-      space.workRequests[ad.id]?.status == 'بسته‌شده');
+  List<Ad> get allAds => workFeedAds;
+  bool ownAd(Ad ad) => signedIn && workStore.needs[ad.id]?.ownerId == actorId;
+  Ad adFor(String id) => workStore.needs.containsKey(id)
+      ? workAd(workStore.need(id))
+      : archivedAds.firstWhere((a) => a.id == id);
+  bool isClosed(Ad ad) => workStore.needs[ad.id]?.closed ?? false;
   List<String> profileSkills(Ad ad) =>
       ownAd(ad) ? mySkills.toList() : adSkills(ad);
   void openProfile(Ad ad) {
@@ -77,7 +72,7 @@ extension NetworkUi on _AppShellState {
     }
     update(() {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      if (page == 'request') rememberAdDraft();
+
       FocusManager.instance.primaryFocus?.unfocus();
       tab = index;
       history.clear();
@@ -374,7 +369,10 @@ extension NetworkUi on _AppShellState {
         if (messageTab == 0) ...inbox() else ...bookmarkView()
       ];
   List<Widget> bookmarkView() {
-    final ads = allAds.where((a) => savedIds.contains(a.id)).toList();
+    final ads = workStore.needs.values
+        .where((n) => savedIds.contains(n.id))
+        .map(workAd)
+        .toList();
     final people = savedPeople.values
         .where((a) => bookmarkTab == 2
             ? ['مصالح', 'ابزار'].contains(a.category)
@@ -394,8 +392,13 @@ extension NetworkUi on _AppShellState {
 
   Future<void> shareItem(Ad ad, {bool profile = false}) async {
     final title = profile ? 'پروفایل ${ad.owner}' : ad.title;
+    final linkedProfile = profile ? findProfile(ad) : null;
+    final profileLink = linkedProfile == null
+        ? null
+        : publicProfileUrl(linkedProfile.id,
+            configuredBase: const String.fromEnvironment('PUBLIC_WEB_URL'));
     final text =
-        '$title\n${ad.area}\n${profile ? profileSkills(ad).join('، ') : ad.price}\nکمچه';
+        '$title\n${ad.area}\n${profile ? profileSkills(ad).join('، ') : ad.price}\nکمچه${profileLink == null ? '' : '\n$profileLink'}';
     await showModalBottomSheet<void>(
         context: context,
         useSafeArea: true,
@@ -430,16 +433,30 @@ extension NetworkUi on _AppShellState {
                                 'اشتراک‌گذاری در این مرورگر پشتیبانی نشد؛ از کپی متن استفاده کن.');
                         }
                       }),
-                      menuRow('کپی متن', 'عنوان، محدوده و شرایط',
+                      menuRow(
+                          profileLink == null ? 'کپی متن' : 'کپی لینک پروفایل',
+                          profileLink == null
+                              ? 'عنوان، محدوده و شرایط'
+                              : profileLink.toString(),
                           Icons.copy_outlined, () async {
-                        await Clipboard.setData(ClipboardData(text: text));
+                        await Clipboard.setData(ClipboardData(
+                            text: profileLink?.toString() ?? text));
                         if (sheet.mounted) Navigator.pop(sheet);
-                        if (mounted) notice('متن کپی شد');
+                        if (mounted)
+                          notice(profileLink == null
+                              ? 'متن کپی شد'
+                              : ['localhost', '127.0.0.1']
+                                      .contains(profileLink.host)
+                                  ? 'لینک کپی شد؛ لینک محلی فقط روی همین کامپیوتر باز می‌شود.'
+                                  : 'لینک پروفایل کپی شد.');
                       })
                     ]))));
   }
 
-  Future<void> chooseShareRecipient(Ad ad, {bool profile = false}) async {
+  Future<void> chooseShareRecipient(Ad ad, {bool profile = false}) =>
+      shareInWorkChat(ad, profile: profile);
+
+  Future<void> legacyChooseShareRecipient(Ad ad, {bool profile = false}) async {
     if (!canAct) {
       await ensureAccess(() => chooseShareRecipient(ad, profile: profile));
       return;
@@ -655,11 +672,21 @@ extension NetworkUi on _AppShellState {
 
   void openRequest(String id) {
     selectedRequest = id;
+    bidSortUnit = null;
     selectedAd = adFor(id);
     go('applicants');
   }
 
-  List<Widget> requestBoard() => [
+  List<Widget> requestBoard() => workBoard();
+  List<Widget> requestDetails() => workRequestDetails();
+  Future<void> sendOffer(Ad ad) => proposeWork(ad);
+  Future<void> createVisit() async {
+    final c = currentWorkChat;
+    if (c != null)
+      await requestWorkVisit(workStore.need(c.requestId), bidderId: c.bidderId);
+  }
+
+  List<Widget> legacyRequestBoard() => [
         miniTabs(['درخواست‌های من', 'پیشنهادهای من', 'قرارها'], requestTab,
             (i) => update(() => requestTab = i)),
         const SizedBox(height: 8),
@@ -718,26 +745,17 @@ extension NetworkUi on _AppShellState {
               'قراری ثبت نشده', 'در گفت‌وگوی مربوط به کار، قرار بازدید ثبت کن.')
       ];
   void openWorkThread(String peer, Ad ad) {
-    var index =
-        threads.indexWhere((t) => t.peer == peer && t.subject == ad.title);
-    if (index < 0) {
-      threads.insert(
-          0,
-          ChatThread(
-              'thread-${DateTime.now().microsecondsSinceEpoch}',
-              peer,
-              ad.title,
-              peerAd(peer).image,
-              'شرایط، زمان و محل همکاری را اینجا هماهنگ کنید.',
-              time: 'اکنون'));
-      index = 0;
+    final p =
+        profileRepository.profiles.where((p) => p.name == peer).firstOrNull;
+    final n = workStore.needs[ad.id];
+    if (p == null || n == null) {
+      notice('درخواست مرتبط پیدا نشد.');
+      return;
     }
-    threadIndex = index;
-    threadAdIds[threads[index].id] = ad.id;
-    openThread();
+    openCanonicalChat('${n.id}::${n.ownerId == actorId ? p.id : actorId}');
   }
 
-  List<Widget> requestDetails() {
+  List<Widget> legacyRequestDetails() {
     final job = workRequests[selectedRequest]!;
     final ad = adFor(job.adId);
     return [
@@ -797,7 +815,7 @@ extension NetworkUi on _AppShellState {
     ];
   }
 
-  Future<void> sendOffer(Ad ad) async {
+  Future<void> legacySendOffer(Ad ad) async {
     if (!canAct) {
       await ensureAccess(() => sendOffer(ad));
       return;
@@ -855,7 +873,7 @@ extension NetworkUi on _AppShellState {
     terms.dispose();
   }
 
-  Future<void> createVisit() async {
+  Future<void> legacyCreateVisit() async {
     if (!canAct) {
       await ensureAccess(createVisit);
       return;
@@ -925,7 +943,33 @@ extension NetworkUi on _AppShellState {
         ])
       ]);
   Future<void> recordReviewForPeer(String peer) async {
-    final eligible = visits.where((v) => v.peer == peer).toList();
+    if (!canAct) {
+      await ensureAccess(() => recordReviewForPeer(peer));
+      return;
+    }
+    if (peer == myName) {
+      notice('ثبت نظر برای خودت ممکن نیست.');
+      return;
+    }
+    final canonical = workStore.visits.values.where((v) =>
+        v.status == 'accepted' &&
+        !v.at.isAfter(DateTime.now()) &&
+        (v.bidderId == actorId ||
+            workStore.need(v.requestId).ownerId == actorId) &&
+        workName(v.bidderId == actorId
+                ? workStore.need(v.requestId).ownerId
+                : v.bidderId) ==
+            peer);
+    final eligible = canonical
+        .map((v) => VisitRecord(
+            v.id,
+            '${v.requestId}::${v.bidderId}',
+            peer,
+            workStore.need(v.requestId).title,
+            shortDate(v.at),
+            workStore.need(v.requestId).city,
+            adId: v.requestId))
+        .toList();
     if (eligible.isEmpty) {
       notice(
           'برای ثبت تجربه، ابتدا قرار یا همکاری مربوط را در گفت‌وگو ثبت کن.');
@@ -1032,7 +1076,12 @@ extension NetworkUi on _AppShellState {
               outcome,
               notes.text.trim(),
               punctuality,
-              outcome.contains('مراجعه کرد') && quality > 0 ? quality : null));
+              outcome.contains('مراجعه کرد') && quality > 0 ? quality : null,
+              subjectProfileId: profileRepository.profiles
+                  .where((p) => p.name == visit.peer)
+                  .firstOrNull
+                  ?.id,
+              authorProfileId: myProfile.id));
       });
     await Future<void>.delayed(const Duration(milliseconds: 250));
     notes.dispose();
@@ -1066,6 +1115,12 @@ extension NetworkUi on _AppShellState {
       ];
     return [
       AdGallery(ad: ad),
+      Align(
+          alignment: Alignment.centerLeft,
+          child: TextButton.icon(
+              onPressed: () => reportTarget('ad:${ad.id}'),
+              icon: const Icon(Icons.flag_outlined, size: 16),
+              label: const Text('گزارش آگهی'))),
       section(ad.title),
       Row(children: [
         label(
