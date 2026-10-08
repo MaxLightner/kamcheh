@@ -59,7 +59,8 @@ List<String> adSkills(Ad ad) {
       .where((e) => allowed.contains(e.key) && e.value.any(text.contains))
       .map((e) => e.key)
       .toList();
-  return result.isEmpty ? [allowed.first] : result;
+  // Never invent a required specialty just because it is first in a category.
+  return result;
 }
 
 const initialOwnAds = [

@@ -33,7 +33,7 @@ class AccountWorkspace {
     ]);
     w.drafts.add(ContractDraft('اجرای داربست', {
       'طرفین': 'مهدی احمدی · داربست رضایی',
-      'موضوع و محل': 'نصب و اجاره داربست — کرج، گوهردشت',
+      'موضوع و محل': 'نصب و اجاره داربست — مشهد، الهیه',
       'مبلغ و مدت': '۱۲٬۰۰۰٬۰۰۰ تومان · ۳۰ روز',
       'شرایط توافق': 'حمل، نصب و جمع‌آوری در مبلغ لحاظ شده است.'
     }));
@@ -163,7 +163,7 @@ extension ProfileUi on _AppShellState {
           ? Icon(Icons.person_outline, color: red, size: radius)
           : null);
   Ad get myProfileAd => Ad('profile-self', myProfile.specialty, 'خدمات', false,
-      myProfile.city ?? 'کرج', '', 'concrete', '', myName,
+      myProfile.city ?? 'مشهد', '', 'concrete', '', myName,
       providerProfile: myProfile.badge);
 
   List<Widget> accountView() {
@@ -705,7 +705,7 @@ class _ProfileEditorState extends State<ProfileEditor> {
                                   isExpanded: true,
                                   decoration: const InputDecoration(
                                       labelText: 'شهر اصلی فعالیت'),
-                                  items: cities
+                                  items: demoCities
                                       .map((c) => DropdownMenuItem(
                                           value: c.name,
                                           child: Text(

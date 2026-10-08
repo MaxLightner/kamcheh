@@ -38,11 +38,11 @@ class UserProfile {
       id: 'profile-sample',
       phoneVerified: true,
       name: 'مهدی احمدی',
-      city: 'کرج',
+      city: 'مشهد',
       complete: true,
-      coverage:
-          const AreaFilter(province: 'البرز', city: 'کرج', surroundings: true),
-      bio: 'اجرای پروژه‌های ساختمانی و هماهنگی اکیپ‌های اجرایی در کرج.',
+      coverage: const AreaFilter(
+          province: 'خراسان رضوی', city: 'مشهد', surroundings: true),
+      bio: 'اجرای پروژه‌های ساختمانی و هماهنگی اکیپ‌های اجرایی در مشهد.',
       experience: '۸ سال',
       availability: 'با هماهنگی قبلی',
       skills: ['ساخت‌وساز', 'مدیریت پروژه', 'بتن‌ریزی'],

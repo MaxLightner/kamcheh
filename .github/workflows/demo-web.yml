@@ -16,7 +16,7 @@ jobs:
           echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
       - run: flutter pub get
       - run: flutter analyze
-      - run: flutter test test/kamcheh_test.dart test/stages_14_17_test.dart test/stages_7_13_test.dart
+      - run: flutter test test/kamcheh_test.dart test/stages_14_17_test.dart test/stages_7_13_test.dart test/structure_test.dart
       - run: flutter build web --no-web-resources-cdn
       - uses: actions/upload-artifact@v4
         with:

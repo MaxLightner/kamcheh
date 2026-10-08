@@ -68,7 +68,7 @@ extension KamchehUi on _AppShellState {
     repo.acceptRules('profile-sample');
     final seen = repo.profiles.map((p) => p.name).toSet();
     var index = 0;
-    for (final ad in [...demoAds, ...marketDemoAds]) {
+    for (final ad in [...demoAds, ...marketDemoAds].map(localDemoAd)) {
       if (!['نیرو', 'خدمات', 'مهندسی'].contains(ad.category) ||
           ad.need ||
           ad.title.contains('نظارت') ||
@@ -191,14 +191,6 @@ extension KamchehUi on _AppShellState {
               icon: const Icon(Icons.tune, size: 18),
               label: const Text('فیلتر'))
       ]),
-      miniTabs(
-          ['درخواست‌ها', 'افراد و اکیپ‌ها'],
-          showProfileFeed ? 1 : 0,
-          (i) => update(() {
-                showProfileFeed = i == 1;
-                search = '';
-                searchInput.clear();
-              })),
       const SizedBox(height: 8),
       TextField(
           key: const ValueKey('feed-search'),
@@ -206,9 +198,7 @@ extension KamchehUi on _AppShellState {
           onChanged: (v) => update(() => search = v),
           style: const TextStyle(fontSize: 13),
           decoration: InputDecoration(
-              hintText: showProfileFeed
-                  ? 'نام یا تخصص فرد و اکیپ'
-                  : 'جست‌وجو در درخواست‌ها',
+              hintText: 'جست‌وجو در آگهی‌های خدمات',
               prefixIcon: const Icon(Icons.search),
               isDense: true)),
       const SizedBox(height: 10),
@@ -226,15 +216,13 @@ extension KamchehUi on _AppShellState {
             onSelected: (_) =>
                 update(() => feedFilter = feedFilter.selectCategory(c.id))))
       ]),
-      if (showProfileFeed)
-        ...profileDirectory(embedded: true)
-      else ...[
+      ...[
         Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
-            child: small('${fa(ads.length)} درخواست · داده نمونه')),
+            child: small('${fa(ads.length)} آگهی خدمات · داده نمونه')),
         ...ads.map(networkAdRow),
         if (ads.isEmpty)
-          emptyState('درخواستی پیدا نشد',
+          emptyState('آگهی‌ای پیدا نشد',
               'عبارت جست‌وجو یا محدوده و فیلترها را تغییر بده.',
               action: 'پاک کردن فیلترها',
               onTap: () => update(() {
@@ -267,7 +255,13 @@ extension KamchehUi on _AppShellState {
     }).toList();
     return [
       if (!embedded)
+        TextButton.icon(
+            onPressed: chooseRegion,
+            icon: const Icon(Icons.location_on_outlined),
+            label: Text(region)),
+      if (!embedded)
         TextField(
+            key: const ValueKey('profile-search'),
             onChanged: (v) => update(() => profileQuery = v),
             decoration: const InputDecoration(
                 hintText: 'جست‌وجوی نام یا تخصص',

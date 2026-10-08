@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'persian_calendar.dart';
 
 class ContractRevision {
   ContractRevision(
@@ -94,7 +95,7 @@ Future<Uint8List> buildContractPdf(ContractRevision revision) async {
             pw.SizedBox(height: 8),
             pw.Text(revision.title),
             pw.Text(
-                'نسخه ${pdfFa(revision.number)} · تاریخ: ${pdfFa('${revision.createdAt.year}/${revision.createdAt.month}/${revision.createdAt.day}')}',
+                'نسخه ${pdfFa(revision.number)} · تاریخ: ${jalaliDate(revision.createdAt)}',
                 style: const pw.TextStyle(fontSize: 9)),
             if (revision.parentId != null)
               pw.Text('ارجاع به قرارداد: ${revision.parentId}',

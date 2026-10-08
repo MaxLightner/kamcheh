@@ -20,6 +20,10 @@ import 'dart:convert';
 import 'package:file_selector/file_selector.dart';
 import 'work_repository.dart';
 import 'demo_store.dart';
+import 'service_listing.dart';
+import 'request_filter.dart';
+import 'persian_calendar.dart';
+import 'demo_migration.dart';
 
 part 'network_ui.dart';
 part 'home_ui.dart';
@@ -29,6 +33,7 @@ part 'kamcheh_ui.dart';
 part 'stages_ui.dart';
 part 'work_ui.dart';
 part 'work_persistence.dart';
+part 'structure_ui.dart';
 
 const red = Color(0xFFAF282B);
 const ink = Color(0xFF222329);
@@ -268,8 +273,8 @@ class _AppShellState extends State<AppShell> {
   List<Ad> get createdAds => workspace.createdAds;
   Ad selectedAd = demoAds.first;
   AreaFilter selectedArea = const AreaFilter();
-  AreaFilter adArea =
-      const AreaFilter(province: 'البرز', city: 'کرج', districts: {'گوهردشت'});
+  AreaFilter adArea = const AreaFilter(
+      province: 'خراسان رضوی', city: 'مشهد', surroundings: true);
   String get region => selectedArea.label;
   String postKind = 'نیاز دارم', postCategory = 'نیرو', inboxQuery = '';
   final adNotes = TextEditingController();
@@ -283,7 +288,7 @@ class _AppShellState extends State<AppShell> {
       financeForm = GlobalKey<FormState>();
   final description = TextEditingController(),
       people = TextEditingController(text: '3'),
-      location = TextEditingController(text: 'کرج، گوهردشت'),
+      location = TextEditingController(text: 'مشهد، الهیه'),
       wage = TextEditingController(),
       start = TextEditingController();
   final searchInput = TextEditingController();
@@ -293,9 +298,14 @@ class _AppShellState extends State<AppShell> {
       chat = TextEditingController();
   String txCat = 'مصالح';
   bool txPaid = true, txIncome = false;
+  RequestFilter requestFilter = const RequestFilter();
+  String requestQuery = '';
+  final requestInput = TextEditingController();
+  final workSkills = <String>{};
   static const titles = {
-    'home': 'آگهی‌های ساختمان',
-    'professionals': 'افراد و اکیپ‌ها',
+    'home': 'آگهی‌ها',
+    'professionals': 'پروفایل‌ها',
+    'requests': 'درخواست‌ها',
     'estimate': 'برآورد مصالح',
     'reports': 'گزارش‌های من',
     'publicMissing': 'پروفایل',
@@ -305,7 +315,7 @@ class _AppShellState extends State<AppShell> {
     'project': 'پروژه من',
     'contract': 'تنظیم قرارداد',
     'contracts': 'قراردادهای من',
-    'request': 'ثبت آگهی',
+    'request': 'ثبت درخواست',
     'applicants': 'پیشنهادهای درخواست',
     'worker': 'پروفایل کارگر',
     'ledger': 'حساب پروژه',
@@ -313,10 +323,10 @@ class _AppShellState extends State<AppShell> {
     'supplier': 'پروفایل تأمین‌کننده',
     'chat': 'گفت‌وگو',
     'inbox': 'پیام‌ها',
-    'activities': 'درخواست‌ها و پیشنهادها',
+    'activities': 'درخواست‌ها و پیشنهادهای من',
     'me': 'صفحه من',
     'ownProfile': 'معرفی و نمونه‌کارهای من',
-    'post': 'ثبت آگهی',
+    'post': 'آگهی‌های من',
     'detail': 'جزئیات آگهی',
     'myAds': 'آگهی‌های من',
     'settings': 'تنظیمات',
@@ -356,6 +366,7 @@ class _AppShellState extends State<AppShell> {
       txAmount,
       chat,
       searchInput,
+      requestInput,
       inboxInput,
       adNotes,
       quantityInput,
@@ -416,14 +427,17 @@ class _AppShellState extends State<AppShell> {
       history.add(value == 'chat' ? ('inbox', 3) : (page, tab));
       page = value;
       if (value == 'chat' || value == 'inbox') tab = 3;
-      if (value == 'post') tab = 2;
+      if (['post', 'myAds'].contains(value)) tab = 0;
+      if (value == 'professionals') tab = 1;
+      if (['requests', 'activities', 'request', 'applicants'].contains(value))
+        tab = 2;
     });
   }
 
   void back() => setState(() {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
         if (history.isEmpty) {
-          page = ['home', 'activities', 'post', 'inbox', 'me'][tab];
+          page = ['home', 'professionals', 'requests', 'inbox', 'me'][tab];
         } else {
           final previous = history.removeLast();
           page = previous.$1;
@@ -431,8 +445,7 @@ class _AppShellState extends State<AppShell> {
         }
       });
   void openAd(Ad ad) {
-    selectedAd =
-        archivedAds.where((current) => current.id == ad.id).firstOrNull ?? ad;
+    selectedAd = adFor(ad.id);
     go('detail');
   }
 
@@ -467,7 +480,7 @@ class _AppShellState extends State<AppShell> {
 
   Ad peerAd(String name) => demoAds.firstWhere((ad) => ad.owner == name,
       orElse: () => Ad('peer-$name', 'کارگری ساختمان و بتن‌ریزی', 'نیرو', false,
-          'کرج', 'گوهردشت', 'worker', 'روزانه با توافق', name));
+          'مشهد', 'الهیه', 'worker', 'روزانه با توافق', name));
 
   void notice(String text) => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -534,8 +547,13 @@ class _AppShellState extends State<AppShell> {
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      leading: !['home', 'activities', 'post', 'inbox', 'me']
-                              .contains(page)
+                      leading: ![
+                        'home',
+                        'professionals',
+                        'requests',
+                        'inbox',
+                        'me'
+                      ].contains(page)
                           ? IconButton(
                               onPressed: back,
                               tooltip: 'بازگشت',
@@ -592,40 +610,49 @@ class _AppShellState extends State<AppShell> {
                         ),
               bottomNavigationBar: page == 'chat'
                   ? null
-                  : NavigationBar(
-                      height: 60,
-                      selectedIndex: tab,
-                      backgroundColor: Colors.white,
-                      surfaceTintColor: Colors.white,
-                      indicatorColor: const Color(0xFFFFEEEE),
-                      onDestinationSelected: selectTab,
-                      destinations: const [
-                        NavigationDestination(
-                          icon: Icon(Icons.home_outlined),
-                          selectedIcon: Icon(Icons.home, color: red),
-                          label: 'آگهی‌ها',
-                        ),
-                        NavigationDestination(
-                          icon: Icon(Icons.assignment_outlined),
-                          selectedIcon: Icon(Icons.assignment, color: red),
-                          label: 'درخواست‌ها',
-                        ),
-                        NavigationDestination(
-                            icon: Icon(Icons.add_circle_outline, color: red),
-                            selectedIcon: Icon(Icons.add_circle, color: red),
-                            label: 'ثبت نیاز'),
-                        NavigationDestination(
-                          icon: Icon(Icons.chat_bubble_outline_rounded),
-                          selectedIcon: Icon(Icons.chat_bubble, color: red),
-                          label: 'پیام‌ها',
-                        ),
-                        NavigationDestination(
-                          icon: Icon(Icons.person_outline_rounded),
-                          selectedIcon: Icon(Icons.person, color: red),
-                          label: 'صفحه من',
-                        ),
-                      ],
-                    ),
+                  : Column(mainAxisSize: MainAxisSize.min, children: [
+                      if (page == 'home')
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+                            child: SizedBox(
+                                width: double.infinity,
+                                child: button('ثبت آگهی', () => go('myAds'),
+                                    icon: Icons.add))),
+                      NavigationBar(
+                        height: 60,
+                        selectedIndex: tab,
+                        backgroundColor: Colors.white,
+                        surfaceTintColor: Colors.white,
+                        indicatorColor: const Color(0xFFFFEEEE),
+                        onDestinationSelected: selectTab,
+                        destinations: const [
+                          NavigationDestination(
+                            icon: Icon(Icons.home_outlined),
+                            selectedIcon: Icon(Icons.home, color: red),
+                            label: 'آگهی‌ها',
+                          ),
+                          NavigationDestination(
+                            icon: Icon(Icons.people_outline),
+                            selectedIcon: Icon(Icons.people, color: red),
+                            label: 'پروفایل‌ها',
+                          ),
+                          NavigationDestination(
+                              icon: Icon(Icons.assignment_outlined),
+                              selectedIcon: Icon(Icons.assignment, color: red),
+                              label: 'درخواست‌ها'),
+                          NavigationDestination(
+                            icon: Icon(Icons.chat_bubble_outline_rounded),
+                            selectedIcon: Icon(Icons.chat_bubble, color: red),
+                            label: 'پیام‌ها',
+                          ),
+                          NavigationDestination(
+                            icon: Icon(Icons.person_outline_rounded),
+                            selectedIcon: Icon(Icons.person, color: red),
+                            label: 'صفحه من',
+                          ),
+                        ],
+                      ),
+                    ]),
             ),
           ),
         ),
@@ -634,6 +661,7 @@ class _AppShellState extends State<AppShell> {
   List<Widget> body() => switch (page) {
         'home' => home(),
         'professionals' => professionals(),
+        'requests' => requestFeed(),
         'pro' => professional(),
         'project' => project(),
         'contract' => contract(),
@@ -646,7 +674,7 @@ class _AppShellState extends State<AppShell> {
         'supplier' => supplier(),
         'chat' => [],
         'inbox' => messageHub(),
-        'myAds' => myAdsView(),
+        'myAds' => ownServices(),
         'settings' => settingsView(),
         'activities' => activities(),
         'me' => me(),
@@ -659,7 +687,7 @@ class _AppShellState extends State<AppShell> {
         'rules' => rulesView(),
         'team' => teamView(),
         'ownProfile' => ownProfile(),
-        'post' => post(),
+        'post' => ownServices(),
         'detail' => detail(),
         _ => home(),
       };
@@ -845,10 +873,10 @@ class _AppShellState extends State<AppShell> {
   List<Widget> project() => [
         panel([
           const Text(
-            'ساخت ساختمان گوهردشت',
+            'ساخت ساختمان الهیه',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          small('کرج · گوهردشت'),
+          small('مشهد · الهیه'),
         ]),
         Row(
           children: [
@@ -881,11 +909,11 @@ class _AppShellState extends State<AppShell> {
           ].map((s) => label(s, color: s == stage ? red : muted)).toList(),
         ),
         section('نیازهای این مرحله'),
-        small('افراد و تأمین‌کنندگان کرج، متناسب با مرحله‌ای که انتخاب کردی.'),
+        small('افراد و تأمین‌کنندگان مشهد، متناسب با مرحله‌ای که انتخاب کردی.'),
         ...demoAds
             .where((ad) =>
                 !ad.need &&
-                ad.city == 'کرج' &&
+                ad.city == 'مشهد' &&
                 switch (stage) {
                   'آماده‌سازی' =>
                     ad.title.contains('خاک') || ad.title.contains('داربست'),
@@ -909,7 +937,7 @@ class _AppShellState extends State<AppShell> {
         ),
         button('مشاهده دفتر مالی', () => go('ledger'), outlined: true),
         section('افراد مرتبط'),
-        menuRow('علی رضایی', 'کارگری ساختمان · کرج · ۴٫۷ ★',
+        menuRow('علی رضایی', 'کارگری ساختمان · مشهد · ۴٫۷ ★',
             Icons.engineering_outlined, () {
           selectedAd = peerAd('علی رضایی');
           go('worker');
@@ -928,10 +956,10 @@ class _AppShellState extends State<AppShell> {
     return [
       panel([
         const Text(
-          'ساخت ساختمان گوهردشت',
+          'ساخت ساختمان الهیه',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        small('کرج · گوهردشت'),
+        small('مشهد · الهیه'),
       ]),
       panel([
         pair('مجموع هزینه‌ها', money(cost)),
@@ -986,7 +1014,7 @@ class _AppShellState extends State<AppShell> {
   }
 
   List<Widget> finance() => [
-        small('ساخت ساختمان گوهردشت'),
+        small('ساخت ساختمان الهیه'),
         const SizedBox(height: 16),
         SegmentedButton<bool>(
           segments: const [
@@ -1313,5 +1341,5 @@ class _AppShellState extends State<AppShell> {
           ),
         ),
       );
-  List<Widget> detail() => workDetail();
+  List<Widget> detail() => selectedAd.need ? workDetail() : serviceDetails();
 }

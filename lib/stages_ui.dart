@@ -126,8 +126,7 @@ extension LaterDemoUi on _AppShellState {
     ];
   }
 
-  String shortDate(DateTime d) => fa(
-      '${d.year}/${d.month}/${d.day} · ${d.hour}:${d.minute.toString().padLeft(2, '0')}');
+  String shortDate(DateTime d) => jalaliDate(d, withTime: true);
   Future<void> showContractRevision(ContractDraft draft, ContractRevision v) =>
       showModalBottomSheet<void>(
           context: context,

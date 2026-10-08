@@ -10,8 +10,10 @@ class AreaPicker extends StatefulWidget {
       this.showMap = true,
       this.pickLocation = false,
       this.initialPoint,
-      this.coverage = false});
+      this.coverage = false,
+      this.availableCities});
   final AreaFilter initial;
+  final List<CityArea>? availableCities;
   final bool requireCity, showMap, pickLocation, coverage;
   final MapPoint? initialPoint;
   @override
@@ -34,8 +36,14 @@ class _AreaPickerState extends State<AreaPicker> {
   @override
   Widget build(BuildContext context) {
     final current = city == null ? null : cityByName(city!);
-    final provinces = cities.map((c) => c.province).toSet().toList()..sort();
-    final options = cities
+    final available = widget.availableCities ?? demoCities;
+    final choices = [
+      ...available,
+      if (city != null && !available.any((c) => c.name == city))
+        cityByName(city!)
+    ];
+    final provinces = choices.map((c) => c.province).toSet().toList()..sort();
+    final options = choices
         .where((c) => province == null || c.province == province)
         .toList();
     return SafeArea(

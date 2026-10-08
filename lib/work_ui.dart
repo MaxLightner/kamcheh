@@ -54,7 +54,7 @@ extension WorkUi on _AppShellState {
     final p = profile ? findProfile(ad) : null;
     final text = p != null
         ? 'پروفایل ${p.name}\n${publicProfileUrl(p.id)}'
-        : 'درخواست: ${ad.title}\n${ad.area}';
+        : '${ad.need ? 'درخواست' : 'آگهی خدمات'}: ${ad.title}\n${ad.area}';
     workAction(() => workStore.send(id, actor, text));
     openCanonicalChat(id);
   }
@@ -81,6 +81,29 @@ extension WorkUi on _AppShellState {
 
   DemoWorkRepository seedWorkStore() {
     final repo = DemoWorkRepository();
+    for (final ad
+        in [...demoAds, ...marketDemoAds, ...initialOwnAds].map(localDemoAd)) {
+      if (ad.need ||
+          !['نیرو', 'خدمات', 'مهندسی'].contains(ad.category) ||
+          ad.title.contains('نظارت')) continue;
+      final owner = profileRepository.profiles
+          .where((p) => p.name == ad.owner)
+          .firstOrNull;
+      if (owner == null) continue;
+      repo.services[ad.id] = ServiceListing(
+          id: ad.id,
+          ownerId: owner.id,
+          title: ad.title,
+          details: ad.description.isEmpty ? ad.title : ad.description,
+          city: ad.city,
+          district: ad.district,
+          category: ad.category,
+          image: ad.image,
+          price: ad.price,
+          amount: ad.pricing?.amount,
+          unit: ad.pricing?.unit ?? PriceUnit.project,
+          skills: adSkills(ad));
+    }
     final seen = <String>{};
     for (final ad in archivedAds.where(activeListing)) {
       if (!seen.add(ad.id)) continue;
@@ -115,7 +138,8 @@ extension WorkUi on _AppShellState {
           unit: ad.pricing?.unit ?? PriceUnit.project,
           image: ad.image,
           photos: ad.photos,
-          crew: ad.title.contains('اکیپ'));
+          crew: ad.title.contains('اکیپ'),
+          skills: adSkills(ad));
       repo.needs[n.id] = n;
     }
     final people = profileRepository.profiles
@@ -134,7 +158,7 @@ extension WorkUi on _AppShellState {
           'تجربه بتن‌ریزی؛ مبلغ برای هر نفر در یک روز است.');
     }
     repo.needs['own-scaffold']!.privateAddress =
-        'نشانی نمونه: کرج، گوهردشت، محل پروژه';
+        'نشانی نمونه: مشهد، الهیه، محل پروژه';
     final scaffold =
         profileRepository.profiles.firstWhere((p) => p.name == 'داربست رضایی');
     final v = repo.proposeVisit('own-scaffold', scaffold.id, scaffold.id,
@@ -161,7 +185,7 @@ extension WorkUi on _AppShellState {
       photos: n.photos,
       pricing: n.budget == null ? null : MarketPrice(n.budget!, n.unit),
       listingKind: AdKind.need,
-      skills: const []);
+      skills: n.skills);
   List<Ad> get workFeedAds => workStore.needs.values
       .where((n) => !n.archived && !n.closed)
       .map(workAd)
@@ -191,6 +215,8 @@ extension WorkUi on _AppShellState {
       postCategory = 'خدمات';
       draftPriceUnit = PriceUnit.project;
     }
+    workSkills.clear();
+    workSkills.addAll(n?.skills ?? []);
     go('request');
   }
 
@@ -264,7 +290,25 @@ extension WorkUi on _AppShellState {
                                 .map((c) => DropdownMenuItem(
                                     value: c.id, child: Text(c.label)))
                                 .toList(),
-                            onChanged: (v) => update(() => postCategory = v!)),
+                            onChanged: (v) => update(() {
+                                  postCategory = v!;
+                                  workSkills.clear();
+                                })),
+                        const SizedBox(height: 10),
+                        small('تخصص موردنیاز (اختیاری)'),
+                        Wrap(
+                            spacing: 6,
+                            children: marketCategory(postCategory)
+                                .skills
+                                .map((skill) => FilterChip(
+                                    label: Text(skill),
+                                    selected: workSkills.contains(skill),
+                                    onSelected: (v) => update(() {
+                                          v
+                                              ? workSkills.add(skill)
+                                              : workSkills.remove(skill);
+                                        })))
+                                .toList()),
                         const SizedBox(height: 10),
                         photoChooser(draftPhotos, addAdPhotos,
                             (i) => update(() => draftPhotos.removeAt(i))),
@@ -300,6 +344,7 @@ extension WorkUi on _AppShellState {
         when: start.text.trim(),
         privateAddress: workPrivate.text.trim(),
         crew: workCrew,
+        skills: workSkills.toList(),
         budget: wage.text.trim().isEmpty ? null : parsePriceInput(wage.text),
         unit: draftPriceUnit ?? PriceUnit.project,
         image: marketCategory(postCategory).asset,
@@ -446,7 +491,7 @@ extension WorkUi on _AppShellState {
       ]),
       section('پیشنهادهای دریافتی'),
       small('مبلغ‌های با واحد متفاوت قابل مقایسه مستقیم نیستند.'),
-      const SizedBox(height:12),
+      const SizedBox(height: 12),
       DropdownButtonFormField<PriceUnit>(
           key: ValueKey('sort-$selectedRequest-$bidSortUnit'),
           initialValue: bidSortUnit,
@@ -621,8 +666,7 @@ extension WorkUi on _AppShellState {
       notice('بازدید را برای یک پیشنهاددهنده تنظیم کن.');
       return;
     }
-    final date = await showDatePicker(
-        context: context,
+    final date = await pickPersianDate(context,
         initialDate: DateTime.now().add(const Duration(days: 1)),
         firstDate: DateTime.now(),
         lastDate: DateTime.now().add(const Duration(days: 90)));
@@ -688,7 +732,7 @@ extension WorkUi on _AppShellState {
   List<Widget> workDetail() {
     final n = workStore.needs[selectedAd.id];
     if (n == null)
-      return [emptyState('درخواست پیدا نشد', 'از صفحه خانه انتخاب کن.')];
+      return [emptyState('درخواست پیدا نشد', 'از فهرست درخواست‌ها انتخاب کن.')];
     final owner = n.ownerId == actorId, bid = workStore.mine(n.id, actorId);
     final address = workStore.privateAddress(n.id, actorId);
     return [

@@ -97,9 +97,9 @@ void main() {
     t.view.physicalSize = const Size(320, 800);
     expect(find.text('سرمایه‌گذاری'), findsNothing);
     expect(find.text('مجوز و انشعاب'), findsNothing);
-    await tap(t, 'افراد و اکیپ‌ها');
+    await tap(t, 'پروفایل‌ها');
     await t.enterText(
-        find.byKey(const ValueKey('feed-search')), 'طراح معماری الهیه');
+        find.byKey(const ValueKey('profile-search')), 'طراح معماری الهیه');
     await t.pumpAndSettle();
     await tap(t, 'طراح معماری الهیه');
     expect(find.text('نمونه‌کارها'), findsOneWidget);

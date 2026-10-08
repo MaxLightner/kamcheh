@@ -79,7 +79,7 @@ extension HomeUi on _AppShellState {
               final cat = draft.category == 'همه'
                   ? null
                   : marketCategory(draft.category);
-              final kinds = cat?.kinds ?? AdKind.values;
+              final kinds = [AdKind.offer];
               final units = cat?.priceUnits ?? PriceUnit.values;
               final activityOptions =
                   ['مصالح', 'ابزار'].contains(draft.category)
@@ -521,7 +521,14 @@ extension HomeUi on _AppShellState {
                   Text(isClosed(ad) ? 'بسته‌شده' : ad.kind.label,
                       style: const TextStyle(fontSize: 10, color: red)),
                   const SizedBox(height: 4),
-                  profileBadges(ad, compact: true),
+                  if (!ad.need)
+                    profileBadges(ad, compact: true)
+                  else
+                    Wrap(spacing: 4, runSpacing: 4, children: [
+                      if (workStore.needs[ad.id]?.crew ?? false)
+                        label('اکیپ موردنیاز'),
+                      ...ad.skills.map((s) => label(s)),
+                    ]),
                 ])),
             const SizedBox(width: 8),
             Stack(children: [

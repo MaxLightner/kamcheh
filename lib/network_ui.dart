@@ -39,18 +39,25 @@ extension NetworkUi on _AppShellState {
 
   List<Ad> get archivedAds => [
         for (final space in accountSpaces.values)
-          ...space.createdAds.map((a) =>
+          ...space.createdAds.map(localDemoAd).map((a) =>
               a.kind == AdKind.tender ? a.copyWith(kind: AdKind.need) : a),
-        ...demoAds.map(
+        ...demoAds.map(localDemoAd).map(
             (a) => a.kind == AdKind.tender ? a.copyWith(kind: AdKind.need) : a),
-        ...marketDemoAds.map(
+        ...marketDemoAds.map(localDemoAd).map(
             (a) => a.kind == AdKind.tender ? a.copyWith(kind: AdKind.need) : a)
       ];
-  List<Ad> get allAds => workFeedAds;
-  bool ownAd(Ad ad) => signedIn && workStore.needs[ad.id]?.ownerId == actorId;
+  List<Ad> get allAds => serviceFeedAds;
+  bool ownAd(Ad ad) =>
+      signedIn &&
+      (ad.need
+              ? workStore.needs[ad.id]?.ownerId
+              : workStore.services[ad.id]?.ownerId) ==
+          actorId;
   Ad adFor(String id) => workStore.needs.containsKey(id)
       ? workAd(workStore.need(id))
-      : archivedAds.firstWhere((a) => a.id == id);
+      : workStore.services.containsKey(id)
+          ? serviceAd(workStore.services[id]!)
+          : archivedAds.firstWhere((a) => a.id == id);
   bool isClosed(Ad ad) => workStore.needs[ad.id]?.closed ?? false;
   List<String> profileSkills(Ad ad) =>
       ownAd(ad) ? mySkills.toList() : adSkills(ad);
@@ -66,8 +73,8 @@ extension NetworkUi on _AppShellState {
   }
 
   void selectTab(int index) {
-    if ([1, 2, 3].contains(index) && (!signedIn || (index != 3 && !canAct))) {
-      ensureAccess(() => selectTab(index), activity: index != 3);
+    if (index == 3 && !signedIn) {
+      ensureAccess(() => selectTab(index), activity: false);
       return;
     }
     update(() {
@@ -76,7 +83,7 @@ extension NetworkUi on _AppShellState {
       FocusManager.instance.primaryFocus?.unfocus();
       tab = index;
       history.clear();
-      page = ['home', 'activities', 'post', 'inbox', 'me'][index];
+      page = ['home', 'professionals', 'requests', 'inbox', 'me'][index];
       if (index == 2) changingAdCategory = false;
       if (index == 3) {
         messageTab = 0;
@@ -305,7 +312,7 @@ extension NetworkUi on _AppShellState {
         pair('ابعاد موجود', '۶۰×۱۲۰ و ۸۰×۸۰'),
         button('درخواست قیمت', () async {
           final value = await edit('مقدار و محل تحویل', '',
-              hint: 'مثلاً ۸۰ متر مربع، گوهردشت');
+              hint: 'مثلاً ۸۰ متر مربع، الهیه');
           if (value != null && value.isNotEmpty && mounted) {
             openThread(ad: ad);
             update(() => sent.add('درخواست قیمت: $value'));
@@ -369,9 +376,8 @@ extension NetworkUi on _AppShellState {
         if (messageTab == 0) ...inbox() else ...bookmarkView()
       ];
   List<Widget> bookmarkView() {
-    final ads = workStore.needs.values
-        .where((n) => savedIds.contains(n.id))
-        .map(workAd)
+    final ads = [...allAds, ...workFeedAds]
+        .where((ad) => savedIds.contains(ad.id))
         .toList();
     final people = savedPeople.values
         .where((a) => bookmarkTab == 2
@@ -379,7 +385,7 @@ extension NetworkUi on _AppShellState {
             : !['مصالح', 'ابزار'].contains(a.category))
         .toList();
     return [
-      miniTabs(['درخواست‌ها', 'افراد و اکیپ‌ها'], bookmarkTab,
+      miniTabs(['آگهی‌ها و درخواست‌ها', 'پروفایل‌ها'], bookmarkTab,
           (i) => update(() => bookmarkTab = i)),
       if (bookmarkTab == 0)
         ...ads.map(networkAdRow)

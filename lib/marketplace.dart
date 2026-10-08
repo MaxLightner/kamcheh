@@ -199,11 +199,11 @@ final marketCategories = allMarketCategories
             'طراحی ساختمان',
             'طراحی',
             ['طراحی معماری', 'محاسبات سازه', 'طراحی داخلی'],
-            [AdKind.need],
+            [AdKind.need, AdKind.offer],
             [PriceUnit.project, PriceUnit.squareMeter],
             'survey')
-        : MarketCategory(c.id, c.label, c.shortLabel, c.skills, [AdKind.need],
-            c.priceUnits, c.asset))
+        : MarketCategory(c.id, c.label, c.shortLabel, c.skills,
+            [AdKind.need, AdKind.offer], c.priceUnits, c.asset))
     .toList();
 
 MarketCategory marketCategory(String id) =>

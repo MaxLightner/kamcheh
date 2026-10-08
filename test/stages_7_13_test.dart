@@ -114,7 +114,7 @@ void main() {
     addTearDown(t.view.resetDevicePixelRatio);
     await t.pumpWidget(const SakhtyarApp(startWithDemoAccount: true));
     await t.pumpAndSettle();
-    await t.tap(find.text('ثبت نیاز'));
+    await t.tap(find.text('درخواست‌ها').last);
     await t.pumpAndSettle();
     await t.tap(find.text('ثبت درخواست جدید'));
     await t.pumpAndSettle();

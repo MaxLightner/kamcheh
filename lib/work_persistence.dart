@@ -96,6 +96,7 @@ extension WorkPersistence on _AppShellState {
             .map((v) => revisionFrom(Map<String, dynamic>.from(v))));
   Map<String, Object?> workSnapshot() => {
         'version': 1,
+        'structureVersion': 2,
         'work': workStore.toJson(),
         'profiles': profileRepository.profiles.map(profileJson).toList(),
         'accounts': {
@@ -167,6 +168,13 @@ extension WorkPersistence on _AppShellState {
         final profiles = (j['profiles'] as List)
             .map((p) => profileFrom(Map<String, dynamic>.from(p)))
             .toList();
+        if (j['structureVersion'] != 2) {
+          migrateStructureDemo(recovered, profiles, workStore.services.values);
+          for (final n in recovered.needs.values) {
+            if (n.skills.isEmpty && workStore.needs.containsKey(n.id))
+              n.skills = List.from(workStore.needs[n.id]!.skills);
+          }
+        }
         final accounts = <String, AccountWorkspace>{};
         for (final e in Map<String, dynamic>.from(j['accounts']).entries) {
           final x = Map<String, dynamic>.from(e.value), w = AccountWorkspace();
@@ -179,6 +187,13 @@ extension WorkPersistence on _AppShellState {
           }
           w.drafts.addAll((x['contracts'] as List)
               .map((d) => contractFrom(Map<String, dynamic>.from(d))));
+          if (j['structureVersion'] != 2) {
+            for (final d in w.drafts) {
+              if (d.values['موضوع و محل'] ==
+                  'نصب و اجاره داربست — کرج، گوهردشت')
+                d.values['موضوع و محل'] = 'نصب و اجاره داربست — مشهد، الهیه';
+            }
+          }
           for (final r in x['reviews'] ?? []) {
             w.workReviews.add(WorkReview(
                 r['peer'],

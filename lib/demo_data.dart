@@ -69,6 +69,27 @@ const cities = [
   CityArea('یزد', 'یزد', 31.90, 54.37, ['صفائیه', 'مرکز شهر']),
 ];
 CityArea cityByName(String name) => cities.firstWhere((c) => c.name == name);
+final demoCities = cities.where((c) => c.province == 'خراسان رضوی').toList();
+
+/// Keep the full city catalogue available for later expansion.
+Ad localDemoAd(Ad ad) {
+  if (ad.province == 'خراسان رضوی') return ad;
+  return ad.copyWith(
+      city: 'مشهد',
+      district: switch (ad.district) {
+        'گوهردشت' => 'الهیه',
+        'عظیمیه' => 'سجاد',
+        'مهرشهر' => 'وکیل‌آباد',
+        _ => 'قاسم‌آباد'
+      },
+      serviceArea: const AreaFilter(
+          province: 'خراسان رضوی', city: 'مشهد', surroundings: true),
+      point: ad.point == null ? null : const MapPoint(36.30, 59.58),
+      title: ad.title.replaceAll('کرج', 'مشهد').replaceAll('گوهردشت', 'الهیه'),
+      description: ad.description
+          .replaceAll('کرج', 'مشهد')
+          .replaceAll('گوهردشت', 'الهیه'));
+}
 
 class MapPoint {
   const MapPoint(this.latitude, this.longitude);
@@ -174,12 +195,16 @@ class Ad {
       district.isEmpty || district == 'تمام شهر' ? city : '$city · $district';
   Ad copyWith(
           {String? title,
+          String? city,
+          String? district,
+          AreaFilter? serviceArea,
+          MapPoint? point,
           String? description,
           String? owner,
           ProviderProfile? providerProfile,
           AdKind? kind}) =>
-      Ad(id, title ?? this.title, category, need, city, district, image, price,
-          owner ?? this.owner,
+      Ad(id, title ?? this.title, category, need, city ?? this.city,
+          district ?? this.district, image, price, owner ?? this.owner,
           time: time,
           description: description ?? this.description,
           rating: rating,
@@ -189,8 +214,8 @@ class Ad {
           duration: duration,
           listingKind: kind ?? listingKind,
           pricing: pricing,
-          point: point,
-          serviceArea: serviceArea,
+          point: point ?? this.point,
+          serviceArea: serviceArea ?? this.serviceArea,
           providerProfile: providerProfile ?? this.providerProfile,
           skills: skills,
           photos: photos);

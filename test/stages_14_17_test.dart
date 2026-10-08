@@ -131,7 +131,7 @@ void main() {
         null,
         subjectProfileId: 'demo-person-1',
         authorProfileId: 'profile-sample'));
-    await tester.tap(find.text('افراد و اکیپ‌ها'));
+    await tester.tap(find.text('پروفایل‌ها'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('داربست رضایی').first);
     await tester.pumpAndSettle();

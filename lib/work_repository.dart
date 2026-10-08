@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'marketplace.dart';
+import 'service_listing.dart';
 
 typedef Json = Map<String, dynamic>;
 String workId(String prefix) =>
@@ -20,6 +21,7 @@ class WorkNeed {
       this.when = '',
       this.privateAddress = '',
       this.crew = false,
+      this.skills = const [],
       this.budget,
       this.unit = PriceUnit.project,
       this.image = 'concrete',
@@ -37,6 +39,7 @@ class WorkNeed {
       privateAddress,
       image;
   bool crew;
+  List<String> skills;
   int? budget;
   PriceUnit unit;
   List<Uint8List> photos;
@@ -55,6 +58,7 @@ class WorkNeed {
         'quantity': quantity,
         'when': when,
         'crew': crew,
+        'skills': skills,
         'budget': budget,
         'unit': unit.name,
         'image': image,
@@ -80,6 +84,7 @@ class WorkNeed {
       quantity: j['quantity'],
       when: j['when'],
       crew: j['crew'],
+      skills: List<String>.from(j['skills'] ?? []),
       budget: j['budget'],
       unit: PriceUnit.values.byName(j['unit']),
       image: j['image'],
@@ -189,12 +194,26 @@ class WorkConversation {
 
 /// Local demo adapter. The future API must independently enforce these rights.
 class DemoWorkRepository {
+  final services = <String, ServiceListing>{};
   final needs = <String, WorkNeed>{};
   final bids = <String, WorkBid>{};
   final visits = <String, WorkVisit>{};
   final conversations = <String, WorkConversation>{};
   final creditSpent = <String, int>{};
   int balance(String actor) => 10 - (creditSpent[actor] ?? 0);
+  void saveService(ServiceListing s, String actor) {
+    require(
+        s.ownerId == actor &&
+            (services[s.id] == null || services[s.id]!.ownerId == actor),
+        'فقط صاحب آگهی می‌تواند آن را ویرایش کند.');
+    require(
+        s.title.trim().isNotEmpty &&
+            s.details.trim().isNotEmpty &&
+            s.city.isNotEmpty,
+        'عنوان، شرح خدمات و شهر را تکمیل کن.');
+    services[s.id] = s;
+  }
+
   void require(bool test, String message) {
     if (!test) throw StateError(message);
   }
@@ -345,6 +364,7 @@ class DemoWorkRepository {
   }
 
   Json toJson() => {
+        'services': services.values.map((v) => v.toJson()).toList(),
         'needs': needs.values.map((v) => v.toJson()).toList(),
         'bids': bids.values.map((v) => v.toJson()).toList(),
         'visits': visits.values.map((v) => v.toJson()).toList(),
@@ -352,6 +372,11 @@ class DemoWorkRepository {
         'creditSpent': creditSpent
       };
   void restore(Json j) {
+    services.clear();
+    for (final x in j['services'] ?? []) {
+      final v = ServiceListing.fromJson(Map<String, dynamic>.from(x));
+      services[v.id] = v;
+    }
     needs.clear();
     bids.clear();
     visits.clear();
