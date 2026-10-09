@@ -38,6 +38,7 @@ part 'work_persistence.dart';
 part 'structure_ui.dart';
 part 'ad_profile_ui.dart';
 part 'request_details_ui.dart';
+part 'message_details_ui.dart';
 
 const red = Color(0xFFAF282B);
 const ink = Color(0xFF222329);
@@ -216,6 +217,10 @@ class _AppShellState extends State<AppShell> {
   DateTime? workDeadline;
   bool bidSortDescending = false;
   Timer? deadlineRefresh;
+  final chatSearchInput = TextEditingController();
+  final chatScroll = ScrollController();
+  bool sendingAttachment = false;
+  int visitMessageTab = 0;
   String chatSearch = '';
   PriceUnit? bidSortUnit;
   final workPrivate = TextEditingController();
@@ -371,6 +376,8 @@ class _AppShellState extends State<AppShell> {
   @override
   void dispose() {
     deadlineRefresh?.cancel();
+    chatSearchInput.dispose();
+    chatScroll.dispose();
     workPrivate.dispose();
     if (storageReady) demoStore.close();
     for (final c in [
@@ -644,7 +651,7 @@ class _AppShellState extends State<AppShell> {
                         surfaceTintColor: Colors.white,
                         indicatorColor: const Color(0xFFFFEEEE),
                         onDestinationSelected: selectTab,
-                        destinations: const [
+                        destinations: [
                           NavigationDestination(
                             icon: Icon(Icons.home_outlined),
                             selectedIcon: Icon(Icons.home, color: red),
@@ -660,8 +667,8 @@ class _AppShellState extends State<AppShell> {
                               selectedIcon: Icon(Icons.assignment, color: red),
                               label: 'درخواست‌ها'),
                           NavigationDestination(
-                            icon: Icon(Icons.chat_bubble_outline_rounded),
-                            selectedIcon: Icon(Icons.chat_bubble, color: red),
+                            icon: messageNavigationIcon(false),
+                            selectedIcon: messageNavigationIcon(true),
                             label: 'پیام‌ها',
                           ),
                           NavigationDestination(

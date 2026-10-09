@@ -402,7 +402,7 @@ extension WorkUi on _AppShellState {
   }
 
   List<Widget> workBoard() => [
-        miniTabs(['درخواست‌های من', 'پیشنهادهای من', 'بازدیدها'], requestTab,
+        miniTabs(['درخواست‌های من', 'پیشنهادهای من'], requestTab,
             (i) => update(() => requestTab = i)),
         const SizedBox(height: 10),
         if (requestTab == 0) ...[
@@ -458,20 +458,6 @@ extension WorkUi on _AppShellState {
           if (!workStore.bids.values.any((b) => b.bidderId == actorId))
             emptyState(
                 'پیشنهادی نفرستاده‌ای', 'از درخواست‌ها کار مناسب پیدا کن.'),
-        ],
-        if (requestTab == 2) ...[
-          ...workStore.visits.values
-              .where((v) =>
-                  v.bidderId == actorId ||
-                  workStore.contextInfo(v.contextId, v.contextType).ownerId ==
-                      actorId)
-              .map(workVisitCard),
-          if (!workStore.visits.values.any((v) =>
-              v.bidderId == actorId ||
-              workStore.contextInfo(v.contextId, v.contextType).ownerId ==
-                  actorId))
-            emptyState('بازدیدی نداری',
-                'می‌توانی پیش از پیشنهاد قیمت درخواست بازدید بدهی.'),
         ],
       ];
   List<Widget> workRequestDetails() {
@@ -730,7 +716,16 @@ extension WorkUi on _AppShellState {
       Text(n.title, style: const TextStyle(fontWeight: FontWeight.bold)),
       small(
           '${workName(owner == actorId ? v.bidderId : owner)} · ${shortDate(v.at)}'),
-      label(visitStatus(v.status), color: red),
+      label(
+          v.status == 'pending' && !v.at.isAfter(DateTime.now())
+              ? 'زمان قرار گذشته؛ تأیید ممکن نیست'
+              : visitStatus(v.status),
+          color: red),
+      TextButton.icon(
+          onPressed: () =>
+              showWorkProfile(owner == actorId ? v.bidderId : owner),
+          icon: const Icon(Icons.person_outline, size: 17),
+          label: const Text('پروفایل طرف مقابل')),
       small('${n.city} · ${n.district}'),
       if (v.status == 'accepted' && address != null && address.isNotEmpty)
         pair('نشانی بازدید', address),
@@ -741,7 +736,9 @@ extension WorkUi on _AppShellState {
             city: cityByName(n.city),
             point: MapPoint(request!.latitude!, request.longitude!),
             height: 160),
-      if (v.status == 'pending' && actorId != v.proposedBy)
+      if (v.status == 'pending' &&
+          actorId != v.proposedBy &&
+          v.at.isAfter(DateTime.now()))
         Row(children: [
           Expanded(
               child: button(
@@ -761,6 +758,13 @@ extension WorkUi on _AppShellState {
             onPressed: () => workAction(
                 () => workStore.respondVisit(v.id, actorId, 'cancelled')),
             child: const Text('لغو درخواست بازدید')),
+      if (v.status == 'pending' &&
+          actorId != v.proposedBy &&
+          !v.at.isAfter(DateTime.now()))
+        TextButton(
+            onPressed: () => workAction(
+                () => workStore.respondVisit(v.id, actorId, 'declined')),
+            child: const Text('بستن درخواست بازدید')),
       if (v.status == 'accepted')
         button(
             'گفت‌وگو',
@@ -863,8 +867,10 @@ extension WorkUi on _AppShellState {
       workChatId = c.id;
       chat.clear();
       chatSearch = '';
+      chatSearchInput.clear();
       showChatSearch = false;
       go('chat');
+      scrollToLastMessage();
       persistWork();
     } on StateError catch (e) {
       notice(e.message.toString());
@@ -885,7 +891,7 @@ extension WorkUi on _AppShellState {
     final list = workStore.conversations.values
         .where((c) => c.contains(actorId))
         .where((c) => normalizeMarketText(
-                '${workName(c.peer(actorId))} ${workStore.contextInfo(c.contextId, c.contextType).title} ${c.messages.lastOrNull?.text ?? ''}')
+                '${workName(c.peer(actorId))} ${workStore.contextInfo(c.contextId, c.contextType).title} ${c.messages.map((m) => '${m.text} ${m.fileName ?? ''}').join(' ')}')
             .contains(normalizeMarketText(inboxQuery)))
         .toList();
     list.sort((a, b) => (b.messages.lastOrNull?.at ?? b.createdAt)
@@ -893,21 +899,38 @@ extension WorkUi on _AppShellState {
     return [
       TextField(
           controller: inboxInput,
-          decoration: const InputDecoration(
-              hintText: 'جست‌وجو در گفت‌وگوها', prefixIcon: Icon(Icons.search)),
+          decoration: InputDecoration(
+              hintText: 'نام، موضوع، پیام یا نام فایل',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: inboxQuery.isEmpty
+                  ? null
+                  : IconButton(
+                      tooltip: 'پاک کردن جست‌وجو',
+                      onPressed: () => update(() {
+                            inboxQuery = '';
+                            inboxInput.clear();
+                          }),
+                      icon: const Icon(Icons.close, size: 18))),
           onChanged: (v) => update(() => inboxQuery = v)),
       const SizedBox(height: 8),
       ...list.map((c) => ListTile(
           contentPadding: EdgeInsets.zero,
           onTap: () => openCanonicalChat(c.id),
-          leading: const CircleAvatar(
+          leading: CircleAvatar(
+              backgroundImage:
+                  profileRepository.profile(c.peer(actorId))?.avatar == null
+                      ? null
+                      : MemoryImage(
+                          profileRepository.profile(c.peer(actorId))!.avatar!),
               backgroundColor: Color(0xFFF8EFEF),
-              child: Icon(Icons.person_outline, color: red)),
+              child: profileRepository.profile(c.peer(actorId))?.avatar == null
+                  ? const Icon(Icons.person_outline, color: red)
+                  : null),
           title: Text(workName(c.peer(actorId)),
               style:
                   const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
           subtitle: Text(
-              '${workStore.contextInfo(c.contextId, c.contextType).title}\n${c.messages.lastOrNull?.fileName ?? c.messages.lastOrNull?.text ?? 'برای هماهنگی پیام بده'}',
+              '${c.contextType == 'service' ? 'آگهی' : 'درخواست'}: ${workStore.contextInfo(c.contextId, c.contextType).title}\n${inboxMessagePreview(c)}',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 11)),
@@ -919,14 +942,15 @@ extension WorkUi on _AppShellState {
         emptyState(
             inboxQuery.isEmpty ? 'گفت‌وگویی نداری' : 'نتیجه‌ای پیدا نشد',
             inboxQuery.isEmpty
-                ? 'پس از تأیید بازدید یا انتخاب پیشنهاد، گفت‌وگو اینجا می‌آید.'
-                : 'نام فرد یا عنوان درخواست را جست‌وجو کن.'),
+                ? 'پس از پذیرش ارتباط، تأیید بازدید یا انتخاب پیشنهاد، گفتگو اینجا می‌آید.'
+                : 'نام فرد، موضوع، متن پیام یا نام فایل را جست‌وجو کن.'),
     ];
   }
 
   Future<void> attachWorkFile() async {
     final id = workChatId, actor = actorId;
-    if (id == null) return;
+    if (id == null || sendingAttachment) return;
+    update(() => sendingAttachment = true);
     try {
       final file = await openFile(acceptedTypeGroups: [
         const XTypeGroup(label: 'تصویر و سند', extensions: [
@@ -962,6 +986,21 @@ extension WorkUi on _AppShellState {
       if (!mounted || actorId != actor || workChatId != id) return;
       final name = file.name.replaceAll(RegExp(r'[\\/]'), '_');
       final ext = name.split('.').last.toLowerCase();
+      if (![
+        'jpg',
+        'jpeg',
+        'png',
+        'webp',
+        'pdf',
+        'doc',
+        'docx',
+        'xls',
+        'xlsx',
+        'txt'
+      ].contains(ext)) {
+        notice('عکس یا سند با فرمت مجاز انتخاب کن.');
+        return;
+      }
       final mime = switch (ext) {
         'png' => 'image/png',
         'jpg' || 'jpeg' => 'image/jpeg',
@@ -969,17 +1008,24 @@ extension WorkUi on _AppShellState {
         'pdf' => 'application/pdf',
         _ => 'application/octet-stream'
       };
-      workAction(() => workStore.send(id, actor, '',
-          fileName: name, mime: mime, bytes: bytes));
+      final caption = await previewAttachment(name, mime, bytes);
+      if (!mounted || caption == null || actorId != actor || workChatId != id)
+        return;
+      if (workAction(() => workStore.send(id, actor, caption,
+          fileName: name, mime: mime, bytes: bytes))) scrollToLastMessage();
     } catch (_) {
       if (mounted) notice('پیوست ارسال نشد؛ دوباره امتحان کن.');
+    } finally {
+      if (mounted) update(() => sendingAttachment = false);
     }
   }
 
   void sendWorkMessage() {
     if (!canAct || workChatId == null || chat.text.trim().isEmpty) return;
-    workAction(() => workStore.send(workChatId!, actorId, chat.text));
-    chat.clear();
+    if (workAction(() => workStore.send(workChatId!, actorId, chat.text))) {
+      chat.clear();
+      scrollToLastMessage();
+    }
   }
 
   Widget durableConversation() {
@@ -995,22 +1041,40 @@ extension WorkUi on _AppShellState {
       ListTile(
           dense: true,
           contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-          title: Text(n.title,
+          leading: const Icon(Icons.person_outline, size: 20),
+          title: Text('پروفایل $chatPeerName',
+              style: const TextStyle(fontSize: 12)),
+          onTap: () => showWorkProfile(c.peer(actorId)),
+          trailing: const Icon(Icons.chevron_left, size: 18)),
+      ListTile(
+          dense: true,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+          title: Text(
+              '${c.contextType == 'service' ? 'آگهی' : 'درخواست'}: ${n.title}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 12)),
           onTap: () => openAd(adFor(c.contextId)),
           trailing: IconButton(
               tooltip: 'جست‌وجوی پیام',
-              onPressed: () => update(() => showChatSearch = !showChatSearch),
+              onPressed: () => update(() {
+                    showChatSearch = !showChatSearch;
+                    if (!showChatSearch) {
+                      chatSearch = '';
+                      chatSearchInput.clear();
+                    }
+                  }),
               icon: const Icon(Icons.search, size: 20))),
       if (showChatSearch)
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: TextField(
+                controller: chatSearchInput,
                 onChanged: (v) => update(() => chatSearch = v),
                 decoration:
                     const InputDecoration(hintText: 'متن پیام یا نام فایل'))),
+      if (showChatSearch && chatSearch.isNotEmpty)
+        small('${fa(messages.length)} پیام پیدا شد'),
       Row(children: [
         Expanded(
             child: TextButton.icon(
@@ -1028,72 +1092,86 @@ extension WorkUi on _AppShellState {
                 label: const Text('قرارداد')))
       ]),
       Expanded(
-          child: ListView(padding: const EdgeInsets.all(12), children: [
-        ...workStore.visits.values
-            .where((v) =>
-                v.contextId == c.contextId &&
-                v.contextType == c.contextType &&
-                v.bidderId == c.bidderId)
-            .map(workVisitCard),
-        ...messages.map((m) => Align(
-            alignment: m.senderId == actorId
-                ? Alignment.centerLeft
-                : Alignment.centerRight,
-            child: Container(
-                constraints: const BoxConstraints(maxWidth: 330),
-                margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: m.senderId == actorId
-                        ? const Color(0xFFFFEEEE)
-                        : const Color(0xFFF4F4F5),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (m.text.isNotEmpty)
-                        SelectableText(m.text,
-                            style: const TextStyle(fontSize: 13, height: 1.6)),
-                      if (m.bytes != null &&
-                          m.mime?.startsWith('image/') == true)
-                        InkWell(
-                            onTap: () => showDialog<void>(
-                                context: context,
-                                builder: (ctx) => Dialog(
-                                    child: InteractiveViewer(
-                                        child: Image.memory(m.bytes!,
-                                            errorBuilder: (_, __, ___) =>
-                                                const Text(
-                                                    'تصویر قابل نمایش نیست.'))))),
-                            child: Image.memory(m.bytes!,
-                                width: 230,
-                                height: 150,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) =>
-                                    const Text('تصویر قابل نمایش نیست.'))),
-                      if (m.bytes != null)
-                        TextButton.icon(
-                            onPressed: () async {
-                              try {
-                                await deliverFile(m.bytes!, m.fileName!,
-                                    m.mime ?? 'application/octet-stream');
-                              } catch (_) {
-                                if (mounted) notice('دریافت پیوست انجام نشد.');
-                              }
-                            },
-                            icon: const Icon(Icons.download, size: 17),
-                            label: Text(m.fileName ?? 'پیوست',
-                                overflow: TextOverflow.ellipsis)),
-                      Text(
-                          '${shortDate(m.at)}${m.senderId == actorId && (c.readCount[c.peer(actorId)] ?? 0) > c.messages.indexOf(m) ? ' · دیده‌شده' : ''}',
-                          style: const TextStyle(fontSize: 9, color: muted)),
-                    ])))),
-        if (messages.isEmpty)
-          small(chatSearch.isEmpty
-              ? 'توافق‌ها و شرایط را اینجا بنویسید.'
-              : 'پیامی با این جست‌وجو پیدا نشد.'),
-        ...chatContractCards(c),
-      ])),
+          child: ListView(
+              controller: chatScroll,
+              padding: const EdgeInsets.all(12),
+              children: [
+            if (chatSearch.isEmpty)
+              ...workStore.visits.values
+                  .where((v) =>
+                      v.contextId == c.contextId &&
+                      v.contextType == c.contextType &&
+                      v.bidderId == c.bidderId)
+                  .map(workVisitCard),
+            ...messages.map((m) => Align(
+                alignment: m.senderId == actorId
+                    ? Alignment.centerLeft
+                    : Alignment.centerRight,
+                child: Container(
+                    constraints: const BoxConstraints(maxWidth: 330),
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: m.senderId == actorId
+                            ? const Color(0xFFFFEEEE)
+                            : const Color(0xFFF4F4F5),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (m.text.isNotEmpty)
+                            SelectableText(m.text,
+                                style:
+                                    const TextStyle(fontSize: 13, height: 1.6)),
+                          if (m.bytes != null &&
+                              m.mime?.startsWith('image/') == true)
+                            InkWell(
+                                onTap: () => showDialog<void>(
+                                    context: context,
+                                    builder: (ctx) => Dialog(
+                                        child: InteractiveViewer(
+                                            child: Image.memory(m.bytes!,
+                                                errorBuilder: (_, __, ___) =>
+                                                    const Text(
+                                                        'تصویر قابل نمایش نیست.'))))),
+                                child: Image.memory(m.bytes!,
+                                    width: 230,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) =>
+                                        const Text('تصویر قابل نمایش نیست.'))),
+                          if (m.bytes != null)
+                            TextButton.icon(
+                                onPressed: () async {
+                                  try {
+                                    await deliverFile(
+                                        m.bytes!,
+                                        m.fileName ?? 'attachment.bin',
+                                        m.mime ?? 'application/octet-stream');
+                                  } catch (_) {
+                                    if (mounted)
+                                      notice('دریافت پیوست انجام نشد.');
+                                  }
+                                },
+                                icon: const Icon(Icons.download, size: 17),
+                                label: Text(m.fileName ?? 'پیوست',
+                                    overflow: TextOverflow.ellipsis)),
+                          if (m.bytes != null)
+                            Text(
+                                '${fa((m.bytes!.length / 1024).ceil())} کیلوبایت',
+                                style: const TextStyle(
+                                    fontSize: 10, color: muted)),
+                          Text(
+                              '${shortDate(m.at)}${m.senderId == actorId && (c.readCount[c.peer(actorId)] ?? 0) > c.messages.indexOf(m) ? ' · دیده‌شده' : ''}',
+                              style:
+                                  const TextStyle(fontSize: 9, color: muted)),
+                        ])))),
+            if (messages.isEmpty)
+              small(chatSearch.isEmpty
+                  ? 'توافق‌ها و شرایط را اینجا بنویسید.'
+                  : 'پیامی با این جست‌وجو پیدا نشد.'),
+            if (chatSearch.isEmpty) ...chatContractCards(c),
+          ])),
       Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           child: Text(
@@ -1106,8 +1184,13 @@ extension WorkUi on _AppShellState {
               child: Row(children: [
                 IconButton(
                     tooltip: 'ارسال عکس یا فایل',
-                    onPressed: attachWorkFile,
-                    icon: const Icon(Icons.attach_file, size: 21)),
+                    onPressed: sendingAttachment ? null : attachWorkFile,
+                    icon: sendingAttachment
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2))
+                        : const Icon(Icons.attach_file, size: 21)),
                 Expanded(
                     child: TextField(
                         controller: chat,

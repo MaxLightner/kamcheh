@@ -372,13 +372,15 @@ extension NetworkUi on _AppShellState {
           ])));
 
   List<Widget> messageHub() => [
-        miniTabs(['گفت‌وگوها', 'نشان‌ها', 'ارتباط‌ها'], messageTab,
+        miniTabs(['گفت‌وگوها', 'نشان‌ها', 'بازدیدها', 'ارتباط‌ها'], messageTab,
             (i) => update(() => messageTab = i)),
         const SizedBox(height: 5),
         if (messageTab == 0)
           ...inbox()
         else if (messageTab == 1)
           ...bookmarkView()
+        else if (messageTab == 2)
+          ...messageVisits()
         else
           ...serviceConnectionsView()
       ];
