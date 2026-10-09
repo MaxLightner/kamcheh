@@ -15,6 +15,14 @@ extension WorkPersistence on _AppShellState {
         'available': p.available,
         'skills': p.skills.toList(),
         'avatar': p.avatar == null ? null : base64Encode(p.avatar!),
+        'cover': p.coverPhoto == null
+            ? null
+            : {
+                'asset': p.coverPhoto!.asset,
+                'bytes': p.coverPhoto!.bytes == null
+                    ? null
+                    : base64Encode(p.coverPhoto!.bytes!)
+              },
         'photos': p.photos
             .map((x) => {
                   'asset': x.asset,
@@ -46,6 +54,11 @@ extension WorkPersistence on _AppShellState {
         available: j['available'],
         skills: List<String>.from(j['skills']),
         avatar: j['avatar'] == null ? null : base64Decode(j['avatar']),
+        coverPhoto: j['cover'] == null
+            ? null
+            : j['cover']['asset'] != null
+                ? ProfilePhoto.asset(j['cover']['asset'])
+                : ProfilePhoto.bytes(base64Decode(j['cover']['bytes'])),
         coverage: area == null
             ? null
             : AreaFilter(
@@ -84,16 +97,26 @@ extension WorkPersistence on _AppShellState {
         'photos': d.photos.map(base64Encode).toList(),
         'status': d.status,
         'threadId': d.threadId,
+        'parties': d.parties,
+        'signatures': d.signatures,
+        'partyDocuments': d.partyDocuments
+            .map((k, v) => MapEntry(k, v.map(base64Encode).toList())),
         'revisions': d.revisions.map(revisionJson).toList()
       };
-  ContractDraft contractFrom(Json j) =>
-      ContractDraft(j['title'], Map<String, String>.from(j['values']),
-          template: j['template'], parentId: j['parentId'], restoredId: j['id'])
-        ..status = j['status']
-        ..threadId = j['threadId']
-        ..photos.addAll((j['photos'] as List).map((p) => base64Decode(p)))
-        ..revisions.addAll((j['revisions'] as List)
-            .map((v) => revisionFrom(Map<String, dynamic>.from(v))));
+  ContractDraft contractFrom(Json j) => ContractDraft(
+      j['title'], Map<String, String>.from(j['values']),
+      template: j['template'], parentId: j['parentId'], restoredId: j['id'])
+    ..status = j['status']
+    ..threadId = j['threadId']
+    ..parties.addAll((j['parties'] as Map? ?? {})
+        .map((k, v) => MapEntry(k.toString(), Map<String, String>.from(v))))
+    ..signatures.addAll(Map<String, String>.from(j['signatures'] ?? {}))
+    ..partyDocuments.addAll((j['partyDocuments'] as Map? ?? {}).map((k, v) =>
+        MapEntry(
+            k.toString(), (v as List).map((b) => base64Decode(b)).toList())))
+    ..photos.addAll((j['photos'] as List).map((p) => base64Decode(p)))
+    ..revisions.addAll((j['revisions'] as List)
+        .map((v) => revisionFrom(Map<String, dynamic>.from(v))));
   Map<String, Object?> workSnapshot() => {
         'version': 1,
         'structureVersion': 2,

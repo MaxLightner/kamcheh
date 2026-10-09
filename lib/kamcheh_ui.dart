@@ -474,6 +474,7 @@ extension KamchehUi on _AppShellState {
       chat.clear();
       threadIndex = 0;
       contractIndex = 0;
+      selectedContractId = null;
       page = 'me';
       tab = 4;
     });

@@ -1214,17 +1214,20 @@ extension WorkUi on _AppShellState {
           .entries
           .where((e) => e.value.threadId == c.id)) {
         final d = e.value;
-        if (space.profile.id != actorId && d.revisions.isEmpty) continue;
+        if (space.profile.id != actorId &&
+            !d.parties.containsKey(actorId) &&
+            d.revisions.isEmpty) continue;
         yield panel([
           Text(d.title),
           small(d.status),
-          if (space.profile.id == actorId)
+          if (space.profile.id == actorId || d.parties.containsKey(actorId))
             TextButton(
                 onPressed: () {
-                  contractIndex = e.key;
+                  selectedContractId = d.id;
+                  if (space.profile.id == actorId) contractIndex = e.key;
                   go('contract');
                 },
-                child: const Text('ویرایش و نسخه‌ها'))
+                child: const Text('تکمیل، تأیید و نسخه‌ها'))
           else
             TextButton(
                 onPressed: () => showContractRevision(d, d.revisions.last),

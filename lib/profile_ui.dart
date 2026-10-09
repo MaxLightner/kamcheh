@@ -89,6 +89,7 @@ extension ProfileUi on _AppShellState {
         clearAdComposer();
         threadIndex = 0;
         contractIndex = 0;
+        selectedContractId = null;
       });
     }
     if (activity && !myProfile.complete) {
@@ -105,6 +106,7 @@ extension ProfileUi on _AppShellState {
       history.clear();
       threadIndex = 0;
       contractIndex = 0;
+      selectedContractId = null;
       page = 'me';
       tab = 4;
     });
@@ -121,6 +123,7 @@ extension ProfileUi on _AppShellState {
       history.clear();
       threadIndex = 0;
       contractIndex = 0;
+      selectedContractId = null;
       messageTab = 0;
       bookmarkTab = 0;
       page = 'me';
@@ -259,6 +262,7 @@ extension ProfileUi on _AppShellState {
             onPressed: () => go('team'),
             icon: const Icon(Icons.person_add_alt_1, size: 18),
             label: const Text('مدیریت اعضا و دعوت‌ها')),
+        coverSettings(),
         section('مهارت‌ها و زمینه فعالیت'),
         skillCards(mySkills, editAction: editSkills),
         section('معرفی'),

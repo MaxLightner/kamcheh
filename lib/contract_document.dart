@@ -36,6 +36,66 @@ class ContractDraft {
   String? threadId;
   final photos = <Uint8List>[];
   final revisions = <ContractRevision>[];
+  final parties = <String, Map<String, String>>{};
+  final partyDocuments = <String, List<Uint8List>>{};
+  final signatures = <String, String>{};
+  bool get bilateral => parties.length == 2;
+  void invalidateApprovals() {
+    signatures.clear();
+    status = 'در انتظار تکمیل و تأیید طرفین';
+  }
+
+  String? get signingError {
+    if (!bilateral) return 'طرفین قرارداد مشخص نشده‌اند.';
+    for (final p in parties.values) {
+      for (final key in ['نام', 'شماره تماس', 'شناسه هویتی', 'نشانی']) {
+        if ((p[key] ?? '').trim().isEmpty)
+          return 'اطلاعات هر دو طرف باید تکمیل شود: $key';
+      }
+    }
+    for (final key in [
+      'موضوع و محل',
+      'مبلغ (تومان)',
+      'زمان شروع و مدت',
+      'شیوه پرداخت',
+      'شرایط توافق'
+    ]) {
+      if ((values[key] ?? '').trim().isEmpty) return '$key را تکمیل کن.';
+    }
+    return null;
+  }
+
+  ContractRevision finalize() {
+    final error = signingError;
+    if (error != null) throw FormatException(error);
+    if (signatures.length != 2 || !parties.keys.every(signatures.containsKey))
+      throw const FormatException('تأیید و امضای هر دو طرف لازم است.');
+    values['طرفین'] = parties.values
+        .map((p) => p.entries.map((e) => '${e.key}: ${e.value}').join('\n'))
+        .join('\n\n');
+    values['تأیید و امضای طرفین'] = parties.entries
+        .map((e) => '${e.value['نام']} · ${signatures[e.key]}')
+        .join('\n');
+    values['فهرست مدارک طرفین'] = parties.entries
+        .map((e) =>
+            '${e.value['نام']}: ${partyDocuments[e.key]?.length ?? 0} تصویر پیوست')
+        .join('\n');
+    final revision = ContractRevision(
+        number: revisions.length + 1,
+        title: title,
+        template: template,
+        values: values,
+        photos: [
+          ...photos,
+          ...parties.keys.expand((id) => partyDocuments[id] ?? <Uint8List>[])
+        ],
+        createdAt: DateTime.now(),
+        parentId: parentId);
+    revisions.add(revision);
+    status = 'تأیید دوطرفه · نسخه ${revision.number}';
+    return revision;
+  }
+
   String? get validationError {
     for (final key in ['طرفین', 'موضوع و محل', 'مبلغ و مدت', 'شرایط توافق']) {
       final text = values[key]?.trim() ?? '';
@@ -88,8 +148,8 @@ Future<Uint8List> buildContractPdf(ContractRevision revision) async {
       build: (_) => [
             pw.Text(
                 revision.parentId == null
-                    ? 'پیش‌نویس قرارداد ${revision.template}'
-                    : 'پیش‌نویس الحاقیه قرارداد',
+                    ? '${revision.values.containsKey('تأیید و امضای طرفین') ? 'قرارداد' : 'پیش‌نویس قرارداد'} ${revision.template}'
+                    : 'الحاقیه قرارداد',
                 style:
                     pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
             pw.SizedBox(height: 8),
@@ -111,11 +171,14 @@ Future<Uint8List> buildContractPdf(ContractRevision revision) async {
                   pw.SizedBox(height: 14),
                 ]),
             pw.Text(
-                'این فایل پیش‌نویس نسخه آزمایشی است. ثبت در اپ یا دریافت فایل، امضای طرفین محسوب نمی‌شود.',
+                revision.values.containsKey('تأیید و امضای طرفین')
+                    ? 'تأییدهای درج‌شده در نسخه آزمایشی محلی ثبت شده‌اند؛ امضای الکترونیکی احراز‌شده نیستند.'
+                    : 'این فایل پیش‌نویس نسخه آزمایشی است. ثبت در اپ یا دریافت فایل، امضای طرفین محسوب نمی‌شود.',
                 style: const pw.TextStyle(fontSize: 10)),
             pw.SizedBox(height: 18),
-            pw.Text(
-                'محل امضای طرف اول:                       محل امضای طرف دوم:'),
+            if (!revision.values.containsKey('تأیید و امضای طرفین'))
+              pw.Text(
+                  'محل امضای طرف اول:                       محل امضای طرف دوم:'),
             ...revision.photos.asMap().entries.expand((e) => [
                   pw.NewPage(),
                   pw.Text('پیوست ${e.key + 1} · نسخه ${revision.number}'),

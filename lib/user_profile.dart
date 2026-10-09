@@ -29,6 +29,7 @@ class UserProfile {
       this.experience = '',
       this.availability = '',
       this.avatar,
+      this.coverPhoto,
       this.complete = false,
       Iterable<String> skills = const [],
       Iterable<ProfilePhoto> photos = const []})
@@ -55,6 +56,7 @@ class UserProfile {
   AreaFilter? coverage;
   ActivityType activity;
   Uint8List? avatar;
+  ProfilePhoto? coverPhoto;
   bool complete;
   final Set<String> skills;
   final List<ProfilePhoto> photos;
@@ -75,6 +77,7 @@ class UserProfile {
       experience: experience,
       availability: availability,
       avatar: avatar,
+      coverPhoto: coverPhoto,
       complete: complete,
       skills: skills,
       photos: photos);

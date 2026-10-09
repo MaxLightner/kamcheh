@@ -15,114 +15,60 @@ extension LaterDemoUi on _AppShellState {
           () => createSimpleContract(peer: peer, subject: subject));
       return;
     }
-    final template = await showDialog<String>(
-        context: context,
-        builder: (ctx) => SimpleDialog(
-            title: const Text('نوع قرارداد'),
-            children: ['اجرای کار', 'خدمات طراحی', 'توافق عمومی']
-                .map((t) => SimpleDialogOption(
-                    onPressed: () => Navigator.pop(ctx, t), child: Text(t)))
-                .toList()));
-    if (template == null || !mounted) return;
-    final title =
-        await edit('موضوع قرارداد', subject ?? '', hint: 'مثلاً اجرای داربست');
-    if (title == null || title.isEmpty || !mounted) return;
+    final actor = actorId;
+    final conversation =
+        peer != null && currentWorkChat != null && peer == chatPeerName
+            ? currentWorkChat
+            : null;
+    final result = await Navigator.of(context).push<ContractDraft>(
+        MaterialPageRoute(
+            builder: (_) => ContractSetupPage(
+                profiles: profileRepository.profiles
+                    .where((p) => p.id != actor && p.complete)
+                    .toList(),
+                actor: myProfile,
+                subject: subject ?? '',
+                peerId: conversation?.peer(actor),
+                parent: null)));
+    if (result == null || !mounted || actor != actorId) return;
     update(() {
-      final draft = ContractDraft(
-          title,
-          {
-            'طرفین': peer == null ? '' : '$myName · $peer',
-            'موضوع و محل': title,
-            'مبلغ و مدت': '',
-            'شرایط توافق': '',
-            'تأمین مصالح و ابزار': '',
-            'هزینه حمل و جمع‌آوری': '',
-            'تغییر و لغو توافق': '',
-            'حل اختلاف': '',
-          },
-          template: template);
-      if (peer != null && currentWorkChat != null && peer == chatPeerName)
-        draft.threadId = currentWorkChat!.id;
-      drafts.add(draft);
+      result.threadId = conversation?.id;
+      drafts.add(result);
       contractIndex = drafts.length - 1;
+      selectedContractId = result.id;
     });
     go('contract');
   }
 
-  Widget contractField(ContractDraft draft, String key) => menuRow(
-          key,
-          (draft.values[key]?.isEmpty ?? true)
-              ? 'برای تکمیل بزن'
-              : draft.values[key]!,
-          Icons.edit_outlined, () async {
-        final value = await edit(key, draft.values[key] ?? '',
-            hint: switch (key) {
-              'طرفین' => 'نام و مشخصات طرف اول و طرف دوم',
-              'موضوع و محل' => 'شرح کار، محدوده تعهد و محل اجرای آن',
-              'مبلغ و مدت' => 'مبلغ و واحد پول، زمان شروع و پایان',
-              'شرایط توافق' => 'پرداخت‌ها، کیفیت و تعهدات هر طرف',
-              _ => 'شرایط مورد توافق طرفین',
-            });
-        if (value != null && mounted) update(() => draft.values[key] = value);
-      });
+  ContractDraft? get openedContract {
+    if (selectedContractId != null) {
+      for (final space in accountSpaces.values) {
+        for (final d in space.drafts) {
+          if (d.id == selectedContractId &&
+              (space.profile.id == actorId || d.parties.containsKey(actorId)))
+            return d;
+        }
+      }
+    }
+    return contractIndex < drafts.length ? drafts[contractIndex] : null;
+  }
 
   List<Widget> simpleContract() {
-    if (drafts.isEmpty || contractIndex >= drafts.length)
+    final d = openedContract;
+    if (d == null)
       return [
-        emptyState(
-            'قراردادی انتخاب نشده', 'از قراردادهای من یک قرارداد انتخاب کن.')
+        emptyState('قراردادی انتخاب نشده', 'از قراردادهای من انتخاب کن.')
       ];
-    final draft = drafts[contractIndex];
     return [
-      Text(draft.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      small(
-          '${draft.template} · ${draft.status}${draft.parentId == null ? '' : ' · الحاقیه'}'),
-      const SizedBox(height: 8),
-      for (final key in ['طرفین', 'موضوع و محل', 'مبلغ و مدت', 'شرایط توافق'])
-        contractField(draft, key),
-      ExpansionTile(
-          tilePadding: EdgeInsets.zero,
-          title: const Text('شرایط تکمیلی', style: TextStyle(fontSize: 13)),
-          children: [
-            for (final key in [
-              'تأمین مصالح و ابزار',
-              'هزینه حمل و جمع‌آوری',
-              'تغییر و لغو توافق',
-              'حل اختلاف'
-            ])
-              contractField(draft, key)
-          ]),
-      section('پیوست‌ها'),
-      photoChooser(draft.photos, () async {
-        final files = await selectPhotos(6 - draft.photos.length);
-        if (mounted) update(() => draft.photos.addAll(files));
-      }, (i) => update(() => draft.photos.removeAt(i))),
-      const SizedBox(height: 10),
-      button('ذخیره نسخه و دریافت PDF', () async {
-        if (draft.validationError != null) {
-          notice(draft.validationError!);
-          return;
-        }
-        final snapshot = draft.saveRevision();
-        update(() {});
-        await exportContract(snapshot, draft.id);
-      }, icon: Icons.picture_as_pdf_outlined),
-      button('ذخیره پیش‌نویس', () {
-        update(() => draft.status = 'پیش‌نویس ذخیره‌شده');
-        go('contracts');
-      }, outlined: true),
-      if (draft.revisions.isNotEmpty) ...[
-        section('نسخه‌های ذخیره‌شده'),
-        ...draft.revisions.reversed.map((v) => menuRow(
-            'نسخه ${fa(v.number)}',
-            shortDate(v.createdAt),
-            Icons.history,
-            () => showContractRevision(draft, v))),
-        button('افزودن الحاقیه', () => createAddendum(draft),
-            outlined: true, icon: Icons.add),
-      ],
-      small(
-          'نسخه‌های ذخیره‌شده تغییر نمی‌کنند. پیش‌نویس جدید و الحاقیه جدا نگهداری می‌شوند. این نسخه امضای دیجیتال یا ذخیره سرور ندارد.'),
+      ContractEditor(
+          key: ValueKey('${d.id}:$actorId'),
+          draft: d,
+          actor: myProfile,
+          onChanged: () => update(() {}),
+          choosePhotos: selectPhotos,
+          export: (v) => exportContract(v, d.id),
+          addendum: () => createAddendum(d),
+          upgrade: () => createSimpleContract(subject: d.title))
     ];
   }
 
@@ -162,43 +108,53 @@ extension LaterDemoUi on _AppShellState {
   }
 
   Future<void> createAddendum(ContractDraft parent) async {
-    final text =
-        await edit('موضوع الحاقیه', '', hint: 'مثلاً تغییر مبلغ یا افزودن کار');
-    if (text == null || text.isEmpty || !mounted) return;
-    final snapshot = parent.revisions.last;
+    if (parent.revisions.isEmpty || !parent.parties.containsKey(actorId))
+      return;
+    final actor = actorId;
+    final result = await Navigator.of(context).push<ContractDraft>(
+        MaterialPageRoute(
+            builder: (_) => ContractSetupPage(
+                profiles: profileRepository.profiles.toList(),
+                actor: myProfile,
+                subject: '',
+                peerId: parent.parties.keys.firstWhere((id) => id != actor),
+                parent: parent)));
+    if (result == null || !mounted || actor != actorId) return;
     update(() {
-      final draft = ContractDraft(
-          'الحاقیه: $text',
-          {
-            'طرفین': snapshot.values['طرفین'] ?? '',
-            'موضوع و محل': text,
-            'مبلغ و مدت': '',
-            'شرایط توافق': '',
-            'ارجاع': '${parent.id} · نسخه ${snapshot.number}'
-          },
-          template: parent.template,
-          parentId: parent.id);
-      draft.threadId = parent.threadId;
-      drafts.add(draft);
+      result.threadId = parent.threadId;
+      drafts.add(result);
+      selectedContractId = result.id;
       contractIndex = drafts.length - 1;
     });
     go('contract');
   }
 
-  List<Widget> simpleContracts() => [
-        small('مستقل از درخواست یا مرتبط با گفت‌وگو · آرشیو روی همین دستگاه'),
-        ...drafts.asMap().entries.map((e) => menuRow(
-                e.value.title,
-                '${e.value.status}${e.value.parentId == null ? '' : ' · الحاقیه'}',
-                Icons.description_outlined, () {
-              contractIndex = e.key;
-              go('contract');
-            })),
-        const SizedBox(height: 12),
-        button('قرارداد جدید', () => createContract(), icon: Icons.add),
-        small(
-            'متن فعلی برای نمایش جریان کار است. قالب‌های قراردادی نهایی شما جایگزین متن نمونه می‌شوند.'),
-      ];
+  List<Widget> simpleContracts() {
+    final all = <String, ContractDraft>{};
+    for (final space in accountSpaces.values) {
+      for (final d in space.drafts) {
+        if (space.profile.id == actorId || d.parties.containsKey(actorId))
+          all[d.id] = d;
+      }
+    }
+    return [
+      small(
+          'قرارداد مستقل یا مرتبط با گفتگو · اطلاعات هر طرف توسط خودش تکمیل می‌شود'),
+      if (all.isEmpty)
+        emptyState('هنوز قراردادی نداری',
+            'با یکی از اعضای کمچه قرارداد مستقل تنظیم کن.'),
+      ...all.values.map((d) => menuRow(
+              d.title,
+              '${d.status}${d.parentId == null ? '' : ' · الحاقیه'}',
+              Icons.description_outlined, () {
+            selectedContractId = d.id;
+            go('contract');
+          })),
+      button('قرارداد جدید', () => createContract(), icon: Icons.add),
+      small(
+          'دمو: همکاری دو حساب روی همین دستگاه؛ ارسال دعوت و همگام‌سازی واقعی پس از اتصال سرور.')
+    ];
+  }
 
   List<(AccountWorkspace, WorkReview)> reviewsFor(UserProfile p) =>
       accountSpaces.values

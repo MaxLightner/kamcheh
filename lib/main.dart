@@ -39,6 +39,8 @@ part 'structure_ui.dart';
 part 'ad_profile_ui.dart';
 part 'request_details_ui.dart';
 part 'message_details_ui.dart';
+part 'contract_ui.dart';
+part 'account_home_ui.dart';
 
 const red = Color(0xFFAF282B);
 const ink = Color(0xFF222329);
@@ -292,6 +294,7 @@ class _AppShellState extends State<AppShell> {
   final adNotes = TextEditingController();
   List<Expense> get expenses => workspace.expenses;
   int contractIndex = 0;
+  String? selectedContractId;
   List<ContractDraft> get drafts => workspace.drafts;
   String get contractStatus => drafts[contractIndex].status;
   set contractStatus(String value) => drafts[contractIndex].status = value;
@@ -624,16 +627,19 @@ class _AppShellState extends State<AppShell> {
                     ),
               body: loadingDemo
                   ? const Center(child: CircularProgressIndicator())
-                  : page == 'chat'
-                      ? conversationBody()
-                      : SingleChildScrollView(
-                          key: ValueKey(page),
-                          padding: const EdgeInsets.fromLTRB(12, 10, 12, 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: body(),
-                          ),
-                        ),
+                  : page == 'me'
+                      ? accountHome()
+                      : page == 'chat'
+                          ? conversationBody()
+                          : SingleChildScrollView(
+                              key: ValueKey(page),
+                              padding:
+                                  const EdgeInsets.fromLTRB(12, 10, 12, 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: body(),
+                              ),
+                            ),
               bottomNavigationBar: page == 'chat'
                   ? null
                   : Column(mainAxisSize: MainAxisSize.min, children: [
@@ -653,8 +659,8 @@ class _AppShellState extends State<AppShell> {
                         onDestinationSelected: selectTab,
                         destinations: [
                           NavigationDestination(
-                            icon: Icon(Icons.home_outlined),
-                            selectedIcon: Icon(Icons.home, color: red),
+                            icon: Icon(Icons.campaign_outlined),
+                            selectedIcon: Icon(Icons.campaign, color: red),
                             label: 'آگهی‌ها',
                           ),
                           NavigationDestination(
@@ -663,8 +669,9 @@ class _AppShellState extends State<AppShell> {
                             label: 'پروفایل‌ها',
                           ),
                           NavigationDestination(
-                              icon: Icon(Icons.assignment_outlined),
-                              selectedIcon: Icon(Icons.assignment, color: red),
+                              icon: Icon(Icons.playlist_add_check_outlined),
+                              selectedIcon:
+                                  Icon(Icons.playlist_add_check, color: red),
                               label: 'درخواست‌ها'),
                           NavigationDestination(
                             icon: messageNavigationIcon(false),
@@ -1236,6 +1243,7 @@ class _AppShellState extends State<AppShell> {
                   TextButton(
                       onPressed: () {
                         contractIndex = e.key;
+                        selectedContractId = e.value.id;
                         go('contract');
                       },
                       child: const Text('مشاهده قرارداد'))

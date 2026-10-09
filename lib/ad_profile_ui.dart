@@ -290,78 +290,96 @@ extension AdProfileUi on _AppShellState {
     ];
   }
 
-  Widget profileTile(UserProfile p) => Semantics(
-      button: true,
-      label: 'پروفایل ${p.name}',
-      child: InkWell(
-          key: ValueKey('profile-tile-${p.id}'),
-          onTap: () => viewPerson(p),
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  border: Border.all(color: line),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(children: [
-                      CircleAvatar(
-                          radius: 19,
-                          backgroundColor: const Color(0xFFF8EFEF),
-                          backgroundImage:
-                              p.avatar == null ? null : MemoryImage(p.avatar!),
-                          child: p.avatar == null
-                              ? const Icon(Icons.person_outline, color: red)
-                              : null),
-                      const Spacer(),
-                      IconButton(
+  Widget profileTile(UserProfile p) {
+    final picture = p.coverPhoto ??
+        (p.avatar == null ? null : ProfilePhoto.bytes(p.avatar!));
+    final foreground = picture == null ? ink : Colors.white;
+    return Semantics(
+        button: true,
+        label: 'پروفایل ${p.name}',
+        child: InkWell(
+            key: ValueKey('profile-tile-${p.id}'),
+            onTap: () => viewPerson(p),
+            borderRadius: BorderRadius.circular(12),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Stack(fit: StackFit.expand, children: [
+                  if (picture != null)
+                    profilePicture(picture)
+                  else
+                    Container(
+                        color: const Color(0xFFF8EFEF),
+                        alignment: Alignment.topCenter,
+                        padding: const EdgeInsets.only(top: 22),
+                        child: const Icon(Icons.person_outline,
+                            size: 62, color: Color(0xFFD6B7B7))),
+                  if (picture != null)
+                    const DecoratedBox(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [Colors.transparent, Color(0xDA111820)],
+                                stops: [.15, .9]))),
+                  Positioned(
+                      top: 6,
+                      left: 6,
+                      child: IconButton.filledTonal(
                           tooltip: 'نشان کردن ${p.name}',
-                          onPressed: () => togglePersonBookmark(profileCard(p)),
-                          padding: EdgeInsets.zero,
                           visualDensity: VisualDensity.compact,
-                          constraints:
-                              const BoxConstraints(minWidth: 28, minHeight: 28),
+                          onPressed: () => togglePersonBookmark(profileCard(p)),
                           icon: Icon(
                               savedPeople.containsKey(p.id)
                                   ? Icons.bookmark
                                   : Icons.bookmark_border,
-                              size: 18,
-                              color: muted))
-                    ]),
-                    const SizedBox(height: 5),
-                    Text(p.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 12,
-                            height: 1.3,
-                            fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    profileBadges(profileCard(p), compact: true),
-                    const SizedBox(height: 6),
-                    Text(
-                        p.skills.isEmpty ? p.bio : p.skills.take(2).join(' · '),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 11, height: 1.4, color: muted)),
-                    const Spacer(),
-                    Text(p.coverage?.label ?? p.city ?? 'محدوده مشخص نشده',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 10, height: 1.3, color: muted)),
-                    const SizedBox(height: 5),
-                    Text(p.available ? 'آماده کار' : 'فعلاً در دسترس نیست',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 10,
-                            height: 1.3,
-                            color:
-                                p.available ? const Color(0xFF287F65) : muted)),
-                  ]))));
+                              size: 18))),
+                  Positioned(
+                      left: 10,
+                      right: 10,
+                      bottom: 10,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(p.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: foreground,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 4),
+                            profileBadges(profileCard(p), compact: true),
+                            const SizedBox(height: 5),
+                            Text(
+                                p.skills.isEmpty
+                                    ? p.bio
+                                    : p.skills.take(2).join(' · '),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    height: 1.4,
+                                    color: foreground)),
+                            const SizedBox(height: 5),
+                            Text(
+                                p.coverage?.label ??
+                                    p.city ??
+                                    'محدوده مشخص نشده',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style:
+                                    TextStyle(fontSize: 10, color: foreground)),
+                            Text(
+                                p.available
+                                    ? '● آماده کار'
+                                    : 'فعلاً در دسترس نیست',
+                                maxLines: 1,
+                                style:
+                                    TextStyle(fontSize: 10, color: foreground)),
+                          ])),
+                ]))));
+  }
 }
 
 class _ServiceConnectionForm extends StatefulWidget {
