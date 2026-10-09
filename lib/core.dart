@@ -102,6 +102,17 @@ class DemoProfileRepository implements ProfileRepository {
   final links = <TeamLink>[];
   final notices = <AccountNotice>[];
   final acceptances = <RulesAcceptance>[];
+  final profileViews = <String, Map<String, DateTime>>{};
+  bool recordView(String targetId, String viewerId, {DateTime? at}) {
+    if (targetId == viewerId || profile(targetId) == null) return false;
+    final now = at ?? DateTime.now();
+    final key = '$viewerId:${now.year}-${now.month}-${now.day}';
+    final views = profileViews.putIfAbsent(targetId, () => {});
+    if (views.containsKey(key)) return false;
+    views[key] = now;
+    return true;
+  }
+
   int _next = 0;
   @override
   Iterable<UserProfile> get profiles => _profiles.values;

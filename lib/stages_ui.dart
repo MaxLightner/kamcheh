@@ -208,7 +208,7 @@ extension LaterDemoUi on _AppShellState {
                   : r.subjectProfileId == p.id)
               .map((r) => (space, r)))
           .toList();
-  List<Widget> profileFeedback(UserProfile p) {
+  List<Widget> profileFeedback(UserProfile p, {bool readOnly = false}) {
     final records = reviewsFor(p);
     final average = records.isEmpty
         ? null
@@ -224,7 +224,7 @@ extension LaterDemoUi on _AppShellState {
             Text(entry.$1.profile.name,
                 style: const TextStyle(fontWeight: FontWeight.bold)),
             reviewCard(entry.$2),
-            if (signedIn && myProfile.id == p.id)
+            if (!readOnly && signedIn && myProfile.id == p.id)
               TextButton(
                   onPressed: () async {
                     final reply = await edit('پاسخ به تجربه', entry.$2.reply);
@@ -233,17 +233,19 @@ extension LaterDemoUi on _AppShellState {
                   },
                   child: Text(
                       entry.$2.reply.isEmpty ? 'ثبت پاسخ' : 'ویرایش پاسخ')),
-            TextButton(
-                onPressed: () => reportTarget(
-                    'review:${entry.$1.profile.id}:${entry.$2.contextId}'),
-                child: const Text('گزارش نظر')),
+            if (!readOnly)
+              TextButton(
+                  onPressed: () => reportTarget(
+                      'review:${entry.$1.profile.id}:${entry.$2.contextId}'),
+                  child: const Text('گزارش نظر')),
           ])),
-      if (signedIn && myProfile.id != p.id)
+      if (!readOnly && signedIn && myProfile.id != p.id)
         button('ثبت تجربه مربوط به قرار', () => recordReviewForPeer(p.name),
             outlined: true),
-      TextButton(
-          onPressed: () => reportTarget('profile:${p.id}'),
-          child: const Text('گزارش پروفایل')),
+      if (!readOnly)
+        TextButton(
+            onPressed: () => reportTarget('profile:${p.id}'),
+            child: const Text('گزارش پروفایل')),
     ];
   }
 

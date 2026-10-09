@@ -99,6 +99,12 @@ extension WorkPersistence on _AppShellState {
         'structureVersion': 2,
         'work': workStore.toJson(),
         'profiles': profileRepository.profiles.map(profileJson).toList(),
+        'profileViews': {
+          for (final e in profileRepository.profileViews.entries)
+            e.key: {
+              for (final v in e.value.entries) v.key: v.value.toIso8601String()
+            }
+        },
         'accounts': {
           for (final e in accountSpaces.entries)
             e.key: {
@@ -214,6 +220,13 @@ extension WorkPersistence on _AppShellState {
         for (final p in profiles) {
           profileRepository.save(p);
         }
+        profileRepository.profileViews.clear();
+        for (final e
+            in Map<String, dynamic>.from(j['profileViews'] ?? {}).entries) {
+          profileRepository.profileViews[e.key] =
+              Map<String, dynamic>.from(e.value)
+                  .map((key, value) => MapEntry(key, DateTime.parse(value)));
+        }
         accountSpaces.clear();
         accountSpaces.addAll(accounts);
         if (activePhone != null)
@@ -245,7 +258,10 @@ extension WorkPersistence on _AppShellState {
       if (incoming != null) {
         final p = profileRepository.profile(incoming);
         page = p == null ? 'publicMissing' : 'pro';
-        if (p != null) selectedAd = profileCard(p);
+        if (p != null) {
+          selectedAd = profileCard(p);
+          recordProfileView(p);
+        }
       }
     } catch (_) {
       storageFailed = true;

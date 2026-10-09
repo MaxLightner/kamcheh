@@ -17,6 +17,7 @@ import 'contract_document.dart';
 import 'estimate.dart';
 import 'file_delivery.dart';
 import 'dart:convert';
+import 'dart:async';
 import 'package:file_selector/file_selector.dart';
 import 'work_repository.dart';
 import 'demo_store.dart';
@@ -24,6 +25,7 @@ import 'service_listing.dart';
 import 'request_filter.dart';
 import 'persian_calendar.dart';
 import 'demo_migration.dart';
+import 'listing_gallery.dart';
 
 part 'network_ui.dart';
 part 'home_ui.dart';
@@ -34,6 +36,8 @@ part 'stages_ui.dart';
 part 'work_ui.dart';
 part 'work_persistence.dart';
 part 'structure_ui.dart';
+part 'ad_profile_ui.dart';
+part 'request_details_ui.dart';
 
 const red = Color(0xFFAF282B);
 const ink = Color(0xFF222329);
@@ -209,6 +213,9 @@ class _AppShellState extends State<AppShell> {
   bool loadingDemo = false, storageReady = false, storageFailed = false;
   String? workEditingId, workChatId;
   bool workCrew = false, showChatSearch = false;
+  DateTime? workDeadline;
+  bool bidSortDescending = false;
+  Timer? deadlineRefresh;
   String chatSearch = '';
   PriceUnit? bidSortUnit;
   final workPrivate = TextEditingController();
@@ -330,11 +337,19 @@ class _AppShellState extends State<AppShell> {
     'detail': 'جزئیات آگهی',
     'myAds': 'آگهی‌های من',
     'settings': 'تنظیمات',
+    'profilePreview': 'پیش‌نمایش پروفایل عمومی',
+    'profileStats': 'بازدید پروفایل من',
   };
 
   @override
   void initState() {
     super.initState();
+    if (widget.persistDemo)
+      deadlineRefresh = Timer.periodic(const Duration(seconds: 30), (_) {
+        if (mounted &&
+            ['requests', 'detail', 'applicants', 'activities'].contains(page))
+          setState(() {});
+      });
     if (widget.persistDemo) {
       loadingDemo = true;
       loadWork();
@@ -347,6 +362,7 @@ class _AppShellState extends State<AppShell> {
       } else {
         selectedAd = profileCard(p);
         page = 'pro';
+        if (!widget.persistDemo) recordProfileView(p);
       }
       history.add(('home', 0));
     }
@@ -354,6 +370,7 @@ class _AppShellState extends State<AppShell> {
 
   @override
   void dispose() {
+    deadlineRefresh?.cancel();
     workPrivate.dispose();
     if (storageReady) demoStore.close();
     for (final c in [
@@ -389,6 +406,8 @@ class _AppShellState extends State<AppShell> {
     if (!signedIn &&
         [
           'ownProfile',
+          'profilePreview',
+          'profileStats',
           'myAds',
           'settings',
           'inbox',
@@ -687,6 +706,8 @@ class _AppShellState extends State<AppShell> {
         'rules' => rulesView(),
         'team' => teamView(),
         'ownProfile' => ownProfile(),
+        'profilePreview' => publicProfileView(myProfile, preview: true),
+        'profileStats' => profileStatsView(),
         'post' => ownServices(),
         'detail' => detail(),
         _ => home(),

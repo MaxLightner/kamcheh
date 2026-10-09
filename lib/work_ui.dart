@@ -47,7 +47,8 @@ extension WorkUi on _AppShellState {
               const ListTile(title: Text('ارسال در گفت‌وگو')),
               ...list.map((c) => ListTile(
                   title: Text(workName(c.peer(actor))),
-                  subtitle: Text(workStore.need(c.requestId).title),
+                  subtitle: Text(
+                      workStore.contextInfo(c.contextId, c.contextType).title),
                   onTap: () => Navigator.pop(ctx, c.id))),
             ]));
     if (id == null || !mounted || actorId != actor) return;
@@ -68,7 +69,9 @@ extension WorkUi on _AppShellState {
       : workName(currentWorkChat!.peer(actorId));
   String get chatSubject => currentWorkChat == null
       ? ''
-      : workStore.need(currentWorkChat!.requestId).title;
+      : workStore
+          .contextInfo(currentWorkChat!.contextId, currentWorkChat!.contextType)
+          .title;
   bool workAction(VoidCallback fn) {
     try {
       update(fn);
@@ -102,7 +105,8 @@ extension WorkUi on _AppShellState {
           price: ad.price,
           amount: ad.pricing?.amount,
           unit: ad.pricing?.unit ?? PriceUnit.project,
-          skills: adSkills(ad));
+          skills: adSkills(ad),
+          galleryAssets: [ad.image, 'concrete', 'scaffold'].toSet().toList());
     }
     final seen = <String>{};
     for (final ad in archivedAds.where(activeListing)) {
@@ -197,6 +201,7 @@ extension WorkUi on _AppShellState {
     workEditingId = n?.id;
     workPrivate.text = n?.privateAddress ?? '';
     workCrew = n?.crew ?? false;
+    workDeadline = n?.deadline;
     if (n != null) {
       description.text = n.title;
       adNotes.text = n.details;
@@ -258,6 +263,7 @@ extension WorkUi on _AppShellState {
                       lines: 2),
                   workInput(quantityInput, 'مقدار یا تعداد (اختیاری)'),
                   workInput(start, 'زمان موردنظر (اختیاری)'),
+                  deadlineInput(),
                   CheckboxListTile(
                       contentPadding: EdgeInsets.zero,
                       controlAffinity: ListTileControlAffinity.leading,
@@ -342,6 +348,10 @@ extension WorkUi on _AppShellState {
         category: postCategory,
         quantity: quantityInput.text.trim(),
         when: start.text.trim(),
+        deadline: workDeadline,
+        createdAt: workEditingId == null
+            ? null
+            : workStore.need(workEditingId!).createdAt,
         privateAddress: workPrivate.text.trim(),
         crew: workCrew,
         skills: workSkills.toList(),
@@ -368,6 +378,11 @@ extension WorkUi on _AppShellState {
                   Text(n.details),
                   if (n.quantity.isNotEmpty) pair('مقدار / تعداد', n.quantity),
                   if (n.when.isNotEmpty) pair('زمان', n.when),
+                  pair(
+                      'مهلت پیشنهاد',
+                      n.deadline == null
+                          ? 'بدون مهلت'
+                          : shortDate(n.deadline!)),
                   if (n.budget != null)
                     pair('بودجه', '${money(n.budget!)} / ${n.unit.label}'),
                   small(n.crew ? 'اکیپ موردنیاز' : 'شرط اکیپ ندارد'),
@@ -398,7 +413,7 @@ extension WorkUi on _AppShellState {
                         style: const TextStyle(fontWeight: FontWeight.bold)),
                     small('${n.city} · ${n.district}'),
                     small(
-                        '${n.closed ? 'بسته' : 'دریافت پیشنهاد'} · ${fa(workStore.proposals(n.id).length)} پیشنهاد'),
+                        '${requestStatus(n)} · ${fa(workStore.proposals(n.id).length)} پیشنهاد'),
                     Row(children: [
                       Expanded(
                           child: button(
@@ -448,11 +463,13 @@ extension WorkUi on _AppShellState {
           ...workStore.visits.values
               .where((v) =>
                   v.bidderId == actorId ||
-                  workStore.need(v.requestId).ownerId == actorId)
+                  workStore.contextInfo(v.contextId, v.contextType).ownerId ==
+                      actorId)
               .map(workVisitCard),
           if (!workStore.visits.values.any((v) =>
               v.bidderId == actorId ||
-              workStore.need(v.requestId).ownerId == actorId))
+              workStore.contextInfo(v.contextId, v.contextType).ownerId ==
+                  actorId))
             emptyState('بازدیدی نداری',
                 'می‌توانی پیش از پیشنهاد قیمت درخواست بازدید بدهی.'),
         ],
@@ -467,17 +484,18 @@ extension WorkUi on _AppShellState {
     final visible =
         all.where((b) => bidSortUnit == null || b.unit == bidSortUnit).toList();
     if (bidSortUnit != null)
-      visible.sort((a, b) => a.amount.compareTo(b.amount));
+      visible.sort((a, b) => bidSortDescending
+          ? b.amount.compareTo(a.amount)
+          : a.amount.compareTo(b.amount));
     return [
       Text(n.title, style: const TextStyle(fontWeight: FontWeight.bold)),
       small('${n.city} · ${n.district}'),
-      pair(
-          'وضعیت',
-          n.closed
-              ? 'بسته‌شده'
-              : n.chosenId == null
-                  ? 'دریافت پیشنهاد'
-                  : 'انتخاب برای هماهنگی'),
+      pair('وضعیت', requestStatus(n)),
+      pair('مهلت پیشنهاد',
+          n.deadline == null ? 'بدون مهلت' : shortDate(n.deadline!)),
+      if (n.expiredAt(workStore.now()))
+        small(
+            'برای دریافت پیشنهاد جدید، مهلت را ویرایش کن. پیشنهادهای قبلی قابل بررسی‌اند.'),
       Row(children: [
         Expanded(
             child: button('ویرایش', () => startWorkRequest(n), outlined: true)),
@@ -494,25 +512,44 @@ extension WorkUi on _AppShellState {
       const SizedBox(height: 12),
       DropdownButtonFormField<PriceUnit>(
           key: ValueKey('sort-$selectedRequest-$bidSortUnit'),
+          isExpanded: true,
           initialValue: bidSortUnit,
           decoration:
               const InputDecoration(labelText: 'مرتب‌سازی قیمت در یک واحد'),
           items: [
             const DropdownMenuItem<PriceUnit>(
                 value: null, child: Text('همه · ترتیب دریافت')),
-            ...all.map((b) => b.unit).toSet().map((u) => DropdownMenuItem(
-                value: u, child: Text('${u.label} · ارزان‌تر اول')))
+            ...all
+                .map((b) => b.unit)
+                .toSet()
+                .map((u) => DropdownMenuItem(value: u, child: Text(u.label)))
           ],
           onChanged: (u) => update(() => bidSortUnit = u)),
+      if (bidSortUnit != null)
+        Wrap(spacing: 6, children: [
+          ChoiceChip(
+              label: const Text('ارزان‌تر اول'),
+              selected: !bidSortDescending,
+              onSelected: (_) => update(() => bidSortDescending = false)),
+          ChoiceChip(
+              label: const Text('گران‌تر اول'),
+              selected: bidSortDescending,
+              onSelected: (_) => update(() => bidSortDescending = true)),
+        ]),
       ...visible.map((b) => bidComparisonCard(n, b)),
       if (all.isEmpty)
-        emptyState(
-            'هنوز پیشنهادی نرسیده', 'درخواست در صفحه خانه نمایش داده می‌شود.'),
+        emptyState('هنوز پیشنهادی نرسیده',
+            'درخواست‌های فعال در فهرست درخواست‌ها دیده می‌شوند.'),
+      section('درخواست‌های گفتگو'),
+      ...requestConnections(n).map((c) => requestConnectionCard(n, c)),
+      if (requestConnections(n).isEmpty)
+        small('درخواست گفتگویی دریافت نکرده‌ای.'),
       section('درخواست‌های بازدید'),
       ...workStore.visits.values
-          .where((v) => v.requestId == n.id)
+          .where((v) => v.contextType == 'request' && v.requestId == n.id)
           .map(workVisitCard),
-      if (!workStore.visits.values.any((v) => v.requestId == n.id))
+      if (!workStore.visits.values
+          .any((v) => v.contextType == 'request' && v.requestId == n.id))
         small('هنوز درخواست بازدیدی نرسیده است.'),
       TextButton(
           onPressed: () => openAd(workAd(n)),
@@ -536,35 +573,30 @@ extension WorkUi on _AppShellState {
           Expanded(
               child: Text(workName(b.bidderId),
                   style: const TextStyle(fontWeight: FontWeight.bold))),
-          if (n.chosenId == b.id) label('انتخاب‌شده', color: red)
+          if (n.chosenId == b.id || n.selectedBidIds.contains(b.id))
+            label('انتخاب‌شده', color: red)
         ]),
         pair('پیشنهاد', '${money(b.amount)} / ${b.unit.label}'),
         pair('زمان', b.when),
         if (b.terms.isNotEmpty) small(b.terms),
-        button('پروفایل و سابقه', () => showWorkProfile(b.bidderId),
-            outlined: true),
-        if (workStore.conversations.containsKey('${n.id}::${b.bidderId}'))
-          button('گفت‌وگو', () => openCanonicalChat('${n.id}::${b.bidderId}')),
-        if (n.chosenId == null && !n.closed)
-          button('انتخاب برای هماهنگی', () async {
-            final yes = await showDialog<bool>(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                        title: const Text('انتخاب پیشنهاد؟'),
-                        content: Text(
-                            '${workName(b.bidderId)} · ${money(b.amount)} / ${b.unit.label}\nاین انتخاب فقط گفت‌وگو را باز می‌کند.'),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(ctx, false),
-                              child: const Text('انصراف')),
-                          TextButton(
-                              onPressed: () => Navigator.pop(ctx, true),
-                              child: const Text('انتخاب'))
-                        ]));
-            if (yes == true && mounted) {
-              workAction(() => workStore.select(n.id, b.id, actorId));
-            }
-          }),
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(
+              child: button(
+                  'پروفایل و سابقه', () => showWorkProfile(b.bidderId),
+                  outlined: true)),
+          const SizedBox(width: 8),
+          Expanded(
+              child: workStore.conversations
+                      .containsKey('${n.id}::${b.bidderId}')
+                  ? button('گفتگو',
+                      () => openCanonicalChat('${n.id}::${b.bidderId}'))
+                  : !n.closed && !n.archived
+                      ? button(
+                          'انتخاب برای هماهنگی', () => selectRequestBid(n, b))
+                      : button('درخواست بسته است',
+                          () => notice('درخواست را باز کن.'),
+                          outlined: true)),
+        ]),
       ]);
   void showWorkProfile(String id) {
     final p = profileRepository.profile(id);
@@ -572,8 +604,7 @@ extension WorkUi on _AppShellState {
       notice('پروفایل پیدا نشد.');
       return;
     }
-    selectedAd = profileCard(p);
-    go(id == actorId ? 'ownProfile' : 'pro');
+    viewPerson(p);
   }
 
   Future<void> proposeWork(Ad ad) async {
@@ -586,7 +617,7 @@ extension WorkUi on _AppShellState {
       notice('درخواست مرتبط انتخاب کن.');
       return;
     }
-    if (n.closed || n.ownerId == actorId) {
+    if (!n.acceptsAt(workStore.now()) || n.ownerId == actorId) {
       notice('این درخواست پیشنهاد جدید نمی‌پذیرد.');
       return;
     }
@@ -686,10 +717,15 @@ extension WorkUi on _AppShellState {
         _ => 'در انتظار پاسخ'
       };
   Widget workVisitCard(WorkVisit v) {
-    final n = workStore.need(v.requestId), owner = n.ownerId;
+    final n = workStore.contextInfo(v.contextId, v.contextType),
+        owner = n.ownerId;
+    final request =
+        v.contextType == 'request' ? workStore.needs[v.contextId] : null;
     final mine = v.bidderId == actorId || owner == actorId;
     if (!mine) return const SizedBox.shrink();
-    final address = workStore.privateAddress(n.id, actorId);
+    final address = v.contextType == 'request'
+        ? workStore.privateAddress(v.contextId, actorId)
+        : null;
     return panel([
       Text(n.title, style: const TextStyle(fontWeight: FontWeight.bold)),
       small(
@@ -698,10 +734,12 @@ extension WorkUi on _AppShellState {
       small('${n.city} · ${n.district}'),
       if (v.status == 'accepted' && address != null && address.isNotEmpty)
         pair('نشانی بازدید', address),
-      if (v.status == 'accepted' && n.latitude != null && n.longitude != null)
+      if (v.status == 'accepted' &&
+          request?.latitude != null &&
+          request?.longitude != null)
         LocationMap(
             city: cityByName(n.city),
-            point: MapPoint(n.latitude!, n.longitude!),
+            point: MapPoint(request!.latitude!, request.longitude!),
             height: 160),
       if (v.status == 'pending' && actorId != v.proposedBy)
         Row(children: [
@@ -724,7 +762,10 @@ extension WorkUi on _AppShellState {
                 () => workStore.respondVisit(v.id, actorId, 'cancelled')),
             child: const Text('لغو درخواست بازدید')),
       if (v.status == 'accepted')
-        button('گفت‌وگو', () => openCanonicalChat('${n.id}::${v.bidderId}'),
+        button(
+            'گفت‌وگو',
+            () => openCanonicalChat(workStore.conversationKey(
+                v.contextId, v.bidderId, v.contextType)),
             outlined: true),
     ]);
   }
@@ -736,21 +777,15 @@ extension WorkUi on _AppShellState {
     final owner = n.ownerId == actorId, bid = workStore.mine(n.id, actorId);
     final address = workStore.privateAddress(n.id, actorId);
     return [
-      if (n.photos.isNotEmpty)
-        SizedBox(
-            height: 165,
-            child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: n.photos
-                    .map((p) => Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: Image.memory(p, width: 210, fit: BoxFit.cover)))
-                    .toList()))
-      else
-        image(n.image, w: 420, h: 150),
+      ListingGallery(
+          key: ValueKey('request-gallery-${n.id}'),
+          photos: n.photos,
+          assets: n.photos.isEmpty ? [n.image] : const []),
       section(n.title),
       small('${n.city} · ${n.district}'),
-      label(n.closed || n.archived ? 'بسته‌شده' : 'دریافت پیشنهاد', color: red),
+      label(requestStatus(n), color: red),
+      pair('مهلت دریافت پیشنهاد',
+          n.deadline == null ? 'بدون مهلت' : shortDate(n.deadline!)),
       if (n.crew) label('اکیپ موردنیاز'),
       section('شرح درخواست'),
       Text(n.details, style: const TextStyle(height: 1.7)),
@@ -786,14 +821,23 @@ extension WorkUi on _AppShellState {
             height: 170),
       if (owner)
         button('پیشنهادها و مدیریت درخواست', () => openRequest(n.id))
-      else if (!n.closed && !n.archived) ...[
+      else if (n.acceptsAt(workStore.now())) ...[
         button(bid == null ? 'ارسال پیشنهاد' : 'ویرایش پیشنهاد من',
             () => proposeWork(workAd(n))),
         button('درخواست بازدید قبل از پیشنهاد', () => requestWorkVisit(n),
             outlined: true),
+        if (!workStore.conversations.containsKey('${n.id}::$actorId') &&
+            !requestConnections(n).any((c) => c.status == 'pending'))
+          button('درخواست گفتگو', () => askRequestConversation(n),
+              outlined: true),
       ],
+      if (!owner)
+        ...requestConnections(n).map((c) => requestConnectionCard(n, c)),
       ...workStore.visits.values
-          .where((v) => v.requestId == n.id && v.bidderId == actorId)
+          .where((v) =>
+              v.contextType == 'request' &&
+              v.requestId == n.id &&
+              v.bidderId == actorId)
           .map(workVisitCard),
       if (!owner && workStore.conversations.containsKey('${n.id}::$actorId'))
         button('گفت‌وگو', () => openCanonicalChat('${n.id}::$actorId')),
@@ -841,13 +885,11 @@ extension WorkUi on _AppShellState {
     final list = workStore.conversations.values
         .where((c) => c.contains(actorId))
         .where((c) => normalizeMarketText(
-                '${workName(c.peer(actorId))} ${workStore.need(c.requestId).title} ${c.messages.lastOrNull?.text ?? ''}')
+                '${workName(c.peer(actorId))} ${workStore.contextInfo(c.contextId, c.contextType).title} ${c.messages.lastOrNull?.text ?? ''}')
             .contains(normalizeMarketText(inboxQuery)))
         .toList();
-    list.sort((a, b) =>
-        (b.messages.lastOrNull?.at ?? workStore.need(b.requestId).createdAt)
-            .compareTo(a.messages.lastOrNull?.at ??
-                workStore.need(a.requestId).createdAt));
+    list.sort((a, b) => (b.messages.lastOrNull?.at ?? b.createdAt)
+        .compareTo(a.messages.lastOrNull?.at ?? a.createdAt));
     return [
       TextField(
           controller: inboxInput,
@@ -865,7 +907,7 @@ extension WorkUi on _AppShellState {
               style:
                   const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
           subtitle: Text(
-              '${workStore.need(c.requestId).title}\n${c.messages.lastOrNull?.fileName ?? c.messages.lastOrNull?.text ?? 'برای هماهنگی پیام بده'}',
+              '${workStore.contextInfo(c.contextId, c.contextType).title}\n${c.messages.lastOrNull?.fileName ?? c.messages.lastOrNull?.text ?? 'برای هماهنگی پیام بده'}',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 11)),
@@ -944,7 +986,7 @@ extension WorkUi on _AppShellState {
     final c = currentWorkChat;
     if (c == null || !c.contains(actorId))
       return emptyState('گفت‌وگو در دسترس نیست', 'از صندوق پیام انتخاب کن.');
-    final n = workStore.need(c.requestId);
+    final n = workStore.contextInfo(c.contextId, c.contextType);
     final messages = c.messages
         .where((m) => normalizeMarketText('${m.text} ${m.fileName ?? ''}')
             .contains(normalizeMarketText(chatSearch)))
@@ -957,7 +999,7 @@ extension WorkUi on _AppShellState {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 12)),
-          onTap: () => openAd(workAd(n)),
+          onTap: () => openAd(adFor(c.contextId)),
           trailing: IconButton(
               tooltip: 'جست‌وجوی پیام',
               onPressed: () => update(() => showChatSearch = !showChatSearch),
@@ -972,7 +1014,10 @@ extension WorkUi on _AppShellState {
       Row(children: [
         Expanded(
             child: TextButton.icon(
-                onPressed: () => requestWorkVisit(n, bidderId: c.bidderId),
+                onPressed: () => c.contextType == 'service'
+                    ? requestServiceChatVisit(c)
+                    : requestWorkVisit(workStore.need(c.contextId),
+                        bidderId: c.bidderId),
                 icon: const Icon(Icons.event_outlined, size: 18),
                 label: const Text('قرار بازدید'))),
         Expanded(
@@ -985,7 +1030,10 @@ extension WorkUi on _AppShellState {
       Expanded(
           child: ListView(padding: const EdgeInsets.all(12), children: [
         ...workStore.visits.values
-            .where((v) => v.requestId == n.id && v.bidderId == c.bidderId)
+            .where((v) =>
+                v.contextId == c.contextId &&
+                v.contextType == c.contextType &&
+                v.bidderId == c.bidderId)
             .map(workVisitCard),
         ...messages.map((m) => Align(
             alignment: m.senderId == actorId

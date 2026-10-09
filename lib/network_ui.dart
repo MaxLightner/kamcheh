@@ -58,7 +58,9 @@ extension NetworkUi on _AppShellState {
       : workStore.services.containsKey(id)
           ? serviceAd(workStore.services[id]!)
           : archivedAds.firstWhere((a) => a.id == id);
-  bool isClosed(Ad ad) => workStore.needs[ad.id]?.closed ?? false;
+  bool isClosed(Ad ad) => workStore.needs[ad.id] == null
+      ? false
+      : !workStore.need(ad.id).acceptsAt(workStore.now());
   List<String> profileSkills(Ad ad) =>
       ownAd(ad) ? mySkills.toList() : adSkills(ad);
   void openProfile(Ad ad) {
@@ -125,7 +127,7 @@ extension NetworkUi on _AppShellState {
           ]));
   Widget adPhoto(Ad ad, {double width = 92, double height = 92}) =>
       ad.photos.isEmpty
-          ? image(ad.image, w: width, h: height)
+          ? image(ad.galleryAssets.firstOrNull ?? ad.image, w: width, h: height)
           : ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.memory(ad.photos.first,
@@ -370,10 +372,15 @@ extension NetworkUi on _AppShellState {
           ])));
 
   List<Widget> messageHub() => [
-        miniTabs(['گفت‌وگوها', 'نشان‌ها'], messageTab,
+        miniTabs(['گفت‌وگوها', 'نشان‌ها', 'ارتباط‌ها'], messageTab,
             (i) => update(() => messageTab = i)),
         const SizedBox(height: 5),
-        if (messageTab == 0) ...inbox() else ...bookmarkView()
+        if (messageTab == 0)
+          ...inbox()
+        else if (messageTab == 1)
+          ...bookmarkView()
+        else
+          ...serviceConnectionsView()
       ];
   List<Widget> bookmarkView() {
     final ads = [...allAds, ...workFeedAds]
@@ -688,8 +695,13 @@ extension NetworkUi on _AppShellState {
   Future<void> sendOffer(Ad ad) => proposeWork(ad);
   Future<void> createVisit() async {
     final c = currentWorkChat;
-    if (c != null)
-      await requestWorkVisit(workStore.need(c.requestId), bidderId: c.bidderId);
+    if (c != null) {
+      if (c.contextType == 'service')
+        await requestServiceChatVisit(c);
+      else
+        await requestWorkVisit(workStore.need(c.contextId),
+            bidderId: c.bidderId);
+    }
   }
 
   List<Widget> legacyRequestBoard() => [
@@ -961,19 +973,20 @@ extension NetworkUi on _AppShellState {
         v.status == 'accepted' &&
         !v.at.isAfter(DateTime.now()) &&
         (v.bidderId == actorId ||
-            workStore.need(v.requestId).ownerId == actorId) &&
+            workStore.contextInfo(v.contextId, v.contextType).ownerId ==
+                actorId) &&
         workName(v.bidderId == actorId
-                ? workStore.need(v.requestId).ownerId
+                ? workStore.contextInfo(v.contextId, v.contextType).ownerId
                 : v.bidderId) ==
             peer);
     final eligible = canonical
         .map((v) => VisitRecord(
             v.id,
-            '${v.requestId}::${v.bidderId}',
+            workStore.conversationKey(v.contextId, v.bidderId, v.contextType),
             peer,
-            workStore.need(v.requestId).title,
+            workStore.contextInfo(v.contextId, v.contextType).title,
             shortDate(v.at),
-            workStore.need(v.requestId).city,
+            workStore.contextInfo(v.contextId, v.contextType).city,
             adId: v.requestId))
         .toList();
     if (eligible.isEmpty) {

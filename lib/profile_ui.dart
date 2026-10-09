@@ -183,7 +183,7 @@ extension ProfileUi on _AppShellState {
       ];
     return [
       Row(children: [
-        myAvatar(),
+        editableAvatar(),
         const SizedBox(width: 12),
         Expanded(
             child:
@@ -202,20 +202,10 @@ extension ProfileUi on _AppShellState {
       menuRow('پروفایل عمومی من', 'معرفی، مهارت‌ها و نمونه‌کارها',
           Icons.person_outline, () => go('ownProfile')),
       menuRow(
-          'ویرایش پروفایل',
-          'عکس، مشخصات و محدوده فعالیت',
-          Icons.edit_outlined,
-          () => editMyProfile(completing: !myProfile.complete)),
-      menuRow(
-          'آگهی‌های من',
-          '${fa(workStore.needs.values.where((n) => n.ownerId == actorId && !n.archived).length)} درخواست · ویرایش و مدیریت',
-          Icons.list_alt_outlined,
-          () => go('myAds')),
-      menuRow(
-          'اعضا و دعوت‌ها',
-          '${fa(profileRepository.members(myProfile.id).length)} عضو · ${fa(profileRepository.invitations(myProfile.id).length)} دعوت',
-          Icons.groups_outlined,
-          () => go('team')),
+          'بازدید پروفایل من',
+          '${fa(profileRepository.profileViews[myProfile.id]?.length ?? 0)} بازدید ثبت‌شده',
+          Icons.bar_chart_outlined,
+          () => go('profileStats')),
       menuRow('حساب‌های نمونه', 'آزمایش دعوت و تأیید با دو حساب',
           Icons.switch_account_outlined, switchDemoAccount),
       menuRow('برآورد مصالح', 'بتن، ملات و کاشی', Icons.calculate_outlined,
@@ -234,7 +224,7 @@ extension ProfileUi on _AppShellState {
 
   List<Widget> ownProfileView() => [
         Row(children: [
-          myAvatar(radius: 30),
+          editableAvatar(radius: 30),
           const SizedBox(width: 12),
           Expanded(
               child: Column(
@@ -253,6 +243,8 @@ extension ProfileUi on _AppShellState {
                 onPressed: () => editMyProfile(completing: !myProfile.complete),
                 icon: const Icon(Icons.edit_outlined, size: 17),
                 label: const Text('ویرایش پروفایل'))),
+        button('پیش‌نمایش پروفایل عمومی', () => go('profilePreview'),
+            outlined: true, icon: Icons.visibility_outlined),
         profileBadges(myProfileAd),
         SwitchListTile(
             contentPadding: EdgeInsets.zero,
@@ -313,8 +305,6 @@ extension ProfileUi on _AppShellState {
         button('اشتراک پروفایل من',
             () => shareItem(profileCard(myProfile), profile: true),
             outlined: true, icon: Icons.share_outlined),
-        menuRow('آگهی‌های من', 'نیازها و خدمات منتشرشده',
-            Icons.list_alt_outlined, () => go('myAds')),
       ];
 
   Future<void> addProfilePhotos() async {

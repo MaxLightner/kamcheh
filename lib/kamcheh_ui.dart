@@ -1,7 +1,7 @@
 part of 'main.dart';
 
 extension KamchehUi on _AppShellState {
-  List<Widget> publicProfileView(UserProfile p) => [
+  List<Widget> publicProfileView(UserProfile p, {bool preview = false}) => [
         Row(children: [
           CircleAvatar(
               radius: 28,
@@ -43,19 +43,27 @@ extension KamchehUi on _AppShellState {
                         width: 120, height: 100, child: profilePicture(photo))))
                 .toList()),
         if (p.photos.isEmpty) small('نمونه‌کاری ثبت نشده است.'),
+        if (workStore.services.values
+            .any((s) => s.ownerId == p.id && s.enabled && !s.archived)) ...[
+          section('آگهی‌های فعال'),
+          ...workStore.services.values
+              .where((s) => s.ownerId == p.id && s.enabled && !s.archived)
+              .map((s) => adRow(serviceAd(s))),
+        ],
         section('بازخورد'),
-        ...profileFeedback(p),
-        Row(children: [
-          Expanded(
-              child: button(
-                  savedPeople.containsKey(p.id) ? 'حذف نشان' : 'نشان کردن',
-                  () => togglePersonBookmark(profileCard(p)),
-                  outlined: true)),
-          IconButton(
-              tooltip: 'اشتراک پروفایل',
-              onPressed: () => shareItem(profileCard(p), profile: true),
-              icon: const Icon(Icons.share_outlined))
-        ]),
+        ...profileFeedback(p, readOnly: preview),
+        if (!preview)
+          Row(children: [
+            Expanded(
+                child: button(
+                    savedPeople.containsKey(p.id) ? 'حذف نشان' : 'نشان کردن',
+                    () => togglePersonBookmark(profileCard(p)),
+                    outlined: true)),
+            IconButton(
+                tooltip: 'اشتراک پروفایل',
+                onPressed: () => shareItem(profileCard(p), profile: true),
+                icon: const Icon(Icons.share_outlined))
+          ]),
         small('گفت‌وگو از مسیر پیشنهاد یا بازدید مرتبط آغاز می‌شود.'),
       ];
   bool activeListing(Ad ad) =>
@@ -160,6 +168,7 @@ extension KamchehUi on _AppShellState {
   }
 
   void viewPerson(UserProfile p) {
+    recordProfileView(p);
     if (signedIn && p.id == myProfile.id) {
       go('ownProfile');
       return;
@@ -260,8 +269,9 @@ extension KamchehUi on _AppShellState {
             icon: const Icon(Icons.location_on_outlined),
             label: Text(region)),
       if (!embedded)
-        TextField(
+        TextFormField(
             key: const ValueKey('profile-search'),
+            initialValue: profileQuery,
             onChanged: (v) => update(() => profileQuery = v),
             decoration: const InputDecoration(
                 hintText: 'جست‌وجوی نام یا تخصص',
@@ -278,37 +288,17 @@ extension KamchehUi on _AppShellState {
             onSelected: (v) => update(() => onlyAvailable = v)),
       ]),
       small('${fa(people.length)} پروفایل · نمونه'),
-      ...people.map((p) => InkWell(
-          onTap: () => viewPerson(p),
-          child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: line))),
-              child: Row(children: [
-                CircleAvatar(
-                    backgroundColor: const Color(0xFFF8EFEF),
-                    backgroundImage:
-                        p.avatar == null ? null : MemoryImage(p.avatar!),
-                    child: p.avatar == null
-                        ? const Icon(Icons.person_outline, color: red)
-                        : null),
-                const SizedBox(width: 10),
-                Expanded(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                      Text(p.name,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 13)),
-                      const SizedBox(height: 5),
-                      profileBadges(profileCard(p), compact: true),
-                      const SizedBox(height: 5),
-                      small(p.skills.join(' · ')),
-                      small(
-                          '${p.coverage?.label ?? p.city ?? 'محدوده تعیین نشده'} · ${p.available ? 'آماده کار' : 'فعلاً در دسترس نیست'}')
-                    ])),
-                const Icon(Icons.chevron_left, size: 18, color: muted),
-              ])))),
+      const SizedBox(height: 8),
+      GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisExtent: 210,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8),
+          itemCount: people.length,
+          itemBuilder: (_, i) => profileTile(people[i])),
       if (people.isEmpty)
         emptyState('پروفایلی پیدا نشد', 'محدوده یا عبارت و فیلتر را تغییر بده.')
     ];

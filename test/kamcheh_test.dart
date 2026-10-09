@@ -136,7 +136,8 @@ void main() {
     await tap(t, 'صفحه من');
     expect(find.text('حساب پروژه'), findsNothing);
     expect(find.text('پروژه‌های من'), findsNothing);
-    await tap(t, 'اعضا و دعوت‌ها');
+    await tap(t, 'پروفایل عمومی من');
+    await tap(t, 'مدیریت اعضا و دعوت‌ها');
     expect(find.text('عضو تأییدشده'), findsOneWidget);
     expect(find.text('منتظر تأیید عضو'), findsOneWidget);
     final remove = find.text('حذف لینک').first;

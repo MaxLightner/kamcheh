@@ -10,11 +10,11 @@ class RequestFilter {
   final String? skill;
   final bool crewOnly;
   List<WorkNeed> apply(Iterable<WorkNeed> needs,
-      {required AreaFilter area, String query = ''}) {
+      {required AreaFilter area, String query = '', DateTime? now}) {
     final text = normalizeMarketText(query);
     return needs
         .where((n) {
-          if (n.closed || n.archived) return false;
+          if (!n.acceptsAt(now ?? DateTime.now())) return false;
           if (category != 'همه' && n.category != category) return false;
           if (crewOnly && !n.crew) return false;
           if (skill != null && !n.skills.contains(skill)) return false;

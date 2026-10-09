@@ -31,9 +31,14 @@ extension HomeUi on _AppShellState {
                   Icon(icon, size: compact ? 12 : 14, color: color),
                   if (text.isNotEmpty) ...[
                     const SizedBox(width: 3),
-                    Text(text,
-                        style:
-                            TextStyle(fontSize: compact ? 9 : 11, color: color))
+                    Flexible(
+                        child: Text(text,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: compact ? 9 : 11,
+                                height: 1.2,
+                                color: color)))
                   ]
                 ])));
     return Wrap(spacing: 4, runSpacing: 4, children: [
@@ -554,7 +559,7 @@ extension HomeUi on _AppShellState {
                                   : Icons.bookmark_border,
                               size: 17,
                               color: savedIds.contains(ad.id) ? red : muted)))),
-              if (ad.photos.length > 1)
+              if (ad.photos.length + ad.galleryAssets.length > 1)
                 Positioned(
                     bottom: 3,
                     left: 3,
@@ -562,7 +567,8 @@ extension HomeUi on _AppShellState {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 4, vertical: 2),
                         color: Colors.black54,
-                        child: Text('${fa(ad.photos.length)} عکس',
+                        child: Text(
+                            '${fa(ad.photos.length + ad.galleryAssets.length)} عکس',
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 10)))),
             ])

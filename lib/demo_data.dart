@@ -165,6 +165,7 @@ class Ad {
       this.providerProfile,
       this.skills = const [],
       this.photos = const [],
+      this.galleryAssets = const [],
       this.people = 0});
   final String id,
       title,
@@ -188,6 +189,7 @@ class Ad {
   final ProviderProfile? providerProfile;
   AdKind get kind => listingKind ?? defaultAdKind(category, need);
   final List<Uint8List> photos;
+  final List<String> galleryAssets;
   final bool need;
   final int people;
   String get province => cityByName(city).province;
@@ -218,7 +220,8 @@ class Ad {
           serviceArea: serviceArea ?? this.serviceArea,
           providerProfile: providerProfile ?? this.providerProfile,
           skills: skills,
-          photos: photos);
+          photos: photos,
+          galleryAssets: galleryAssets);
 }
 
 const demoAds = <Ad>[
