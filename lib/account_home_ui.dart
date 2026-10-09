@@ -136,8 +136,8 @@ extension AccountHomeUi on _AppShellState {
                     action(Icons.description_outlined, 'قراردادهای من',
                         () => go('contracts')),
                     const SizedBox(width: 8),
-                    action(Icons.calculate_outlined, 'برآورد مصالح',
-                        () => go('estimate'))
+                    action(Icons.account_balance_wallet_outlined, 'حسابداری',
+                        () => go('ledger'))
                   ]),
                   const SizedBox(height: 8),
                   Row(children: [

@@ -41,6 +41,7 @@ part 'request_details_ui.dart';
 part 'message_details_ui.dart';
 part 'contract_ui.dart';
 part 'account_home_ui.dart';
+part 'accounting_ui.dart';
 
 const red = Color(0xFFAF282B);
 const ink = Color(0xFF222329);
@@ -189,16 +190,22 @@ class _EditDialogState extends State<EditDialog> {
 }
 
 class Expense {
-  Expense(
-    this.title,
-    this.category,
-    this.amount,
-    this.paid, {
-    this.income = false,
-  });
-  final String title, category;
+  Expense(this.title, this.category, this.amount, this.paid,
+      {this.income = false,
+      this.source = '',
+      this.stage = '',
+      String? accountType,
+      DateTime? date,
+      String? restoredId})
+      : accountType = accountType ?? (paid ? 'تسویه' : 'بدهی'),
+        date = date ?? DateTime.now(),
+        id = restoredId ??
+            'expense-${DateTime.now().microsecondsSinceEpoch}-${_counter++}';
+  static int _counter = 0;
+  final String id, title, category, source, stage, accountType;
   final int amount;
   final bool paid, income;
+  final DateTime date;
 }
 
 class AppShell extends StatefulWidget {
@@ -293,6 +300,7 @@ class _AppShellState extends State<AppShell> {
   String postKind = 'نیاز دارم', postCategory = 'نیرو', inboxQuery = '';
   final adNotes = TextEditingController();
   List<Expense> get expenses => workspace.expenses;
+  int accountingTab = 0;
   int contractIndex = 0;
   String? selectedContractId;
   List<ContractDraft> get drafts => workspace.drafts;
@@ -333,7 +341,7 @@ class _AppShellState extends State<AppShell> {
     'request': 'ثبت درخواست',
     'applicants': 'پیشنهادهای درخواست',
     'worker': 'پروفایل کارگر',
-    'ledger': 'حساب پروژه',
+    'ledger': 'حسابداری',
     'finance': 'ثبت مورد مالی',
     'supplier': 'پروفایل تأمین‌کننده',
     'chat': 'گفت‌وگو',
@@ -405,7 +413,7 @@ class _AppShellState extends State<AppShell> {
   }
 
   void go(String value) {
-    if (['ledger', 'finance', 'project', 'supplier'].contains(value)) {
+    if (['project', 'supplier'].contains(value)) {
       notice('این بخش در نسخه اولیه فعال نیست.');
       return;
     }
@@ -982,140 +990,8 @@ class _AppShellState extends State<AppShell> {
   List<Widget> applicants() => requestDetails();
   List<Widget> worker() => profileView(workerMode: true);
 
-  List<Widget> ledger() {
-    final cost =
-            expenses.where((e) => !e.income).fold(0, (n, e) => n + e.amount),
-        paid = expenses
-            .where((e) => e.paid && !e.income)
-            .fold(0, (n, e) => n + e.amount);
-    return [
-      panel([
-        const Text(
-          'ساخت ساختمان الهیه',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        small('مشهد · الهیه'),
-      ]),
-      panel([
-        pair('مجموع هزینه‌ها', money(cost)),
-        const Divider(),
-        pair('پرداخت‌شده', money(paid)),
-        const Divider(),
-        pair('مانده پرداخت', money(cost - paid)),
-      ]),
-      ...expenses.map(
-        (e) => Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: const BoxDecoration(
-            border: Border(bottom: BorderSide(color: line)),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      e.title,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    small('${e.category} · ${e.income ? 'دریافت' : 'هزینه'}'),
-                  ],
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    money(e.amount),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                    ),
-                  ),
-                  const SizedBox(height: 7),
-                  label(
-                    e.paid ? 'تسویه‌شده' : 'تسویه‌نشده',
-                    color: e.paid ? const Color(0xFF228660) : red,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      button('ثبت مورد مالی', () => go('finance'), icon: Icons.add),
-    ];
-  }
-
-  List<Widget> finance() => [
-        small('ساخت ساختمان الهیه'),
-        const SizedBox(height: 16),
-        SegmentedButton<bool>(
-          segments: const [
-            ButtonSegment(value: false, label: Text('هزینه')),
-            ButtonSegment(value: true, label: Text('دریافت')),
-          ],
-          selected: {txIncome},
-          onSelectionChanged: (s) => setState(() => txIncome = s.first),
-        ),
-        const SizedBox(height: 20),
-        Form(
-          key: financeForm,
-          child: Column(
-            children: [
-              input('عنوان', txTitle, required: true),
-              input('مبلغ (تومان)', txAmount, number: true, required: true),
-              DropdownButtonFormField<String>(
-                initialValue: txCat,
-                decoration: const InputDecoration(labelText: 'دسته‌بندی'),
-                items: [
-                  'مصالح',
-                  'دستمزد',
-                  'تجهیزات',
-                  'حمل‌ونقل',
-                  'سایر',
-                ]
-                    .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                    .toList(),
-                onChanged: (s) => setState(() => txCat = s!),
-              ),
-              const SizedBox(height: 18),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(txIncome ? 'دریافت شده' : 'پرداخت شده'),
-                value: txPaid,
-                onChanged: (v) => setState(() => txPaid = v),
-              ),
-              button('ذخیره در حساب پروژه', () {
-                if (financeForm.currentState!.validate()) {
-                  final amount = parseAmount(txAmount.text);
-                  if (amount == null || amount <= 0) {
-                    notice('مبلغ معتبر وارد کن');
-                    return;
-                  }
-                  setState(
-                    () => expenses.insert(
-                      0,
-                      Expense(
-                        txTitle.text,
-                        txCat,
-                        amount,
-                        txPaid,
-                        income: txIncome,
-                      ),
-                    ),
-                  );
-                  txTitle.clear();
-                  txAmount.clear();
-                  go('ledger');
-                  notice('مورد مالی ثبت شد');
-                }
-              }),
-            ],
-          ),
-        ),
-      ];
+  List<Widget> ledger() => accountingView();
+  List<Widget> finance() => accountingView();
   List<Widget> supplier() => profileView(supplierMode: true);
 
   List<Widget> legacyInbox() => [

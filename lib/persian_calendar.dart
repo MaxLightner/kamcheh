@@ -54,7 +54,7 @@ class _PersianDatePickerState extends State<_PersianDatePicker> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('تاریخ بازدید · شمسی'),
+        title: const Text('انتخاب تاریخ · شمسی'),
         content: SingleChildScrollView(
             child: SizedBox(
                 width: 310,

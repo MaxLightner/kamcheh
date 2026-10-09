@@ -27,9 +27,13 @@ class AccountWorkspace {
       ..removeWhere((id, r) => !w.createdAds.any((a) => a.id == id)));
     w.threads.addAll(sampleThreads());
     w.expenses.addAll([
-      Expense('خرید شن', 'مصالح', 18000000, true),
-      Expense('اجاره دوربین', 'تجهیزات', 3500000, true),
-      Expense('دستمزد داربست', 'اجرا', 24500000, false)
+      Expense('خرید شن', 'حمل و مصالح', 18000000, true,
+          source: 'نقدی', stage: 'فنداسیون'),
+      Expense('اجاره دوربین', 'تجهیزات و نیازمندی کارگاه', 3500000, true,
+          source: 'بانک ملی', stage: 'فنداسیون'),
+      Expense('دستمزد داربست', 'حقوق پرسنل', 24500000, false, stage: 'نما'),
+      Expense('دریافت تنخواه اولیه', '', 50000000, true,
+          income: true, source: 'بانک ملی')
     ]);
     w.drafts.add(ContractDraft('اجرای داربست', {
       'طرفین': 'مهدی احمدی · داربست رضایی',
@@ -211,8 +215,8 @@ extension ProfileUi on _AppShellState {
           () => go('profileStats')),
       menuRow('حساب‌های نمونه', 'آزمایش دعوت و تأیید با دو حساب',
           Icons.switch_account_outlined, switchDemoAccount),
-      menuRow('برآورد مصالح', 'بتن، ملات و کاشی', Icons.calculate_outlined,
-          () => go('estimate')),
+      menuRow('حسابداری', 'هزینه‌ها و دفتر کل',
+          Icons.account_balance_wallet_outlined, () => go('ledger')),
       menuRow('گزارش‌های من', 'گزارش‌های همین حساب', Icons.flag_outlined,
           () => go('reports')),
       menuRow('قراردادهای من', 'آرشیو خصوصی و قرارداد مستقل',

@@ -140,6 +140,19 @@ extension WorkPersistence on _AppShellState {
                   .map((p) => p.id)
                   .toList(),
               'contracts': e.value.drafts.map(contractJson).toList(),
+              'accounting': e.value.expenses
+                  .map((v) => {
+                        'id': v.id,
+                        'date': v.date.toIso8601String(),
+                        'description': v.title,
+                        'source': v.source,
+                        'amount': v.amount,
+                        'type': v.accountType,
+                        'group': v.category,
+                        'stage': v.stage,
+                        'receipt': v.income
+                      })
+                  .toList(),
               'reviews': e.value.workReviews
                   .map((r) => {
                         'peer': r.peer,
@@ -216,6 +229,16 @@ extension WorkPersistence on _AppShellState {
           }
           w.drafts.addAll((x['contracts'] as List)
               .map((d) => contractFrom(Map<String, dynamic>.from(d))));
+          for (final v in x['accounting'] ?? []) {
+            w.expenses.add(Expense(
+                v['description'], v['group'], v['amount'], v['type'] != 'بدهی',
+                income: v['receipt'] ?? false,
+                source: v['source'] ?? '',
+                stage: v['stage'] ?? '',
+                accountType: v['type'],
+                date: DateTime.parse(v['date']),
+                restoredId: v['id']));
+          }
           if (j['structureVersion'] != 2) {
             for (final d in w.drafts) {
               if (d.values['موضوع و محل'] ==
