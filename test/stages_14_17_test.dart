@@ -106,13 +106,12 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('صفحه من').last);
     await tester.pumpAndSettle();
-    expect(find.text('برآورد مصالح'), findsOneWidget);
+    expect(find.text('حسابداری'), findsOneWidget);
     expect(find.text('گزارش‌های من'), findsOneWidget);
-    await tester.tap(find.text('برآورد مصالح'));
+    await tester.tap(find.text('حسابداری'));
     await tester.pumpAndSettle();
-    expect(find.text('بتن'), findsOneWidget);
-    expect(find.text('ملات'), findsOneWidget);
-    expect(find.text('کاشی'), findsOneWidget);
+    expect(find.text('هزینه‌ها'), findsOneWidget);
+    expect(find.text('دفتر کل'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
   testWidgets(
