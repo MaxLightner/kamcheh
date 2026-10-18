@@ -92,7 +92,7 @@ extension AccountingUi on _AppShellState {
             label: Text('دفتر کل'))
       ], selected: {
         accountingTab
-      }, onSelectionChanged: (s) => setState(() => accountingTab = s.first)),
+      }, onSelectionChanged: (s) => update(() => accountingTab = s.first)),
       const SizedBox(height: 12),
       if (accountingTab == 1) ...[
         panel([
