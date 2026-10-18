@@ -130,7 +130,7 @@ void main() {
                 child: const Text('بازدید')))));
     await t.tap(find.text('بازدید'));
     await t.pumpAndSettle();
-    expect(find.text('تاریخ بازدید · شمسی'), findsOneWidget);
+    expect(find.text('انتخاب تاریخ · شمسی'), findsOneWidget);
     expect(find.text('فروردین ۱۴۰۴'), findsOneWidget);
     await t.tap(find.text('انتخاب تاریخ'));
     await t.pumpAndSettle();
