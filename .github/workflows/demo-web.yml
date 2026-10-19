@@ -3,6 +3,8 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 permissions:
   contents: read
   pages: write
@@ -42,6 +44,7 @@ jobs:
         with:
           path: public
   deploy:
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     environment:
