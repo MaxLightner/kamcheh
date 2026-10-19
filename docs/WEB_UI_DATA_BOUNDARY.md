@@ -1,27 +1,9 @@
-# وب کمچه: قرارداد رابط و داده — نسخه ساده‌شده
+# Website and app data boundary
 
-## دو رابط، یک دامنه کسب‌وکار
-- `site/`: سایت HTML/CSS/JS دسکتاپ؛ در GitHub Pages ریشه‌ی `/kamcheh/`.
-- `lib/` و `android/`: اپ Flutter، همچنان بدون تغییر UI؛ نسخه‌ی Flutter Web در `/kamcheh/app/` برای تست.
-- **داده سروری هنوز متصل نیست** و اپ Flutter همچنان داده‌ی دمو را محلی نگه می‌دارد.
+Website and Flutter app have independent interfaces but use the same Supabase project, Auth identities, database and Storage. Public configuration comes from config/public_backend.json.
 
-## تمایز واضح داده نمونه و داده واقعی
-- فایل `site/assets/demo-data.js` تنها حاوی محتویات **آزمایشی و نمایشی** است؛ شناسه‌ی نمونه‌ها `sample-*` و پرچم `demo:true` دارند.
-- وقتی اتصال Supabase تنظیم شود، کلاینت وب فقط داده‌ی سرور را نشان می‌دهد؛ دو مجموعه هم‌زمان روی صفحه رندر نمی‌شوند.
-- موجودیت آگهی خدمات از موجودیت درخواست کار جداست: `service_listings` و `work_needs`.
-- در نسخه نهایی مشخصات شخص و اکیپ در موجودیت `profiles` نگهداری شده و توسط `owner_id` به آگهی متصل می‌شوند؛ **نام متخصص نباید به‌عنوان متن ثابت در کارت آگهی تعریف شود.**
-- تصویر کارت، نمونه‌کارها، گالری و فیلد مهارت باید در مرحله‌ی بک‌اند از رسانه/جدول مرتبط و مجاز به خواندن تأمین شوند، نه از فایل دمو.
+Production has no automatic demo-data fallback. Private actions require authentication, and database RLS enforces ownership or participation. Contact decisions and shared contract state transitions use authorized RPCs.
 
-## قرارداد خواندن وب فعلی
-`service_listings`: `id, title, details, city, district, category, amount, created_at, owner_id, enabled, archived`.
+Only anonymous public directory/listing data is cached for read-only offline use. Private identity documents, conversations, contracts and accounting are excluded from this cache.
 
-`work_needs`: `id, title, details, city, district, category, budget, created_at, owner_id, closed, archived`.
-
-بعد از اتصال سرور، خواندن هر لیست با RLS انجام می‌شود. داده‌ی خصوصی، نشانی دقیق و شماره تماس نباید در query عمومی باشند. تصویر و مهارت‌ها باید با سیاست مستقل اضافه شوند.
-
-## باقی‌مانده برای مرحله بعد
-1. Supabase Auth OTP + نقشه شناسه کاربر Flutter و سایت.
-2. `profiles` و ارتباط آن با آگهی/درخواست؛ profile completeness اختیاری، حساب واحد برای هر شماره.
-3. مهاجرت از `DemoWorkRepository` به `BackendWorkRepository`؛ جلوگیری از آپلود خودکار حساب‌های نمونه.
-4. RLS، مدیریت رسانه، فایل قرارداد خصوصی و مذاکره مجوزها.
-5. تست دو دستگاه با حساب یکسان، دیدن داده مشترک، و تست دسترسی غیرمجاز.
+See SHARED_BACKEND.md for current deployment limits.

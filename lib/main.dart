@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'cloud/cloud_marketplace.dart';
+import 'cloud/backend.dart';
+import 'cloud/cloud_shell.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'network_data.dart';
@@ -53,11 +54,23 @@ const line = Color(0xFFE9EAED);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (kamchehCloudEnabled) {
+  if (backendConfigured) {
     await Supabase.initialize(
-      url: kamchehSupabaseUrl,
-      publishableKey: kamchehSupabaseKey,
+      url: backendUrl,
+      publishableKey: backendKey,
     );
+  }
+  if (!backendConfigured &&
+      !const bool.fromEnvironment('KAMCHEH_DEMO') &&
+      Uri.base.queryParameters['demo'] != '1') {
+    runApp(const MaterialApp(
+        home: Scaffold(
+            body: Center(
+                child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(
+                        'اتصال کمچه هنوز تنظیم نشده است. لطفاً بعداً دوباره تلاش کن.'))))));
+    return;
   }
   runApp(const SakhtyarApp(persistDemo: true));
 }
@@ -131,9 +144,11 @@ class SakhtyarApp extends StatelessWidget {
             ),
           ),
         ),
-        home: AppShell(
-            startWithDemoAccount: startWithDemoAccount,
-            persistDemo: persistDemo),
+        home: backendConfigured
+            ? const CloudAppShell()
+            : AppShell(
+                startWithDemoAccount: startWithDemoAccount,
+                persistDemo: persistDemo),
       );
 }
 
@@ -649,12 +664,6 @@ class _AppShellState extends State<AppShell> {
                     ),
               body: loadingDemo
                   ? const Center(child: CircularProgressIndicator())
-                  : kamchehCloudEnabled &&
-                          ['home', 'professionals', 'requests'].contains(page)
-                      ? CloudMarketplacePage(
-                          key: ValueKey('cloud-$page'),
-                          initialNeeds: page == 'requests',
-                        )
                   : page == 'me'
                       ? accountHome()
                       : page == 'chat'
@@ -671,7 +680,7 @@ class _AppShellState extends State<AppShell> {
               bottomNavigationBar: page == 'chat'
                   ? null
                   : Column(mainAxisSize: MainAxisSize.min, children: [
-                      if (page == 'home' && !kamchehCloudEnabled)
+                      if (page == 'home' && !backendConfigured)
                         Padding(
                             padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
                             child: SizedBox(

@@ -3,7 +3,7 @@ const docs={};
 for(const key of ['#kamcheh-services','#kamcheh-requests','#k-result-count','#market-heading','#market-subtitle','#k-mode-note','#k-status','#k-toast','#marketplace'])docs[key]={innerHTML:'',hidden:false,textContent:'',classList:{add(){},remove(){}},scrollIntoView(){},addEventListener(){}};
 const tabs=[{dataset:{kTab:'services'},classList:{toggle(){}},setAttribute(){},addEventListener(){}},{dataset:{kTab:'needs'},classList:{toggle(){}},setAttribute(){},addEventListener(){}}];
 const document={querySelector:s=>docs[s]||null,querySelectorAll:s=>s==='[data-k-tab]'?tabs:[],addEventListener(){}};
-const source={window:{KAMCHEH_CONFIG:{},KAMCHEH_DEMO_DATA:null},document,location:{hash:''},setTimeout,clearTimeout,Intl,Number,console};
+const source={window:{KAMCHEH_CONFIG:{demo:true},KAMCHEH_DEMO_DATA:null},document,location:{hash:''},setTimeout,clearTimeout,Intl,Number,console,URLSearchParams};
 vm.createContext(source);
 source.window.KAMCHEH_DEMO_DATA={};
 vm.runInContext(fs.readFileSync(__dirname+'/../assets/demo-data.js','utf8'),source);

@@ -21,6 +21,8 @@ jobs:
         run: |
           git clone --depth 1 --branch 3.47.6 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
           echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - name: Generate shared public backend config
+        run: node scripts/configure-backend.cjs
       - name: Validate desktop JavaScript
         run: |
           node --check site/assets/config.js
@@ -32,7 +34,7 @@ jobs:
       - name: Domain tests
         run: flutter test test/kamcheh_test.dart test/stages_14_17_test.dart test/stages_7_13_test.dart test/structure_test.dart test/package2_test.dart test/package3_test.dart test/squaring_tool_test.dart
       - name: Build existing Flutter web application
-        run: flutter build web --base-href "/kamcheh/app/" --no-web-resources-cdn
+        run: flutter build web --dart-define-from-file=config/public_backend.json --base-href "/kamcheh/app/" --no-web-resources-cdn
       - name: Assemble desktop website and app
         run: |
           rm -rf public

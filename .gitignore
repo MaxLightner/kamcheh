@@ -53,3 +53,4 @@ app.*.map.json
 *.keystore
 key.properties
 secrets/
+**/node_modules/
