@@ -1,16 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sakhtyar/squaring_tool.dart';
+import 'package:sakhtyar/pythagorean_whole.dart';
+import 'package:sakhtyar/main.dart';
 
 void main() {
   test('classic 3-4-5 triangle produces expected hypotenuse', () {
     expect(rightAngleDiagonalCm(300, 400), closeTo(500, 0.000001));
   });
 
-  test('rounding to whole centimetres is optional', () {
+  test('display does not fake a rounded hypotenuse', () {
     final diagonal = rightAngleDiagonalCm(300, 450);
-    expect(formatDiagonalCm(diagonal, roundToWholeCm: true), '541');
-    expect(formatDiagonalCm(diagonal, roundToWholeCm: false), '540.83');
+    expect(formatDiagonalCm(diagonal), '540.83');
+    expect(rightAngleDiagonalCm(300, 400), 500);
+  });
+
+  test('adjusts both inputs to an exact nearby integer triple', () {
+    final adjusted = nearestWholeCentimeterTriangle(300, 450);
+    expect(adjusted.firstCm, 300);
+    expect(adjusted.secondCm, 455);
+    expect(adjusted.diagonalCm, 545);
+    expect(adjusted.firstCm * adjusted.firstCm +
+        adjusted.secondCm * adjusted.secondCm,
+        adjusted.diagonalCm * adjusted.diagonalCm);
+  });
+
+  test('keeps an already exact triangle unchanged', () {
+    final adjusted = nearestWholeCentimeterTriangle(300, 400);
+    expect([adjusted.firstCm, adjusted.secondCm, adjusted.diagonalCm],
+        [300, 400, 500]);
+  });
+
+  test('a non-integer input yields integer Pythagorean measurements', () {
+    final adjusted = nearestWholeCentimeterTriangle(300.5, 400.25);
+    expect(adjusted.firstCm * adjusted.firstCm +
+        adjusted.secondCm * adjusted.secondCm,
+        adjusted.diagonalCm * adjusted.diagonalCm);
+    expect(adjusted.firstCm, 300);
+    expect(adjusted.secondCm, 400);
+    expect(adjusted.diagonalCm, 500);
   });
 
   test('Persian and Arabic number input works in centimetres', () {
@@ -28,7 +56,7 @@ void main() {
         throwsFormatException);
   });
 
-  testWidgets('calculator updates live and changes precision on toggle',
+  testWidgets('button adjusts sides instead of truncating the hypotenuse',
       (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 850));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -42,10 +70,15 @@ void main() {
     expect(find.text('۵۰۰ سانتی‌متر'), findsOneWidget);
     await tester.enterText(find.byType(TextField).at(1), '450');
     await tester.pump();
-    expect(find.text('۵۴۱ سانتی‌متر'), findsOneWidget);
-    await tester.tap(find.text('رند کردن وتر به سانتی‌متر'));
-    await tester.pumpAndSettle();
     expect(find.text('۵۴۰.۸۳ سانتی‌متر'), findsOneWidget);
+    expect(find.byType(SwitchListTile), findsNothing);
+    await tester.tap(find.byKey(const Key('squaring-adjust-whole')));
+    await tester.pumpAndSettle();
+    expect(find.text('۵۴۵ سانتی‌متر'), findsOneWidget);
+    final fields = tester.widgetList<TextField>(find.byType(TextField)).toList();
+    expect(fields[0].controller!.text, '300');
+    expect(fields[1].controller!.text, '455');
+    expect(find.textContaining('علامت‌های کار را با ابعاد جدید بزن'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -61,4 +94,23 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
+  testWidgets('squaring is hidden before login but visible after login',
+      (tester) async {
+    await tester.pumpWidget(const SakhtyarApp());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('صفحه من').last);
+    await tester.pumpAndSettle();
+    expect(find.text('گونیا سازی'), findsNothing);
+    expect(tester.takeException(), isNull);
+
+    await tester.pumpWidget(const SakhtyarApp(startWithDemoAccount: true));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('صفحه من').last);
+    await tester.pumpAndSettle();
+    expect(find.text('گونیا سازی'), findsOneWidget);
+    expect(find.text('ماشین حساب مصالح'), findsOneWidget);
+    expect(find.text('حسابداری'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
 }
