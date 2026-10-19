@@ -17,6 +17,7 @@ import 'user_profile.dart';
 import 'core.dart';
 import 'contract_document.dart';
 import 'estimate.dart';
+import 'squaring_tool.dart';
 import 'file_delivery.dart';
 import 'dart:convert';
 import 'dart:async';
@@ -341,6 +342,7 @@ class _AppShellState extends State<AppShell> {
     'professionals': 'پروفایل‌ها',
     'requests': 'درخواست‌ها',
     'estimate': 'برآورد مصالح',
+    'squaring': 'گونیا سازی',
     'reports': 'گزارش‌های من',
     'publicMissing': 'پروفایل',
     'rules': 'قوانین کمچه',
@@ -737,6 +739,7 @@ class _AppShellState extends State<AppShell> {
         'activities' => activities(),
         'me' => me(),
         'estimate' => [const MaterialEstimator()],
+        'squaring' => [const SquaringTool()],
         'reports' => myReports(),
         'publicMissing' => [
             emptyState('پروفایل پیدا نشد',
