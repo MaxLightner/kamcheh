@@ -17,9 +17,9 @@ Migration `kamcheh_shared_backend` created 15 public tables with RLS, authentica
 - Build and publish updated frontends. Existing GitHub Pages deployment has not been updated by this change.
 - Run end-to-end verification with two actual accounts after SMS configuration.
 - Complete production parity for crew links, galleries, ratings and profile-view statistics; the historical demo has features not yet migrated to server-backed screens.
-- Flutter test suite is deferred pending fresh user authorization; automated approval rejected execution due to the previous tests-later instruction. Do not bypass this via CI.
+- Fresh user authorization received: all 53 Flutter tests, 27 PostgreSQL policy checks and website UI-model checks passed. GitHub Actions build and deploy run 39306026220 succeeded. SMS-dependent two-user end-to-end behavior remains unverified.
 
-27 in-memory PostgreSQL policy checks passed during implementation before the test deferral rejection. They do not prove real Auth/SMS/Storage HTTP behavior. Latest bid-transition adjustment needs verification.
+27 in-memory PostgreSQL policy checks passed during implementation before the test deferral rejection. They do not prove real Auth/SMS/Storage HTTP behavior. The updated bid-transition migration parses and applies in the policy suite.
 
 ## Other products
 AR, طوطیوار and ویتاورس are requested independent projects, not tables within Kamcheh. Creation of AR was refused because the account already has two active Free projects. No paid upgrade was performed; the other two projects were not created. Obtain an explicit paid cost decision before proceeding.
