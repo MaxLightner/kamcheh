@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'pythagorean_whole.dart';
 
 /// Centimetres are the only input unit. Persian and Arabic digits are accepted.
 double parseSquaringCentimeters(String raw) {
@@ -29,8 +30,7 @@ double rightAngleDiagonalCm(double firstCm, double secondCm) {
   return math.sqrt(firstCm * firstCm + secondCm * secondCm);
 }
 
-String formatDiagonalCm(double value, {required bool roundToWholeCm}) {
-  if (roundToWholeCm) return value.round().toString();
+String formatDiagonalCm(double value) {
   return value.toStringAsFixed(2).replaceFirst(RegExp(r'0+$'), '')
       .replaceFirst(RegExp(r'\.$'), '');
 }
@@ -50,7 +50,30 @@ class SquaringTool extends StatefulWidget {
 class _SquaringToolState extends State<SquaringTool> {
   final _first = TextEditingController(text: '300');
   final _second = TextEditingController(text: '400');
-  bool _roundToWholeCm = true;
+  String? _adjustment;
+
+  void _adjustLegs() {
+    try {
+      final beforeA = parseSquaringCentimeters(_first.text);
+      final beforeB = parseSquaringCentimeters(_second.text);
+      final triple = nearestWholeCentimeterTriangle(beforeA, beforeB);
+      setState(() {
+        _first.text = triple.firstCm.toString();
+        _second.text = triple.secondCm.toString();
+        final a = _faDigits(formatDiagonalCm(beforeA));
+        final b = _faDigits(formatDiagonalCm(beforeB));
+        final adjustedA = _faDigits(triple.firstCm.toString());
+        final adjustedB = _faDigits(triple.secondCm.toString());
+        final adjustedC = _faDigits(triple.diagonalCm.toString());
+        _adjustment = beforeA == triple.firstCm && beforeB == triple.secondCm
+            ? 'این ضلع‌ها از قبل وتر صحیح دارند؛ نیازی به تغییر نیست.'
+            : 'ضلع اول: $a ← $adjustedA   ضلع دوم: $b ← $adjustedB\n'
+              'وتر دقیق: $adjustedC سانتی‌متر. علامت‌های کار را با ابعاد جدید بزن.';
+      });
+    } on FormatException catch (e) {
+      setState(() => _adjustment = e.message);
+    }
+  }
 
   @override
   void dispose() {
@@ -74,8 +97,7 @@ class _SquaringToolState extends State<SquaringTool> {
 
     final diagonalText = diagonal == null
         ? '—'
-        : _faDigits(formatDiagonalCm(
-            diagonal, roundToWholeCm: _roundToWholeCm));
+        : _faDigits(formatDiagonalCm(diagonal));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -127,7 +149,7 @@ class _SquaringToolState extends State<SquaringTool> {
                         child: _SideInput(
                           label: 'ضلع اول',
                           controller: _first,
-                          onChanged: () => setState(() {}),
+                          onChanged: () => setState(() => _adjustment = null),
                         ),
                       ),
                       Positioned(
@@ -136,7 +158,7 @@ class _SquaringToolState extends State<SquaringTool> {
                         child: _SideInput(
                           label: 'ضلع دوم',
                           controller: _second,
-                          onChanged: () => setState(() {}),
+                          onChanged: () => setState(() => _adjustment = null),
                         ),
                       ),
                       Positioned(
@@ -177,19 +199,24 @@ class _SquaringToolState extends State<SquaringTool> {
                   child: Text(error, textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 12, color: Colors.red)),
                 ),
-              const SizedBox(height: 4),
-              Material(
-                color: Colors.white,
-                child: SwitchListTile.adaptive(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                  title: const Text('رند کردن وتر به سانتی‌متر',
-                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                  subtitle: const Text('بدون نیاز به خواندن میلی‌متر',
-                      style: TextStyle(fontSize: 11)),
-                  value: _roundToWholeCm,
-                  onChanged: (v) => setState(() => _roundToWholeCm = v),
-                ),
+              const SizedBox(height: 8),
+              FilledButton.icon(
+                key: const Key('squaring-adjust-whole'),
+                onPressed: diagonal == null ? null : _adjustLegs,
+                icon: const Icon(Icons.square_foot_outlined),
+                label: const Text('تنظیم ضلع‌ها برای وتر صحیح'),
               ),
+              if (_adjustment != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 4),
+                  child: Text(
+                    _adjustment!,
+                    key: const Key('squaring-adjustment-description'),
+                    style: const TextStyle(
+                        fontSize: 12, height: 1.8,
+                        color: Color(0xFF24518A)),
+                  ),
+                ),
             ],
           ),
         ),
@@ -197,7 +224,8 @@ class _SquaringToolState extends State<SquaringTool> {
         const Text(
           'نکته: این عدد، وتر مورد انتظار است؛ برای اطمینان از گونیا بودن '
           'باید وتر واقعی را هم روی کار اندازه بگیری. '
-          'رند کردن می‌تواند تا نیم سانتی‌متر اختلاف ایجاد کند.',
+          'دکمه تنظیم، اندازه‌های ضلع‌ها را تغییر می‌دهد، نه فقط عدد نمایش وتر را. '
+          'برای نتیجه صحیح، اندازه‌های جدید را روی کار پیاده کن.',
           style: TextStyle(fontSize: 12, color: Color(0xFF667085), height: 1.8),
         ),
       ],
