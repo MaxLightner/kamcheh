@@ -55,7 +55,7 @@ Future<void> main() async {
   if (kamchehCloudEnabled) {
     await Supabase.initialize(
       url: kamchehSupabaseUrl,
-      anonKey: kamchehSupabaseKey,
+      publishableKey: kamchehSupabaseKey,
     );
   }
   runApp(const SakhtyarApp(persistDemo: true));
