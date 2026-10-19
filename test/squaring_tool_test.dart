@@ -94,13 +94,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
-  testWidgets('squaring is hidden before login but visible after login',
+  testWidgets('squaring and digital meter are in guest and signed-in My Page',
       (tester) async {
     await tester.pumpWidget(const SakhtyarApp());
     await tester.pumpAndSettle();
     await tester.tap(find.text('صفحه من').last);
     await tester.pumpAndSettle();
-    expect(find.text('گونیا سازی'), findsNothing);
+    expect(find.text('گونیا سازی'), findsOneWidget);
+    expect(find.text('متر دیجیتال'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     // Recreate AppShell: initial demo account is read only in initState.
@@ -111,6 +112,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('گونیا سازی'), findsOneWidget);
     expect(find.text('ماشین حساب مصالح'), findsOneWidget);
+    expect(find.text('متر دیجیتال (AR)'), findsOneWidget);
     expect(find.text('حسابداری'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
