@@ -159,12 +159,13 @@ extension AccountHomeUi on _AppShellState {
                     child: Text('ابزارهای کارگاهی',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: line),
+                  Material(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(color: line),
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    clipBehavior: Clip.antiAlias,
                     child: ListTile(
                       dense: true,
                       onTap: () => go('squaring'),
