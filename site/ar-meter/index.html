@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#182535">
+  <meta name="description" content="متر دیجیتال واقعیت افزوده کمچه؛ کالیبراسیون یک متر و اندازه‌گیری فاصله بین دو نقطه روی کف">
+  <title>متر دیجیتال AR | کمچه</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="start-screen" id="start-screen">
+    <div class="brand">کمچه <span> / ابزار کارگاهی</span></div>
+    <div class="hero-icon" aria-hidden="true">⌗</div>
+    <h1>متر دیجیتال</h1>
+    <p>دوربین را به سمت کف بگیر؛ یک فاصله واقعی <strong>۱ متری</strong> را به‌عنوان مرجع مشخص کن و بعد فاصله بین دو نقطه را اندازه بگیر.</p>
+    <ol>
+      <li>کف را با دوربین شناسایی کن.</li>
+      <li>دو سر فاصله واقعی ۱ متری را با نشانگر وسط صفحه ثبت کن.</li>
+      <li>نقطه شروع و پایان فاصله موردنظر را ثبت کن.</li>
+    </ol>
+    <button type="button" class="primary start-button" id="start-ar">شروع اندازه‌گیری AR</button>
+    <p id="support" class="support" role="status">در حال بررسی پشتیبانی دستگاه…</p>
+    <small>به گوشی اندرویدی سازگار با WebXR/ARCore و Chrome نیاز دارد. دقت به کیفیت تشخیص کف و کالیبراسیون بستگی دارد؛ جایگزین متر فیزیکی برای کارهای حساس نیست.</small>
+  </main>
+
+  <div id="ar-overlay" hidden>
+    <header class="ar-header">
+      <span class="ar-brand">کمچه · متر دیجیتال</span>
+      <button type="button" id="leave-ar" class="quiet">خروج ×</button>
+    </header>
+    <div class="tracking" id="tracking" role="status">دوربین را به سمت کف بگیر…</div>
+    <div id="reticle-2d" class="reticle-2d" aria-hidden="true"><span></span></div>
+    <section class="ar-controls" aria-label="کنترل اندازه‌گیری">
+      <div class="step" id="phase">مرجع ۱ متر — نقطه اول</div>
+      <div id="reading" class="reading" aria-live="polite">هنوز اندازه‌گیری انجام نشده است</div>
+      <button type="button" class="primary capture" id="capture" disabled>ثبت نقطه اول مرجع</button>
+      <div class="control-row">
+        <button type="button" class="quiet" id="reset-measure">اندازه‌گیری مجدد</button>
+        <button type="button" class="quiet" id="reset-reference">کالیبراسیون مجدد</button>
+      </div>
+      <small>نشانگر وسط صفحه را روی نقطه بگیر و «ثبت» را بزن.</small>
+    </section>
+  </div>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
