@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" dir="rtl" lang="fa"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>کمچه | بازار آنلاین ساختمانی - سرمایه‌گذاری و ملک</title>
+<!-- Material Symbols & Typography -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;family=Vazirmatn:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "background": "#f9f9ff",
+            "on-primary-fixed-variant": "#00458d",
+            "on-primary-fixed": "#001b3e",
+            "surface-variant": "#d4e3ff",
+            "on-tertiary-fixed-variant": "#76330d",
+            "primary-fixed": "#d6e3ff",
+            "surface-container-lowest": "#ffffff",
+            "on-primary": "#ffffff",
+            "tertiary": "#6d2c06",
+            "outline-variant": "#c2c6d3",
+            "secondary-container": "#fea94d",
+            "primary": "#003e80",
+            "inverse-primary": "#aac7ff",
+            "on-secondary-fixed": "#2d1600",
+            "surface-container-high": "#dde9ff",
+            "surface-tint": "#295ea8",
+            "error": "#ba1a1a",
+            "primary-container": "#1e56a0",
+            "tertiary-container": "#8b421c",
+            "on-secondary-fixed-variant": "#693c00",
+            "on-error-container": "#93000a",
+            "on-secondary-container": "#703f00",
+            "secondary": "#8b5000",
+            "on-surface": "#0c1c30",
+            "surface-dim": "#ccdbf7",
+            "outline": "#737782",
+            "secondary-fixed": "#ffdcbe",
+            "inverse-surface": "#223146",
+            "surface": "#f9f9ff",
+            "on-tertiary-fixed": "#351000",
+            "on-secondary": "#ffffff",
+            "inverse-on-surface": "#ebf1ff",
+            "tertiary-fixed": "#ffdbcc",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#ffb694",
+            "on-background": "#0c1c30",
+            "secondary-fixed-dim": "#ffb870",
+            "on-tertiary": "#ffffff",
+            "surface-container": "#e6eeff",
+            "on-primary-container": "#b4cdff",
+            "surface-container-low": "#f0f3ff",
+            "primary-fixed-dim": "#aac7ff",
+            "on-error": "#ffffff",
+            "surface-container-highest": "#d4e3ff",
+            "surface-bright": "#f9f9ff",
+            "on-surface-variant": "#424751",
+            "on-tertiary-container": "#ffbea1"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "margin-desktop": "2.5rem",
+            "space-md": "1rem",
+            "space-xl": "2.5rem",
+            "gutter": "1.25rem",
+            "space-lg": "1.5rem",
+            "margin-tablet": "1.5rem",
+            "margin": "1rem",
+            "gutter-desktop": "1.5rem",
+            "space-sm": "0.5rem"
+          },
+          "fontFamily": {
+            "display-lg-mobile": ["Vazirmatn", "Space Grotesk", "sans-serif"],
+            "headline-lg": ["Vazirmatn", "Space Grotesk", "sans-serif"],
+            "headline-md": ["Vazirmatn", "Space Grotesk", "sans-serif"],
+            "label-md": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "display-lg": ["Vazirmatn", "Space Grotesk", "sans-serif"],
+            "headline-sm": ["Vazirmatn", "Space Grotesk", "sans-serif"],
+            "label-sm": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "body-lg": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "body-sm": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "title-md": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "title-lg": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "body-md": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "label-lg": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "headline-lg-mobile": ["Vazirmatn", "Space Grotesk", "sans-serif"]
+          },
+          "fontSize": {
+            "display-lg-mobile": ["32px", { "lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-lg": ["32px", { "lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-md": ["24px", { "lineHeight": "34px", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "display-lg": ["48px", { "lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "title-lg": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "34px", "letterSpacing": "0", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FAFAF7;
+      color: #0c1c30;
+      -webkit-font-smoothing: antialiased;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+<link href="assets/kamcheh.css" rel="stylesheet"/></head>
+<body class="bg-surface text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><div class="k-demo-label" role="note">این صفحه فعلاً طراحی اولیه است. اطلاعات نمونه واقعی یا تأییدشده نیستند. ثبت اطلاعات در بخش «بازار واقعی کمچه» انجام می‌شود. <a href="index.html#kamcheh-marketplace">ورود به بازار واقعی</a></div>
+<!-- ========================================== -->
+<!-- SHARED COMPONENT: TopNavBar (Web Header)   -->
+<!-- ========================================== -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<div class="w-full max-w-[1360px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between h-20 rtl">
+<!-- Logo & Primary Branding -->
+<div class="flex items-center gap-8">
+<a class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight flex items-center gap-2" href="index.html">
+<span class="w-9 h-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center font-black text-xl shadow-sm">ک</span>
+<span>کمچه | بازار آنلاین ساختمانی</span>
+</a>
+<!-- Desktop Navigation Items -->
+<nav class="hidden lg:flex items-center gap-7">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface font-medium pb-1 transition-colors duration-200" href="gallery.html">متخصصان و گالری</a>
+<!-- Active: سرمایه‌گذاری و ملک (Active State Applied Strictly from JSON) -->
+<a class="text-primary dark:text-inverse-primary font-bold border-b-2 border-secondary pb-1" href="investment.html">سرمایه‌گذاری و ملک</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface font-medium pb-1 transition-colors duration-200" href="magazine.html">اخبار و تحلیل</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface font-medium pb-1 transition-colors duration-200" data-k-action="post-need" href="index.html#kamcheh-marketplace">ثبت درخواست</a>
+</nav>
+</div>
+<!-- Action Cluster -->
+<div class="flex items-center gap-3">
+<!-- City Selector Button -->
+<button class="hidden md:flex items-center gap-1.5 px-3 py-2 text-label-lg font-label-lg text-on-surface hover:text-secondary hover:bg-surface-container dark:hover:bg-surface-variant rounded-lg transition-colors duration-200 active:scale-95">
+<span class="material-symbols-outlined text-[20px] text-primary" data-icon="location_on">location_on</span>
+<span>انتخاب شهر</span>
+</button>
+<!-- Search Icon Trigger -->
+<button aria-label="جستجو" class="w-10 h-10 flex items-center justify-center rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-200 active:scale-95">
+<span class="material-symbols-outlined text-[22px]" data-icon="search">search</span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant/60 mx-1 hidden sm:block"></div>
+<!-- Auth Button -->
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-container-lowest text-primary border border-outline-variant hover:bg-surface-container hover:text-secondary text-label-lg font-label-lg shadow-sm transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined text-[20px]" data-icon="account_circle">account_circle</span>
+<span class="font-bold">ورود / عضویت</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- HERO SEARCH STRIP (Airbnb-Style Architecture) -->
+<!-- ========================================== -->
+<section class="w-full bg-[#FAFAF7] border-b border-[#E7E2DA] py-8">
+<div class="w-full max-w-[1360px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop">
+<div class="mb-5 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FEF6ED] text-[#8b5000] border border-[#ffdcbe] text-label-sm font-label-sm font-semibold mb-2">
+<span class="material-symbols-outlined text-[15px]" data-icon="verified">verified</span>
+            پروژه‌های بازرسی‌شده و تحت ضمانت حقوقی کمچه
+          </span>
+<h1 class="text-headline-lg font-headline-lg text-[#0c1c30] tracking-tight">سرمایه‌گذاری، مشارکت در ساخت و املاک فاخر</h1>
+</div>
+<div class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant">
+<span class="w-2.5 h-2.5 rounded-full bg-[#2D7A58] animate-pulse"></span>
+<span>۴۲ فرصت ویژه با تحلیل توجیه اقتصادی فعال</span>
+</div>
+</div>
+<!-- Airbnb Styled Floating Search Bar Container -->
+<div class="bg-surface-container-lowest rounded-2xl border border-[#D8D2C5] shadow-[0_4px_20px_rgba(26,41,62,0.06)] p-2 md:p-3">
+<form class="grid grid-cols-1 md:grid-cols-12 items-center divide-y md:divide-y-0 md:divide-x md:divide-x-reverse divide-[#E7E2DA]">
+<!-- Filter 1: Deal Type -->
+<div class="md:col-span-3 px-4 py-2 hover:bg-[#F5F3ED] rounded-xl transition-colors cursor-pointer group">
+<label class="block text-label-sm font-label-sm text-outline font-semibold">مدل سرمایه‌گذاری</label>
+<div class="flex items-center justify-between mt-0.5">
+<span class="text-body-md font-body-md font-semibold text-[#0c1c30]">مشارکت در ساخت</span>
+<span class="material-symbols-outlined text-[18px] text-outline group-hover:text-primary transition-colors" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Filter 2: Area / Location -->
+<div class="md:col-span-3 px-4 py-2 hover:bg-[#F5F3ED] rounded-xl transition-colors cursor-pointer group">
+<label class="block text-label-sm font-label-sm text-outline font-semibold">منطقه و محدوده شهری</label>
+<div class="flex items-center justify-between mt-0.5">
+<span class="text-body-md font-body-md font-semibold text-[#0c1c30]">تهران (منطقه ۱، ۲، ۳)</span>
+<span class="material-symbols-outlined text-[18px] text-outline group-hover:text-primary transition-colors" data-icon="location_searching">location_searching</span>
+</div>
+</div>
+<!-- Filter 3: Budget & Equity -->
+<div class="md:col-span-3 px-4 py-2 hover:bg-[#F5F3ED] rounded-xl transition-colors cursor-pointer group">
+<label class="block text-label-sm font-label-sm text-outline font-semibold">حداقل آورده / ارزش عرصه</label>
+<div class="flex items-center justify-between mt-0.5">
+<span class="text-body-md font-body-md font-semibold text-[#0c1c30]">از ۲۵ تا ۱۰۰ میلیارد تومان</span>
+<span class="material-symbols-outlined text-[18px] text-outline group-hover:text-primary transition-colors" data-icon="tune">tune</span>
+</div>
+</div>
+<!-- Search CTA Button -->
+<div class="md:col-span-3 px-3 py-2 flex items-center justify-between md:justify-end gap-3">
+<button class="hidden xl:flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-[#D8D2C5] text-label-md font-label-md text-on-surface hover:bg-[#F5F3ED] transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="filter_list">filter_list</span>
+<span>فیلترهای فنی</span>
+</button>
+<button class="w-full md:w-auto px-6 py-3 bg-primary hover:bg-[#15427C] text-on-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all" type="submit">
+<span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
+<span>جستجوی فرصت‌ها</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Quick Filter Pills -->
+<div class="flex items-center gap-2 overflow-x-auto pt-4 pb-1 no-scrollbar text-label-sm font-label-sm">
+<button class="px-3.5 py-1.5 rounded-full bg-primary text-on-primary font-medium shrink-0">همه فرصت‌ها</button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-[#D8D2C5] text-on-surface hover:border-primary shrink-0 transition-colors">مشارکت در ساخت مسکونی لوکس</button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-[#D8D2C5] text-on-surface hover:border-primary shrink-0 transition-colors">پیش‌فروش با تضمین تحویل بانکی</button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-[#D8D2C5] text-on-surface hover:border-primary shrink-0 transition-colors">تهاتر مصالح ساختمانی با واحد</button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-[#D8D2C5] text-on-surface hover:border-primary shrink-0 transition-colors">زمین با پروانه ساخت تجاری/اداری</button>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- HERO SHOWCASE: Airbnb 5-Photo Master Grid  -->
+<!-- ========================================== -->
+<main class="w-full max-w-[1360px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-10">
+<!-- Title, Rating, & Quick Actions Bar -->
+<div class="mb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex flex-wrap items-center gap-2.5 mb-1.5">
+<span class="px-2.5 py-0.5 rounded bg-[#EAF2FA] text-[#1E56A0] text-label-sm font-label-sm font-bold border border-[#aac7ff]">مشارکت در ساخت ویژه</span>
+<span class="px-2.5 py-0.5 rounded bg-[#EBF5F0] text-[#2D7A58] text-label-sm font-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="check_circle">check_circle</span>
+            دارای پروانه و دستور نقشه
+          </span>
+<span class="text-body-sm font-body-sm text-outline">کد ملک: KM-4091</span>
+</div>
+<h2 class="text-headline-md font-headline-md text-on-surface font-bold">مجتمع مسکونی باغ‌ایرانی زعفرانیه (فرصت مشارکت در احداث ۱۰ واحد لوکس)</h2>
+<div class="flex items-center gap-4 text-body-sm font-body-sm text-on-surface-variant mt-1">
+<span class="flex items-center gap-1 text-[#8b5000] font-semibold">
+<span class="material-symbols-outlined text-[18px] fill-icon text-[#8b5000]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span>۴.۹۴ اعتبار پروژه</span>
+</span>
+<span>•</span>
+<span class="underline hover:text-primary cursor-pointer">تهران، زعفرانیه، خیابان آصف، کوچه گلستان</span>
+<span>•</span>
+<span class="text-[#2D7A58] font-medium">سند تک‌برگ ۶ دانگ ملکی (آماده انتقال در دفترخانه)</span>
+</div>
+</div>
+<!-- Share / Save CTA -->
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[#D8D2C5] bg-surface-container-lowest text-on-surface text-label-md font-label-md hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="share">share</span>
+<span>اشتراک‌گذاری</span>
+</button>
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[#D8D2C5] bg-surface-container-lowest text-on-surface text-label-md font-label-md hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="bookmark">bookmark</span>
+<span>نشان کردن</span>
+</button>
+</div>
+</div>
+<!-- 5-Grid Showcase Gallery (Airbnb Pattern Adapted for Persian Architecture) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-2.5 rounded-2xl overflow-hidden h-[420px] md:h-[500px] mb-12 shadow-[0_2px_10px_rgba(26,41,62,0.05)] border border-[#E7E2DA]">
+<!-- Primary Main Image (2 cols on md screens) -->
+<div class="md:col-span-2 h-full relative group overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A modern architectural masterwork in northern Tehran featuring warm travertine stone facade, lush landscaped cantilevered balconies, sun-cast dry clay textures, ambient cobalt blue architectural lighting against the golden afternoon sun, high end construction." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi3KUJb_4CQOrpvai4hac_MPckrYyp0jODa3vdUqDkzBkYPCJoOI5LDdtkwWaJejyJ9Dk6ytxWdAm6JFqBoxikjMEqwXHEt9cwc65p34juZXsb_5OQXsbSbzHONivUi6ATY0rdsJOgLCUFeiyXfIQNLi_FCl-6VUH-gq-vg_MgGR7obZVGhi1b5TypMmB6rdCHorPN1kNIebcssYkTMI2cDbrv5jLtz03RCM2dmpgvQd1soO7d01yt"/>
+<div class="absolute bottom-4 right-4 bg-on-surface/80 backdrop-blur-md text-white text-label-sm font-label-sm px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="photo_camera">photo_camera</span>
+<span>نمای اصلی طراحی‌شده و محوطه</span>
+</div>
+</div>
+<!-- Secondary Photo Column 1 (2 stacked images) -->
+<div class="hidden md:flex flex-col gap-2.5 h-full">
+<div class="h-1/2 relative group overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Detailed architectural floor plan rendering and 3D structural model showing modern Iranian apartment layout with generous master suites, floor-to-ceiling double-glazed windows, and refined stone tiling details under bright daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6ToJc-Hnx9sLvnaEODMiQe8bMYbC6YeMKkHtrfWEXtKKYXpJoc2BmJ20dRKpSY6CtAy2rC3sjuHswpUlQqukZDIS2abA8Jsctp_bw1MQZdCPmaAtW1woQV89GqGYLuI8g9183xJnBhl7Qvxla-0uwbhWodAuR3q4tRYujDv8UmObMd0lb0QrHushukHwD8JPHFxTjiZ0EoiexDxQG27_HAiP7rrTQhJmAUzsiWubvQsHkM0woAh4n"/>
+<div class="absolute bottom-2.5 right-2.5 bg-on-surface/75 text-white text-[11px] px-2 py-0.5 rounded">
+            پلان و مقطع معماری
+          </div>
+</div>
+<div class="h-1/2 relative group overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Close-up luxury construction site in Tehran showing heavy rebar structural cages, premium grade steel columns, clean formwork with engineering quality seal and surveyor level equipment in midday sun." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ_WhjSC6FSTw1l6jMqiDWt5LGJkGulLLZHZvNWYZIoSOy392__X9iASRWKQpJgUCCzxCM98KTupKhrDEykRY37nj1HI4V2OJyHHwFNRXk-YEqQrDTQG9dkqlqkw6ne2zwiwZeWShv0urU98se58lB7QG3uYCUsaf2vCtmCfPC6uurmltaJMdCKbxZ8ZT7IQJZ8z1UNOJgozFC6Fe6GPM3Ldl6oaC0Rp57Eu-EvNZvr0xD6JF6JOrX"/>
+<div class="absolute bottom-2.5 right-2.5 bg-on-surface/75 text-white text-[11px] px-2 py-0.5 rounded">
+            متریال سازه‌ای و بتن‌ریزی
+          </div>
+</div>
+</div>
+<!-- Secondary Photo Column 2 (2 stacked images with gallery trigger) -->
+<div class="hidden md:flex flex-col gap-2.5 h-full">
+<div class="h-1/2 relative group overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Interior luxury apartment render showing Persian marble floors, warm oak timber paneling, minimal recessed lighting, and sweeping mountain views of the Alborz range through floor-to-ceiling glass." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6GBzsFc9XpJSZu9gK79_DRFNsTt0A3hborbj5ojBge6WMzsQhwo_wMitIQnwlGsO0Olm0A5fWog-Dvn1bzfVYOgXt6fgVNZVVjFSpJBO4JbuJkQf_4o2c8gzVGrhGtYmc8B_GR_Fcbka9ZpxvegbhNqIzH768lb5DLNNUWG3-gtzCt34dXi1-6Sq3qcp_zTpN-fMrjsUFQEWWZeB2qNbUNucko06yTARHbWyLL5tjtuU1q50HJlmA"/>
+<div class="absolute bottom-2.5 right-2.5 bg-on-surface/75 text-white text-[11px] px-2 py-0.5 rounded">
+            طراحی داخلی و لابی
+          </div>
+</div>
+<div class="h-1/2 relative group overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Detailed civil engineering blueprint document with official engineering stamps, municipal permit stickers, topographic terrain survey map with geotechnical excavation report visible on architect table." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoGlToK0YKlEv9wJrlVU1Sk67mzfChgTEEsFr1fApOTpeXUftsQHprTsxwEhAfwyNpx8kyh-4ZdxrbO5VoXiT9M1nBJwH5bXrc-Cue1Jtvn2M5mQj0vuAoe1hZtVw8XwuBQ6Ga1FRUBS9fNx8p-S2Qb7yhFVK0bGfoRsW4nuix5En4ZMjyMaCiifFCCjXhaywy3ygt4Y0urnKNj-8iAUho8DFKcXcdWONlXcYPGavO27hwkUe38esL"/>
+<!-- Full Gallery Trigger Button inside last picture -->
+<button class="absolute inset-0 bg-primary/40 hover:bg-primary/60 transition-colors flex items-center justify-center text-white flex-col gap-1">
+<span class="material-symbols-outlined text-[28px]" data-icon="grid_view">grid_view</span>
+<span class="text-label-md font-label-md font-bold">مشاهده تمام ۱۸ تصویر و پلان</span>
+</button>
+</div>
+</div>
+</div>
+<!-- ========================================================== -->
+<!-- MAIN CONTENT + STICKY OFFER SIDEBAR (Bento / Airbnb Layout) -->
+<!-- ========================================================== -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- RIGHT COLUMN: Deep Engineering, Legal & Structural Details (8 Cols) -->
+<div class="lg:col-span-8 space-y-10">
+<!-- Key Spec Metrics Bar (Industrial Structural Matrix) -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-[#E7E2DA] shadow-sm grid grid-cols-2 sm:grid-cols-4 gap-6">
+<div class="space-y-1 border-l border-[#E7E2DA] pl-4 last:border-l-0">
+<span class="text-label-sm font-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="pie_chart">pie_chart</span>
+              نسبت سهم مشارکت
+            </span>
+<p class="text-title-lg font-title-lg text-primary font-bold">۵۵٪ سازنده / ۴۵٪ مالک</p>
+<span class="text-[11px] text-on-surface-variant block">با بلاعوض ۱۲ میلیارد تومان</span>
+</div>
+<div class="space-y-1 border-l border-[#E7E2DA] pl-4 last:border-l-0">
+<span class="text-label-sm font-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="square_foot">square_foot</span>
+              مساحت زمین و تراکم
+            </span>
+<p class="text-title-lg font-title-lg text-on-surface font-bold">۸۵۰ م² عرصه</p>
+<span class="text-[11px] text-[#2D7A58] font-medium block">تراکم مصوب: ۵ طبقه مسکونی</span>
+</div>
+<div class="space-y-1 border-l border-[#E7E2DA] pl-4 last:border-l-0">
+<span class="text-label-sm font-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="hourglass_top">hourglass_top</span>
+              پیشرفت فیزیکی
+            </span>
+<p class="text-title-lg font-title-lg text-on-surface font-bold">مرحله گودبرداری</p>
+<span class="text-[11px] text-[#8b5000] font-medium block">نیلینگ و مهار متقابل تکمیل</span>
+</div>
+<div class="space-y-1">
+<span class="text-label-sm font-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="description">description</span>
+              نوع پروانه
+            </span>
+<p class="text-title-lg font-title-lg text-on-surface font-bold">تخریب و نوسازی</p>
+<span class="text-[11px] text-[#2D7A58] font-medium block">عوارض شهرداری تسویه کامل</span>
+</div>
+</div>
+<!-- Kamcheh Verification Seal & Guarantee Accordion -->
+<div class="bg-gradient-to-br from-[#F5F8FC] to-surface-container-low p-6 rounded-2xl border border-[#C2D6EE] relative overflow-hidden">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[28px]" data-icon="gavel">gavel</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-title-lg font-title-lg text-primary font-bold">شناسه ممیزی و تاییدیه حقوقی کمچه (Kamcheh Verified™)</h3>
+<span class="px-2 py-0.5 bg-[#2D7A58] text-white text-[11px] rounded font-semibold">تضمین قطعی</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant mt-1.5 leading-relaxed">
+                این پروژه مراحل ۷ گانه ممیزی حقوقی شامل استعلام ثبتی عدم بازداشت، صحت‌سنجی انحصار وراثت، استعلام تراکم منطقه یک شهرداری، و بررسی صلاحیت فنی مهندس مجری را با موفقیت گذرانده است. کلیه تراکنش‌ها تحت حساب امانی (Escrow) کمچه مدیریت می‌گردد.
+              </p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4 pt-4 border-t border-[#D0E0F3]">
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-[#2D7A58]" data-icon="check_circle">check_circle</span>
+<span>کارشناسی رسمی کانون دادگستری</span>
+</div>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-[#2D7A58]" data-icon="check_circle">check_circle</span>
+<span>سند مادر تک برگ با کد شمس</span>
+</div>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-[#2D7A58]" data-icon="check_circle">check_circle</span>
+<span>تنظیم قرارداد در سامانه خودنویس</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Technical Specification Tabs & Matrix -->
+<div class="space-y-6">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">مشخصات فنی و شرایط عمومی پروژه</h3>
+<div class="bg-surface-container-lowest rounded-2xl border border-[#E7E2DA] overflow-hidden">
+<table class="w-full text-right text-body-md font-body-md">
+<tbody class="divide-y divide-[#E7E2DA]">
+<tr class="hover:bg-[#FAFAF7]">
+<td class="py-3.5 px-6 font-semibold text-outline w-1/3">ابعاد زمین و بر ملک</td>
+<td class="py-3.5 px-6 text-on-surface">طول ۲۵ متر در عرض ۳۴ متر (بر ۳۴ متری شمالی)، اصلاحی کسر شده</td>
+</tr>
+<tr class="hover:bg-[#FAFAF7]">
+<td class="py-3.5 px-6 font-semibold text-outline">زیربنای ناخالص کل</td>
+<td class="py-3.5 px-6 text-on-surface">۴,۲۵۰ مترمربع شامل ۳ طبقه مشاعات و پارکینگ و ۵ طبقه مسکونی</td>
+</tr>
+<tr class="hover:bg-[#FAFAF7]">
+<td class="py-3.5 px-6 font-semibold text-outline">تعداد واحدها و متراژ مفید</td>
+<td class="py-3.5 px-6 text-on-surface">۱۰ واحد مسکونی (۲ واحد در هر طبقه به مساحت‌های ۲۴۰ و ۲۷۰ متر مربع)</td>
+</tr>
+<tr class="hover:bg-[#FAFAF7]">
+<td class="py-3.5 px-6 font-semibold text-outline">اسکلت و سیستم سازه‌ای</td>
+<td class="py-3.5 px-6 text-on-surface">قاب بتن آرمه ویژه با دیوار برشی مطابق آیین‌نامه ۲۸۰۰ ویرایش ۴</td>
+</tr>
+<tr class="hover:bg-[#FAFAF7]">
+<td class="py-3.5 px-6 font-semibold text-outline">مشاعات و امکانات رفاهی</td>
+<td class="py-3.5 px-6 text-on-surface">لابی مجلل با ارتفاع ۶ متر، استخر، سونا، جکوزی، سالن ورزشی و روف‌گاردن ۴ فصل</td>
+</tr>
+<tr class="hover:bg-[#FAFAF7]">
+<td class="py-3.5 px-6 font-semibold text-outline">متریال تعهد شده (پیوست قرارداد)</td>
+<td class="py-3.5 px-6 text-on-surface">سنگ تراورتن عباس‌آباد سوپر، سرامیک‌های اسلب لیسه‌ای، آسانسور ۱۳ نفره Kone فنلاند</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Valuation & ROI Breakdown Chart Bar -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-[#E7E2DA] space-y-4">
+<div class="flex items-center justify-between">
+<h4 class="text-title-lg font-title-lg text-on-surface font-bold">تحلیل اقتصادی و افق سودآوری (گزارش کمیته سرمایه‌گذاری)</h4>
+<span class="text-label-sm font-label-sm text-[#8b5000] font-semibold bg-[#FEF6ED] px-2.5 py-1 rounded">محاسبه در بهار ۱۴۰۳</span>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant">
+            با توجه به قیمت کارشناسی پایه زمین در منطقه (هر متر ۳۲۰ میلیون تومان) و هزینه ساخت برآوردی متری ۶۰ میلیون تومان، نرخ بازده داخلی (IRR) سازنده به شرح زیر تخمین زده می‌شود:
+          </p>
+<div class="space-y-3 pt-2">
+<div>
+<div class="flex justify-between text-label-md font-label-md mb-1">
+<span class="text-on-surface font-semibold">ارزش روز عرصه (آورده مالک): ۲۷۲ میلیارد تومان</span>
+<span class="text-primary font-bold">۵۳٪ از سرمایه کل</span>
+</div>
+<div class="w-full bg-[#E7E2DA] h-2.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 53%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-label-md font-label-md mb-1">
+<span class="text-on-surface font-semibold">هزینه ساخت و بلاعوض (آورده سازنده): ۲۴۰ میلیارد تومان</span>
+<span class="text-secondary font-bold">۴۷٪ از سرمایه کل</span>
+</div>
+<div class="w-full bg-[#E7E2DA] h-2.5 rounded-full overflow-hidden">
+<div class="bg-[#8b5000] h-full rounded-full" style="width: 47%"></div>
+</div>
+</div>
+</div>
+<div class="mt-4 p-4 rounded-xl bg-[#FAFAF7] border border-[#E7E2DA] flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#2D7A58]" data-icon="trending_up">trending_up</span>
+<span class="text-body-sm font-body-sm font-semibold">پیش‌بینی ارزش افزوده پروژه پس از اتمام ۲۴ ماهه:</span>
+</div>
+<span class="text-title-lg font-title-lg text-[#2D7A58] font-bold">+۴۵٪ بازده سالانه خالص</span>
+</div>
+</div>
+<!-- Neighborhood Infrastructure & Logistics -->
+<div class="space-y-4">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">موقعیت و دسترسی‌های کارگاهی</h3>
+<div class="rounded-2xl border border-[#E7E2DA] overflow-hidden relative h-64 bg-[#E7E2DA]">
+<img class="w-full h-full object-cover" data-alt="Detailed satellite and schematic map view of Zafaraniyeh Tehran showing access corridors, wide avenues for heavy construction truck transit, concrete mixer access routes, and nearby highway ramps in crisp clarity." data-location="Tehran" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6Ih3nhtQjz1B0MdnoN9-pmHhuYkkaOr1k8YqwjHc8B21d8RvaP5YZfWsS-rA9xzyv4oyXDl9DOsvPxveaap84i9tpWts6RQSycypj9nasQpnfocC3MVCQZyKAkU2697tDG_TO9GZws9lEz_bp8XWQPfIGlk8bOSnYNklt1UGWRBmvGRj49uYhbrsrC_c-wIccKFwbyLHfqW6wnyjgQQEErJjo3fG9rdzTNbnQ24JzS9ct_4jGbdDH"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent flex items-end p-5">
+<div class="text-white space-y-1">
+<div class="flex items-center gap-2 text-label-md font-label-md">
+<span class="material-symbols-outlined text-[18px]" data-icon="local_shipping">local_shipping</span>
+<span>معبر بدون مانع عبور تریلی بتن‌ریزی و جرثقیل برجی (تاورکرین)</span>
+</div>
+<p class="text-body-sm font-body-sm text-white/90">دسترسی مستقیم از بزرگراه چمران و خیابان ولیعصر بدون ترافیک محلی باریک</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================== -->
+<!-- LEFT COLUMN: Sticky Booking / Investment Offer Sidebar (Airbnb) -->
+<!-- ========================================================== -->
+<aside class="lg:col-span-4 sticky top-28 space-y-4">
+<div class="bg-surface-container-lowest rounded-2xl border border-[#D8D2C5] shadow-[0_10px_30px_rgba(26,41,62,0.08)] p-6 space-y-6">
+<!-- Pricing Header Strip -->
+<div class="flex items-baseline justify-between border-b border-[#E7E2DA] pb-4">
+<div>
+<span class="text-label-sm font-label-sm text-outline block">حداقل نقدینگی مورد نیاز</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="text-headline-md font-headline-md font-bold text-primary">۳۵</span>
+<span class="text-body-md font-body-md text-on-surface font-semibold">میلیارد تومان</span>
+</div>
+</div>
+<div class="text-left">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-[#FEF6ED] text-[#8b5000] text-label-sm font-label-sm font-bold border border-[#ffdcbe]">
+                بازده ۴۵٪ سالانه
+              </span>
+<span class="text-[11px] text-outline block mt-1">تحویل ۲۴ ماهه</span>
+</div>
+</div>
+<!-- Quick Engagement Form (Airbnb Date/Guest selector style) -->
+<div class="rounded-xl border border-[#D8D2C5] overflow-hidden text-right">
+<div class="grid grid-cols-2 divide-x divide-x-reverse divide-[#D8D2C5] bg-white">
+<div class="p-3 hover:bg-[#FAFAF7] cursor-pointer">
+<label class="block text-[11px] font-semibold text-outline">نقش شما در معامله</label>
+<div class="text-body-sm font-body-sm font-bold text-on-surface mt-0.5">سازنده / پیمانکار</div>
+</div>
+<div class="p-3 hover:bg-[#FAFAF7] cursor-pointer">
+<label class="block text-[11px] font-semibold text-outline">ظرفیت سرمایه</label>
+<div class="text-body-sm font-body-sm font-bold text-on-surface mt-0.5">سرمایه کامل یا سهمی</div>
+</div>
+</div>
+<div class="p-3 border-t border-[#D8D2C5] bg-white hover:bg-[#FAFAF7] cursor-pointer">
+<label class="block text-[11px] font-semibold text-outline">نوع پیشنهاد مورد نظر</label>
+<div class="flex items-center justify-between mt-0.5 text-body-sm font-body-sm font-bold text-on-surface">
+<span>پیشنهاد قرارداد مشارکت + بلاعوض</span>
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="unfold_more">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Offer Inputs: Phone & Initial Bid -->
+<div class="space-y-3">
+<div>
+<label class="block text-label-sm font-label-sm text-on-surface font-semibold mb-1">شماره تماس جهت هماهنگی بازدید</label>
+<div class="relative">
+<input class="w-full h-11 px-3 text-left rounded-lg border border-[#D8D2C5] text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-outline" dir="ltr" placeholder="۰۹۱۲ ۰۰۰ ۰۰۰۰" type="tel"/>
+<span class="absolute left-3 top-2.5 text-outline material-symbols-outlined text-[20px]" data-icon="phone_iphone">phone_iphone</span>
+</div>
+</div>
+<div>
+<label class="block text-label-sm font-label-sm text-on-surface font-semibold mb-1">پیشنهاد مبلغ بلاعوض پیشنهادی (تومان)</label>
+<input class="w-full h-11 px-3 rounded-lg border border-[#D8D2C5] text-body-md font-body-md font-bold text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" type="text" value="۱۲,۰۰۰,۰۰۰,۰۰۰"/>
+</div>
+</div>
+<!-- PRIMARY CONVERSION CTA BUTTON -->
+<div class="space-y-2">
+<button class="w-full py-3.5 bg-primary hover:bg-[#15427C] text-white rounded-xl font-label-lg text-label-lg font-bold shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="handshake">handshake</span>
+<span>ثبت پیشنهاد قیمت / جلسه حضوری</span>
+</button>
+<p class="text-center text-[11px] text-outline">ثبت پیشنهاد هیچ تعهد مالی اولیه‌ای ایجاد نمی‌کند</p>
+</div>
+<!-- Financial Breakdown Details -->
+<div class="space-y-2.5 pt-4 border-t border-[#E7E2DA] text-body-sm font-body-sm">
+<div class="flex justify-between text-on-surface-variant">
+<span>کارمزد قرارداد نظارتی کمچه</span>
+<span class="font-medium">۱٪ (پس از امضای نهایی)</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>هزینه استعلامات ثبتی و حقوقی</span>
+<span class="text-[#2D7A58] font-bold">رایگان (تعهد کمچه)</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>مشاوره و ارزیابی ژئوتکنیک</span>
+<span class="text-[#2D7A58] font-bold">تکمیل شده</span>
+</div>
+<div class="flex justify-between text-on-surface pt-2 border-t border-[#E7E2DA] font-bold">
+<span>سپرده حسن انجام تعهدات بانکی</span>
+<span class="text-primary font-bold">ضمانت‌نامه معتبر بانکی</span>
+</div>
+</div>
+<!-- Broker / Project Supervisor Badge -->
+<div class="pt-4 border-t border-[#E7E2DA] flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-[#D8D2C5] shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Professional Iranian senior civil engineer and certified real estate appraiser wearing hard hat and dark navy blazer on modern construction site, warm respectful confident expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7azRnnNeHEnuMxNIyKFRA2iZ93cMfsX48sRkc9g5a1-h8yiK3OqbrxiVwEkwU3DlA6fcDL_0kpDIQ4EIQIrrzpVrVa39uW8TCdnyRhXftvpPRAfn3QvtLlJOCuQSoLpoulRX_a4VgiKP0Y01MrfssRBst2pRvNmNhVol71JYODAyZXL4FShVW487LOSzdlTbtIX6qLbr0Rb1UWuHFri2C8edzalmKEMluXGlL21Bcxj1H2TMoqgFq"/>
+</div>
+<div class="space-y-0.5">
+<div class="flex items-center gap-1.5">
+<span class="text-title-md font-title-md font-bold text-on-surface">مهندس علیرضا کیهان</span>
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="verified_user">verified_user</span>
+</div>
+<p class="text-[12px] text-outline">سرپرست تخصصی پرونده‌های منطقه ۱ تهران</p>
+</div>
+</div>
+</div>
+<!-- Trust Mini Banner -->
+<div class="bg-[#FEF6ED] rounded-xl p-4 border border-[#ffdcbe] flex items-start gap-3">
+<span class="material-symbols-outlined text-[#8b5000] text-[22px] shrink-0 mt-0.5" data-icon="security">security</span>
+<div class="text-body-sm font-body-sm text-[#703f00]">
+<p class="font-bold">پوشش بیمه مسئولیت مدنی و عیوب اساسی سازه</p>
+<p class="text-[11px] mt-0.5 leading-relaxed text-[#8b5000]">کلیه پروژه‌های مشارکتی کمچه تا ۱۰ سال پس از پایان‌کار تحت پوشش بیمه تضمین کیفیت سازه می‌باشند.</p>
+</div>
+</div>
+</aside>
+</div>
+<!-- ========================================================== -->
+<!-- SIMILAR OPPORTUNITIES (Airbnb-Style Card Carousel Grid)     -->
+<!-- ========================================================== -->
+<section class="mt-20 pt-10 border-t border-[#E7E2DA]">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<span class="text-label-sm font-label-sm text-primary font-bold tracking-wider block mb-1">فرصت‌های تایید‌شده</span>
+<h3 class="text-headline-md font-headline-md text-on-surface font-bold">سایر پروژه‌های برجسته مشارکت و سرمایه‌گذاری</h3>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="قبلی" class="w-10 h-10 rounded-full border border-[#D8D2C5] bg-surface-container-lowest flex items-center justify-center hover:bg-[#F5F3ED] transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+<button aria-label="بعدی" class="w-10 h-10 rounded-full border border-[#D8D2C5] bg-surface-container-lowest flex items-center justify-center hover:bg-[#F5F3ED] transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+</div>
+</div>
+<!-- Cards Grid (Airbnb Visual Standard with Persian Contracting Specifics) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- CARD 1 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-[#E7E2DA] overflow-hidden hover:shadow-[0_8px_24px_rgba(26,41,62,0.08)] hover:border-[#D8D2C5] transition-all group">
+<div class="relative h-60 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Modern Iranian architectural villa-apartment project in Shahrak-e Gharb Tehran with limestone facade, expansive cantilevered terraces, floor to ceiling glass, sunlit landscaped courtyard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPv7USv5Ep7H_A1KJFWRaztar5mHp2XkgIcjFIYYZVG62HIN0wjfqJ8_ZrniUiLs--6CqfdNqVAQXrtV6NfqiY4arz4ZbqgoGola3mdLvNebJacGHE3g133VgLAr3k08RcD1FKV3A0x1qN39OHsASesQR1yvP9LRdXXJkMw1BJjFmMyvFqNaJvF4rlBUftmnlyCEdV3tRyZbOg7HoYBpRVw0pry-EAU43pe8iqe6YofLJqO10bwy2p"/>
+<div class="absolute top-3 right-3 flex flex-wrap gap-1.5">
+<span class="px-2.5 py-1 rounded-md bg-on-surface/85 backdrop-blur-md text-white text-[11px] font-medium">آماده کلنگ‌زنی</span>
+<span class="px-2.5 py-1 rounded-md bg-[#2D7A58] text-white text-[11px] font-medium">دارای پروانه</span>
+</div>
+<button aria-label="علاقه‌مندی" class="absolute top-3 left-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center text-outline hover:text-[#BD3929] transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="p-5 space-y-3">
+<div class="flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>تهران، شهرک غرب (فاز ۳)</span>
+<span class="text-[#8b5000] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] fill-icon text-[#8b5000]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+                ۴.۹
+              </span>
+</div>
+<h4 class="text-title-lg font-title-lg text-on-surface font-bold group-hover:text-primary transition-colors">مشارکت در احداث مجتمع ۶ واحدی ویلایی</h4>
+<div class="flex items-center gap-4 text-body-sm font-body-sm text-on-surface-variant py-1 border-y border-[#E7E2DA]">
+<span>۶۰۰ متر عرصه</span>
+<span>•</span>
+<span>سهم ۵۰ / ۵۰</span>
+<span>•</span>
+<span class="text-[#2D7A58] font-bold">بازدهی ۴۲٪</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div>
+<span class="text-[11px] text-outline block">حداقل نقدینگی</span>
+<span class="text-title-md font-title-md text-primary font-bold">۲۲ میلیارد تومان</span>
+</div>
+<button class="px-4 py-2 bg-surface-container hover:bg-primary hover:text-white text-primary text-label-md font-label-md font-semibold rounded-lg transition-colors">
+                مشاهده پرونده
+              </button>
+</div>
+</div>
+</div>
+<!-- CARD 2 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-[#E7E2DA] overflow-hidden hover:shadow-[0_8px_24px_rgba(26,41,62,0.08)] hover:border-[#D8D2C5] transition-all group">
+<div class="relative h-60 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Under construction luxury residential high-rise building in Saadat Abad Tehran showing refined contemporary architectural lines with dark steel mullions, bronze finished panels and warm sunset sky." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvuRJYCMcwGgwrH5Jw77JJ0Jn5yTchOfBJNrYvSBCIgBQciO3TaS0ov4Bd_xaXbX4C-MCIbRe4xpNQDea9zEpceMTZc4_jislGh8K4NDKbW83NAQJdgbjojhlZvCsdDaxnmiGShM8KPVteQMW9oLY0TPDMFWAfCYZSyzJo6ACx7t3y2dlnOTp6UQlV_KyFcYH0vN1SP7PqZ9bGDcGO5mQ3WePXUkX6EzVLvdmQK8I0WEwjBD2LIFVa"/>
+<div class="absolute top-3 right-3 flex flex-wrap gap-1.5">
+<span class="px-2.5 py-1 rounded-md bg-[#1E56A0] text-white text-[11px] font-medium">پیش‌فروش تضمینی</span>
+<span class="px-2.5 py-1 rounded-md bg-[#FEF6ED] text-[#8b5000] text-[11px] font-medium">تضمین بانکی</span>
+</div>
+<button aria-label="علاقه‌مندی" class="absolute top-3 left-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center text-outline hover:text-[#BD3929] transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="p-5 space-y-3">
+<div class="flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>تهران، سعادت‌آباد (میدان کاج)</span>
+<span class="text-[#8b5000] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] fill-icon text-[#8b5000]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+                ۴.۹۸
+              </span>
+</div>
+<h4 class="text-title-lg font-title-lg text-on-surface font-bold group-hover:text-primary transition-colors">برج‌باغ سپهر (پیش‌فروش قطعی ۳ واحد ۱۸۰ متری)</h4>
+<div class="flex items-center gap-4 text-body-sm font-body-sm text-on-surface-variant py-1 border-y border-[#E7E2DA]">
+<span>پیشرفت ۶۵٪</span>
+<span>•</span>
+<span>تحویل ۱۴ ماهه</span>
+<span>•</span>
+<span class="text-[#2D7A58] font-bold">سود تضمین‌شده ۳۸٪</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div>
+<span class="text-[11px] text-outline block">قیمت متری</span>
+<span class="text-title-md font-title-md text-primary font-bold">۱۷۵ میلیون تومان</span>
+</div>
+<button class="px-4 py-2 bg-surface-container hover:bg-primary hover:text-white text-primary text-label-md font-label-md font-semibold rounded-lg transition-colors">
+                مشاهده پرونده
+              </button>
+</div>
+</div>
+</div>
+<!-- CARD 3 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-[#E7E2DA] overflow-hidden hover:shadow-[0_8px_24px_rgba(26,41,62,0.08)] hover:border-[#D8D2C5] transition-all group">
+<div class="relative h-60 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Commercial and administrative prime development plot in Pasdaran Tehran with approved zoning blueprint overlays and street level perspective under warm clear afternoon sunlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWRZ9Thsa_s9PPsAA1DkFs2fbeNGr5i4nwrG0OxgVXQg7cuRpod8lHG5yMf9UsqwGgKj_abdWpeKDt8amQVXJgVCw3259nH_ybw80jXdcn3j2axqskobYfG136Op05biyrr49zGxxLII1ScsJht92CDZhD4eO0eHOBDbkQ3EJuIG6tM2Y9w6OoCZNYgfV2qf3ZGBX9IQuS4qahUbANViYIM9T5z2rr7K2tHL5MXPQYbOZBIFeEcgO1"/>
+<div class="absolute top-3 right-3 flex flex-wrap gap-1.5">
+<span class="px-2.5 py-1 rounded-md bg-[#8b5000] text-white text-[11px] font-medium">تهاتر با مصالح پایه‌کار</span>
+<span class="px-2.5 py-1 rounded-md bg-[#EBF5F0] text-[#2D7A58] text-[11px] font-medium">سند تجاری</span>
+</div>
+<button aria-label="علاقه‌مندی" class="absolute top-3 left-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center text-outline hover:text-[#BD3929] transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="p-5 space-y-3">
+<div class="flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>تهران، پاسداران (خیابان پایدارفرد)</span>
+<span class="text-[#8b5000] font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] fill-icon text-[#8b5000]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+                ۴.۸۸
+              </span>
+</div>
+<h4 class="text-title-lg font-title-lg text-on-surface font-bold group-hover:text-primary transition-colors">زمین ۱,۱۰۰ متری با دستور نقشه اداری/تجاری</h4>
+<div class="flex items-center gap-4 text-body-sm font-body-sm text-on-surface-variant py-1 border-y border-[#E7E2DA]">
+<span>تراکم ۳۵۰٪</span>
+<span>•</span>
+<span>تهاتر میلگرد/سیمان</span>
+<span>•</span>
+<span class="text-[#2D7A58] font-bold">ارزش افزوده بالا</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div>
+<span class="text-[11px] text-outline block">ارزش پایه زمین</span>
+<span class="text-title-md font-title-md text-primary font-bold">۳۴۰ میلیارد تومان</span>
+</div>
+<button class="px-4 py-2 bg-surface-container hover:bg-primary hover:text-white text-primary text-label-md font-label-md font-semibold rounded-lg transition-colors">
+                مشاهده پرونده
+              </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- ========================================== -->
+<!-- SHARED COMPONENT: Footer (Web Footer)      -->
+<!-- ========================================== -->
+<footer class="bg-surface-container-low dark:bg-inverse-surface border-t border-outline-variant dark:border-outline docked full-width mt-20">
+<div class="w-full max-w-[1360px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-12 rtl">
+<!-- Top Grid of Links and Trust Seals -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-10">
+<!-- Brand Info -->
+<div class="lg:col-span-2 space-y-4">
+<span class="text-headline-sm font-headline-sm font-bold text-primary dark:text-inverse-primary block">
+            کمچه | بازار آنلاین ساخت و ساز
+          </span>
+<p class="text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant max-w-sm leading-relaxed">
+            سامانه تخصصی تامین مصالح ساختمانی، مناقصات پیمانکاری و سرمایه‌گذاری ملکی در ایران. ایجاد شفافیت معاملاتی و امنیت حقوقی برای مهندسان، سازندگان و سرمایه‌گذاران.
+          </p>
+<div class="flex items-center gap-3 pt-2">
+<span class="p-2 rounded-lg bg-surface-container-lowest text-primary border border-outline-variant text-label-sm font-label-sm font-semibold">پشتیبانی معاملات: ۰۲۱-۸۸۹۹۰۰۲۲</span>
+</div>
+</div>
+<!-- Links Column 1 -->
+<div class="space-y-3">
+<h5 class="text-title-lg font-title-lg text-primary dark:text-inverse-primary font-bold">دسترسی‌های سریع</h5>
+<ul class="space-y-2 text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant">
+<li><a class="hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-all duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">درباره ما</a></li>
+<li><a class="hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-all duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">قوانین و مقررات</a></li>
+<li><a class="hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-all duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">انجمن‌های صنفی و سندیکاها</a></li>
+</ul>
+</div>
+<!-- Links Column 2 -->
+<div class="space-y-3">
+<h5 class="text-title-lg font-title-lg text-primary dark:text-inverse-primary font-bold">استعلام و راهنما</h5>
+<ul class="space-y-2 text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant">
+<li><a class="hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-all duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">استعلام اصالت پروانه مهندسی</a></li>
+<li><a class="hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-all duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">راهنمای جامع مناقصات</a></li>
+<li><a class="hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-all duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">پشتیبانی و تماس با مرکز</a></li>
+</ul>
+</div>
+<!-- Certifications & Verification Strip -->
+<div class="space-y-3">
+<h5 class="text-title-lg font-title-lg text-primary dark:text-inverse-primary font-bold">مجوزها و اعتبارنامه</h5>
+<div class="grid grid-cols-2 gap-2 text-[11px] text-on-surface-variant">
+<div class="p-3 bg-surface-container-lowest rounded-lg border border-outline-variant flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-primary text-[24px] mb-1" data-icon="policy">policy</span>
+<span>عضو سندیکای شرکت‌های ساختمانی</span>
+</div>
+<div class="p-3 bg-surface-container-lowest rounded-lg border border-outline-variant flex flex-col items-center justify-center text-center">
+<span class="material-symbols-outlined text-primary text-[24px] mb-1" data-icon="verified">verified</span>
+<span>دارای نماد اعتماد الکترونیک</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Copyright Bottom Bar -->
+<div class="pt-8 border-t border-outline-variant/60 dark:border-outline flex flex-col md:flex-row items-center justify-between text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant gap-4">
+<p>تمامی حقوق مادی و معنوی متعلق به بازار آنلاین ساخت و ساز کمچه می‌باشد © ۱۴۰۳</p>
+<div class="flex items-center gap-6 text-label-md font-label-md">
+<a class="hover:text-secondary dark:hover:text-secondary-fixed-dim" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">حفظ حریم خصوصی</a>
+<a class="hover:text-secondary dark:hover:text-secondary-fixed-dim" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">شرایط حساب امانی</a>
+<a class="hover:text-secondary dark:hover:text-secondary-fixed-dim" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">نقشه سایت</a>
+</div>
+</div>
+</div>
+</footer>
+<div class="k-site-footer">کمچه: وب دسکتاپ با طراحی Stitch | نسخه نصب‌شدنی Android با Flutter</div><div aria-live="polite" class="k-toast" id="k-toast" role="status"></div>
+<dialog class="k-dialog" id="k-dialog"><form id="k-form" method="dialog"><button aria-label="بستن" class="k-close" data-k-action="close" type="button">×</button><div id="k-form-content"></div></form></dialog>
+<script src="assets/config.js"></script><script src="assets/kamcheh.js" type="module"></script></body></html>
