@@ -27,11 +27,6 @@ extension AccountHomeUi on _AppShellState {
                     TextButton(
                         onPressed: enterSampleAccount,
                         child: const Text('مشاهده حساب نمونه')),
-                    const SizedBox(height: 12),
-                    OutlinedButton.icon(
-                        onPressed: () => go('squaring'),
-                        icon: const Icon(Icons.square_foot_outlined),
-                        label: const Text('گونیا سازی · ابزار کارگاهی')),
                     const Spacer(),
                     TextButton.icon(
                         onPressed: () => go('rules'),
@@ -147,36 +142,20 @@ extension AccountHomeUi on _AppShellState {
                   ]),
                   const SizedBox(height: 8),
                   Row(children: [
+                    action(Icons.calculate_outlined, 'ماشین حساب مصالح',
+                        () => go('estimate')),
+                    const SizedBox(width: 8),
+                    action(Icons.square_foot_outlined, 'گونیا سازی',
+                        () => go('squaring'))
+                  ]),
+                  const SizedBox(height: 8),
+                  Row(children: [
                     action(Icons.flag_outlined, 'گزارش‌های من',
                         () => go('reports')),
                     const SizedBox(width: 8),
                     action(Icons.switch_account_outlined, 'حساب‌های نمونه',
                         switchDemoAccount)
                   ]),
-                  const SizedBox(height: 14),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 8),
-                    child: Text('ابزارهای کارگاهی',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                  ),
-                  Material(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(color: line),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: ListTile(
-                      dense: true,
-                      onTap: () => go('squaring'),
-                      leading: const Icon(Icons.square_foot_outlined, color: red),
-                      title: const Text('گونیا سازی',
-                          style: TextStyle(fontWeight: FontWeight.w700)),
-                      subtitle: const Text('محاسبه وتر از دو ضلع به سانتی‌متر'),
-                      trailing: const Icon(Icons.chevron_left),
-                    ),
-                  ),
-                  const SizedBox(height: 14),
                   const Divider(height: 12),
                   Row(children: [
                     Expanded(
