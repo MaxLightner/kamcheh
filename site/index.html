@@ -1,979 +1,110 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="کمچه، بازار متخصصان، اکیپ‌ها و درخواست‌های اجرای ساختمان">
+  <title>کمچه | متخصصان و پروژه‌های ساختمانی</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="assets/kamcheh.css">
+  <script src="assets/config.js" defer></script>
+  <script src="assets/demo-data.js" defer></script>
+  <script src="assets/kamcheh.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#marketplace">رفتن به آگهی‌ها</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html" aria-label="صفحه اصلی کمچه">
+        <span class="brand-icon" aria-hidden="true"><span class="material-icons-outlined">construction</span></span>
+        <span class="brand-title"><strong>کمچه</strong><small>بازار اجرای ساختمان</small></span>
+      </a>
+      <nav class="top-nav" aria-label="منوی اصلی">
+        <a class="nav-active" href="index.html">بازار متخصصان</a>
+        <a href="#marketplace" data-k-switch="needs">درخواست‌های کار</a>
+        <a href="gallery.html">نمونه‌کارها</a>
+        <a href="magazine.html">مجله</a>
+      </nav>
+      <div class="header-actions">
+        <a class="app-link" href="app/" title="نسخه Flutter کمچه">نسخه اپ <span class="material-icons-outlined">open_in_new</span></a>
+        <button class="btn btn-text" type="button" data-k-action="account"><span class="material-icons-outlined">person_outline</span><span>ورود</span></button>
+        <button class="btn btn-primary header-create" type="button" data-k-action="post-need"><span class="material-icons-outlined">add</span>ثبت درخواست</button>
+      </div>
+    </div>
+  </header>
 
-<html dir="rtl" lang="fa"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>کمچه | بازار تخصصی استادکاران، اکیپ‌ها و پروژه‌های ساختمانی</title>
-<!-- Google Font: Vazirmatn Persian Typography -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<!-- Material Symbols Outlined -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-<!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script>
-  tailwind.config = {
-    darkMode: "class",
-    theme: {
-      extend: {
-        fontFamily: {
-          sans: ['Vazirmatn', 'system-ui', '-apple-system', 'sans-serif'],
-        },
-        colors: {
-          brand: {
-            50: '#eff6ff',
-            100: '#dbeafe',
-            500: '#2866c0',
-            600: '#1d54a6',
-            700: '#144186',
-            800: '#0f336a',
-            900: '#0a234b',
-          }
-        },
-        boxShadow: {
-          'subtle': '0 1px 2px 0 rgba(15, 23, 42, 0.05)',
-          'card': '0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.06)',
-          'card-hover': '0 10px 20px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04)',
-        }
-      }
-    }
-  }
-</script>
-<style>
-  body {
-    font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
-    letter-spacing: -0.015em;
-  }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    vertical-align: middle;
-  }
-  .material-symbols-fill {
-    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  }
-</style>
-<link href="assets/kamcheh.css" rel="stylesheet"/></head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen selection:bg-brand-100 selection:text-brand-700"><div class="k-demo-label" role="note">بخش‌های نمونه این طراحی هنوز داده واقعی نیستند. آگهی‌ها و درخواست‌های واقعی در بخش «بازار واقعی کمچه» نمایش داده می‌شوند.</div>
-<!-- ========================================================================= -->
-<!-- 1. HEADER (High-end Sticky Navigation)                                    -->
-<!-- ========================================================================= -->
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex items-center justify-between h-18">
-<!-- Right: Logo & Primary Navigation Links -->
-<div class="flex items-center gap-8">
-<!-- Logo -->
-<a class="flex items-center gap-3 group" href="index.html">
-<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
-<span class="material-symbols-outlined text-[24px]">construction</span>
-</div>
-<div class="flex flex-col">
-<div class="flex items-center gap-1.5">
-<span class="text-xl font-black text-slate-900 tracking-tight">کَمچه</span>
-<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-brand-50 text-brand-600 border border-brand-200">مشهد</span>
-</div>
-<span class="text-[11px] font-medium text-slate-500 -mt-0.5">بازار تخصصی استادکاران و ساخت‌وساز</span>
-</div>
-</a>
-<!-- Desktop Navigation -->
-<nav class="hidden lg:flex items-center gap-1 text-sm font-medium">
-<a class="px-3.5 py-2 rounded-lg text-brand-600 bg-brand-50/80 font-bold flex items-center gap-1.5" href="index.html#kamcheh-services">
-<span class="material-symbols-outlined text-[19px]">engineering</span>
-<span>متخصصان و اکیپ‌ها</span>
-</a>
-<a class="px-3.5 py-2 rounded-lg text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition-colors flex items-center gap-1.5" href="index.html#kamcheh-requests">
-<span class="material-symbols-outlined text-[19px]">assignment</span>
-<span>درخواست‌های کار</span>
-</a>
-<a class="px-3.5 py-2 rounded-lg text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-            استعلام آنلاین قیمت
-          </a>
-<a class="px-3.5 py-2 rounded-lg text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition-colors" href="magazine.html">
-            راهنمای سازندگان
-          </a>
-</nav>
-</div>
-<!-- Left: City Selector, Action Icons & CTA Button -->
-<div class="flex items-center gap-2.5 sm:gap-3">
-<!-- City Selector Dropdown -->
-<button class="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition-colors">
-<span class="material-symbols-outlined text-brand-600 text-[18px]">location_on</span>
-<span>مشهد</span>
-<span class="material-symbols-outlined text-slate-400 text-[18px]">expand_more</span>
-</button>
-<!-- Quick Notifications / Messages -->
-<div class="hidden sm:flex items-center gap-1 border-x border-slate-200 px-2">
-<button class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition-colors relative" title="نشان‌شده‌ها">
-<span class="material-symbols-outlined text-[20px]">bookmark</span>
-<span class="w-2 h-2 rounded-full bg-amber-500 absolute top-2 left-2 ring-2 ring-white"></span>
-</button>
-<button class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition-colors relative" title="پیام‌ها و مذاکرات">
-<span class="material-symbols-outlined text-[20px]">chat</span>
-<span class="w-2 h-2 rounded-full bg-brand-500 absolute top-2 left-2 ring-2 ring-white"></span>
-</button>
-</div>
-<!-- Contractor Portal Button -->
-<a class="hidden md:flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-brand-600 rounded-lg hover:bg-slate-100 transition-colors" data-k-action="account" href="#">
-<div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-slate-600">
-<span class="material-symbols-outlined text-[16px]">person</span>
-</div>
-<span>داشبورد پیمانکار</span>
-</a>
-<!-- Primary CTA: Post Job Request -->
-<a class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white font-semibold text-xs sm:text-sm shadow-sm hover:shadow transition-all duration-150" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span class="material-symbols-outlined text-[19px]">add_circle</span>
-<span>ثبت رایگان درخواست</span>
-</a>
-</div>
-</div>
-</div>
-</header>
-<!-- ========================================================================= -->
-<!-- 2. HERO SEARCH SECTION (Polished & Focused Utilitarian Banner)            -->
-<!-- ========================================================================= -->
-<section class="bg-gradient-to-b from-slate-100/90 via-slate-50 to-slate-50 border-b border-slate-200/80 pt-8 pb-7 px-4 sm:px-6 lg:px-8">
-<div class="max-w-7xl mx-auto flex flex-col gap-6">
-<!-- Top Headline & Trust Badge -->
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-<div class="space-y-2">
-<div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white border border-brand-200 text-brand-700 shadow-xs">
-<span class="material-symbols-outlined text-brand-600 text-[16px] material-symbols-fill">verified</span>
-<span class="text-xs font-bold">نسخه آزمایشی بازار تخصصی ساخت‌وساز خراسان</span>
-</div>
-<h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
-          بازار تخصصی استادکاران، اکیپ‌ها و پروژه‌های ساختمانی
-        </h1>
-<p class="text-xs sm:text-sm text-slate-500">
-          استعلام قیمت، بررسی سوابق فنی، مشاهده نمونه‌کار واقعی و عقد قرارداد بدون واسطه
-        </p>
-</div>
-<!-- Real-time Metrics Pill -->
-<div class="flex items-center gap-4 bg-white border border-slate-200/90 px-4 py-2.5 rounded-xl text-xs text-slate-600 shadow-xs self-start md:self-auto">
-<div class="flex items-center gap-1.5">
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-<span class="font-bold text-slate-900">—</span>
-<span class="text-slate-500">متخصص فعال</span>
-</div>
-<span class="text-slate-300">|</span>
-<div class="flex items-center gap-1.5">
-<span class="font-bold text-slate-900">—</span>
-<span class="text-slate-500">پروژه جاری</span>
-</div>
-<span class="text-slate-300">|</span>
-<div class="flex items-center gap-1 text-brand-600 font-semibold">
-<span class="material-symbols-outlined text-[16px]">security</span>
-<span>ارتباط مستقیم</span>
-</div>
-</div>
-</div>
-<!-- Integrated Search Bar -->
-<div class="bg-white p-2 sm:p-2.5 rounded-2xl border border-slate-200 shadow-card flex flex-col md:flex-row items-stretch gap-2">
-<!-- Search Input -->
-<div class="flex-1 flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-slate-50/80 border border-slate-200 focus-within:border-brand-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-100 transition-all">
-<span class="material-symbols-outlined text-slate-400 text-[22px]">search</span>
-<input class="w-full bg-transparent border-0 p-0 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none" placeholder="جستجوی تخصص یا نام استادکار (مثلاً: قالب‌بندی بتنی، سنگ‌کاری اسلب، لوله‌کش، کناف...)" type="text"/>
-</div>
-<!-- District Selector -->
-<div class="md:w-72 flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-slate-50/80 border border-slate-200 focus-within:border-brand-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-100 transition-all">
-<span class="material-symbols-outlined text-slate-400 text-[20px]">location_city</span>
-<select class="w-full bg-transparent border-0 p-0 text-xs sm:text-sm text-slate-700 font-medium focus:ring-0 focus:outline-none cursor-pointer">
-<option>مشهد: همه مناطق (الهیه، وکیل‌آباد، سجاد...)</option>
-<option>منطقه ۱ (سجاد، احمدآباد، فلسطین)</option>
-<option>منطقه ۹ و ۱۱ (وکیل‌آباد، هاشمیه، هنرستان)</option>
-<option>منطقه ۱۲ (الهیه، قاسم‌آباد، مجیدیه)</option>
-<option>حومه، شاندیز و طرقبه (باغ ویلا)</option>
-</select>
-</div>
-<!-- Search CTA Button -->
-<button class="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white font-bold text-sm shadow-sm transition-all duration-150">
-<span class="material-symbols-outlined text-[20px]">search</span>
-<span>یافتن متخصص</span>
-</button>
-</div>
-<!-- Quick Trade Categories Bar -->
-<div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
-<span class="text-xs font-bold text-slate-400 shrink-0 ml-1">تخصص‌های پرتقاضا:</span>
-<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-xs font-semibold text-slate-700 hover:text-brand-700 transition-all shrink-0 shadow-subtle" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span class="material-symbols-outlined text-brand-600 text-[17px]">foundation</span>
-<span>سفت‌کاری و بتن‌ریزی</span>
-</a>
-<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-xs font-semibold text-slate-700 hover:text-brand-700 transition-all shrink-0 shadow-subtle" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span class="material-symbols-outlined text-brand-600 text-[17px]">grid_view</span>
-<span>کاشی و سرامیک اسلب</span>
-</a>
-<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-xs font-semibold text-slate-700 hover:text-brand-700 transition-all shrink-0 shadow-subtle" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span class="material-symbols-outlined text-brand-600 text-[17px]">plumbing</span>
-<span>تاسیسات و لوله‌کشی</span>
-</a>
-<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-xs font-semibold text-slate-700 hover:text-brand-700 transition-all shrink-0 shadow-subtle" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span class="material-symbols-outlined text-brand-600 text-[17px]">format_paint</span>
-<span>گچ‌کاری و کناف</span>
-</a>
-<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-xs font-semibold text-slate-700 hover:text-brand-700 transition-all shrink-0 shadow-subtle" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span class="material-symbols-outlined text-brand-600 text-[17px]">bolt</span>
-<span>برق و هوشمندسازی</span>
-</a>
-<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-xs font-semibold text-slate-700 hover:text-brand-700 transition-all shrink-0 shadow-subtle" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span class="material-symbols-outlined text-brand-600 text-[17px]">apartment</span>
-<span>سنگ‌کاری و نما</span>
-</a>
-<a class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-xs font-semibold text-slate-700 hover:text-brand-700 transition-all shrink-0 shadow-subtle" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span class="material-symbols-outlined text-brand-600 text-[17px]">hardware</span>
-<span>جوشکاری و اسکلت فلزی</span>
-</a>
-</div>
-</div>
-</section>
-<!-- ========================================================================= -->
-<!-- 3. SEGMENTED MARKETPLACE TABS SWITCHER                                    -->
-<!-- ========================================================================= -->
-<section class="bg-white border-b border-slate-200 sticky top-18 z-40">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-2 py-2">
-<!-- Active Tab: Specialists -->
-<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-50 text-brand-700 font-bold text-sm border border-brand-200 transition-all shadow-subtle">
-<span class="material-symbols-outlined text-[20px]">engineering</span>
-<span>متخصصان و اکیپ‌های اجرایی</span>
-<span class="px-2 py-0.5 rounded-full bg-brand-500 text-white text-[11px] font-bold">—</span>
-</button>
-<!-- Inactive Tab: Job Requests -->
-<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold text-sm transition-all">
-<span class="material-symbols-outlined text-[20px]">assignment</span>
-<span>پروژه‌ها و آگهی‌های کار</span>
-<span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 text-[11px] font-bold">—</span>
-</button>
-</div>
-<!-- View & Quick Meta -->
-<div class="hidden sm:flex items-center gap-2 text-xs text-slate-500 font-medium">
-<span class="flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-<span>به‌روزرسانی لحظه‌ای کارگاه‌های مشهد</span>
-</span>
-</div>
-</div>
-</div>
-</section>
-<!-- ========================================================================= -->
-<!-- 4. MAIN DUAL-COLUMN MARKETPLACE CONTENT                                   -->
-<!-- ========================================================================= -->
-<section aria-label="بازار آنلاین کمچه" class="kamcheh-marketplace max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-7" id="kamcheh-marketplace">
-<div class="k-heading"><div><div class="k-overline">داده‌های مشترک وب و اپلیکیشن</div><h2>بازار واقعی کمچه</h2><p id="k-status" role="status">وضعیت اتصال در حال بررسی است…</p></div><div class="k-actions"><button class="k-primary" data-k-action="post-need">ثبت درخواست کار</button><button class="k-outline" data-k-action="post-service">معرفی خدمات</button></div></div>
-<div class="k-tabs" role="tablist"><button aria-selected="true" class="k-active" data-k-tab="services" role="tab">آگهی متخصصان و اکیپ‌ها</button><button aria-selected="false" data-k-tab="needs" role="tab">درخواست‌های کار</button></div>
-<div class="k-filter"><input aria-label="جستجو" id="k-search" placeholder="جستجو در آگهی‌ها و پروژه‌های واقعی…" type="search"/><select aria-label="شهر" id="k-city"><option value="">همه شهرها</option><option>مشهد</option><option>طرقبه</option><option>شاندیز</option><option>گلبهار</option><option>چناران</option></select><button class="k-outline" id="k-reload" type="button">به‌روزرسانی</button></div>
-<div aria-live="polite" class="k-results" id="kamcheh-services"></div><div aria-live="polite" class="k-results" hidden="" id="kamcheh-requests"></div>
-<p class="k-caption">اطلاعات این بخش فقط از پایگاه داده مشترک دریافت می‌شود. داده‌های نمونه Stitch پایین این بخش، واقعی نیستند.</p>
-</section><main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-<div class="flex flex-col lg:flex-row gap-8 items-start">
-<!-- ===================================================================== -->
-<!-- 4A. RIGHT SIDEBAR FILTERS (Sticky, High Usability)                    -->
-<!-- ===================================================================== -->
-<aside class="w-full lg:w-72 shrink-0 bg-white border border-slate-200 rounded-2xl p-5 shadow-card flex flex-col gap-6 lg:sticky lg:top-36">
-<!-- Filter Top Header -->
-<div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
-<div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
-<span class="material-symbols-outlined text-brand-600 text-[20px]">tune</span>
-<span>فیلترهای تخصصی</span>
-</div>
-<button class="text-xs text-brand-600 hover:text-brand-800 font-semibold hover:underline">
-          پاک‌کردن همه
-        </button>
-</div>
-<!-- Quick Toggle: Ready Today -->
-<div class="p-3.5 rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-50/50 border border-emerald-200/80 flex items-center justify-between">
-<div class="flex flex-col">
-<span class="text-xs font-bold text-emerald-950 flex items-center gap-1">
-<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-            آماده به کار امروز
-          </span>
-<span class="text-[11px] text-emerald-700 mt-0.5">اکیپ‌های بدون مشغله فعلی</span>
-</div>
-<label class="relative inline-flex items-center cursor-pointer">
-<input checked="" class="sr-only peer" type="checkbox"/>
-<div class="w-10 h-5.5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:right-[3px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
-</label>
-</div>
-<!-- Cooperation Type -->
-<div class="space-y-3">
-<label class="text-xs font-bold text-slate-900 block">نوع همکاری</label>
-<div class="space-y-2 text-xs">
-<label class="flex items-center gap-2.5 cursor-pointer text-slate-700 hover:text-slate-900">
-<input checked="" class="text-brand-600 focus:ring-brand-500 border-slate-300" name="crew_type" type="radio"/>
-<span class="font-medium">همه موارد</span>
-</label>
-<label class="flex items-center gap-2.5 cursor-pointer text-slate-700 hover:text-slate-900">
-<input class="text-brand-600 focus:ring-brand-500 border-slate-300" name="crew_type" type="radio"/>
-<span class="font-medium">اکیپ پیمانکاری و تیمی (چند نفره)</span>
-</label>
-<label class="flex items-center gap-2.5 cursor-pointer text-slate-700 hover:text-slate-900">
-<input class="text-brand-600 focus:ring-brand-500 border-slate-300" name="crew_type" type="radio"/>
-<span class="font-medium">استادکار انفرادی / کارگر فنی</span>
-</label>
-</div>
-</div>
-<!-- Verification Badges -->
-<div class="space-y-3 pt-4 border-t border-slate-100">
-<label class="text-xs font-bold text-slate-900 block">اعتبارسنجی و مدارک فنی</label>
-<div class="space-y-2.5 text-xs">
-<label class="flex items-center gap-2.5 cursor-pointer text-slate-700">
-<input checked="" class="rounded border-slate-300 text-brand-600 focus:ring-brand-500" type="checkbox"/>
-<span class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[16px] text-brand-600 material-symbols-fill">verified</span>
-<span>دارای گواهی مهارت فنی‌وحرفه‌ای</span>
-</span>
-</label>
-<label class="flex items-center gap-2.5 cursor-pointer text-slate-700">
-<input checked="" class="rounded border-slate-300 text-brand-600 focus:ring-brand-500" type="checkbox"/>
-<span class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[16px] text-brand-600">photo_library</span>
-<span>دارای نمونه‌کار بازرسی‌شده</span>
-</span>
-</label>
-<label class="flex items-center gap-2.5 cursor-pointer text-slate-700">
-<input class="rounded border-slate-300 text-brand-600 focus:ring-brand-500" type="checkbox"/>
-<span class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[16px] text-amber-600">shield</span>
-<span>ضمانت‌نامه حسن اجرای تعهدات</span>
-</span>
-</label>
-</div>
-</div>
-<!-- Districts in Mashhad -->
-<div class="space-y-3 pt-4 border-t border-slate-100">
-<div class="flex items-center justify-between">
-<label class="text-xs font-bold text-slate-900">محدوده فعالیت (مشهد)</label>
-<span class="text-[11px] text-slate-400">۱۲ منطقه</span>
-</div>
-<div class="grid grid-cols-2 gap-2 text-xs text-slate-700">
-<label class="flex items-center gap-2 cursor-pointer">
-<input checked="" class="rounded border-slate-300 text-brand-600 focus:ring-brand-500" type="checkbox"/>
-<span>الهیه و قاسم‌آباد</span>
-</label>
-<label class="flex items-center gap-2 cursor-pointer">
-<input checked="" class="rounded border-slate-300 text-brand-600 focus:ring-brand-500" type="checkbox"/>
-<span>وکیل‌آباد و سجاد</span>
-</label>
-<label class="flex items-center gap-2 cursor-pointer">
-<input class="rounded border-slate-300 text-brand-600 focus:ring-brand-500" type="checkbox"/>
-<span>احمدآباد و کوهسنگی</span>
-</label>
-<label class="flex items-center gap-2 cursor-pointer">
-<input class="rounded border-slate-300 text-brand-600 focus:ring-brand-500" type="checkbox"/>
-<span>سیدی و پیروزی</span>
-</label>
-</div>
-</div>
-<!-- Experience Slider -->
-<div class="space-y-2.5 pt-4 border-t border-slate-100">
-<div class="flex items-center justify-between">
-<label class="text-xs font-bold text-slate-900">حداقل سابقه کاری</label>
-<span class="text-xs font-bold text-brand-600">۵ سال به بالا</span>
-</div>
-<input class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-500" max="25" min="1" type="range" value="5"/>
-<div class="flex justify-between text-[10px] text-slate-400 font-medium">
-<span>۱ سال</span>
-<span>۱۰ سال</span>
-<span>۲۵ سال+</span>
-</div>
-</div>
-<!-- Apply Button -->
-<button class="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white font-bold text-xs shadow-sm transition-all duration-150">
-        اعمال فیلترها (— متخصص)
-      </button>
-</aside>
-<!-- ===================================================================== -->
-<!-- 4B. MAIN CONTENT (Urgent Strip, Sort Bar, Contractor Cards Grid)      -->
-<!-- ===================================================================== -->
-<div class="flex-1 w-full space-y-6">
-<!-- Urgent / Available Today Horizontal Strip -->
-<div class="bg-gradient-to-r from-blue-50/70 via-slate-50 to-white border border-blue-200/70 rounded-2xl p-4 sm:p-5 shadow-subtle">
-<div class="flex items-center justify-between mb-3.5">
-<div class="flex items-center gap-2">
-<span class="flex h-3 w-3 relative">
-<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-<span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-</span>
-<h2 class="text-sm font-bold text-slate-900">اکیپ‌های آماده به کار فوری امروز در مشهد</h2>
-<span class="hidden sm:inline-block px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-              تایید بازرسی میدانی
-            </span>
-</div>
-<a class="text-xs font-bold text-brand-600 hover:text-brand-800 flex items-center gap-1 group" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span>مشاهده همه آنلاین‌ها</span>
-<span class="material-symbols-outlined text-[16px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
-</a>
-</div>
-<!-- 3 Urgent Micro Cards -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-<!-- Micro Card 1 -->
-<div class="bg-white border border-slate-200 hover:border-brand-300 rounded-xl p-3 flex items-center gap-3 transition-all hover:shadow-card">
-<img alt="اکیپ برادران رمضانی" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJzIHfDefsYVC3NihhAXpCSaBdlf-GSUknF_Pqf9ekg1hMPh5mGc465YbFWq2LVMf5Y34R3L5Ws_JHdwnjqiAydUf9D9lhTUBgoyNYKkqQ7z2LvT_m1QUXVz73w7N3B8Cr2B_gr7j-3-q4ivBslJgTmWoLtcmUktu5ILTiScmHnzimJfHmmqitMst-gr3v5KlsvmJHYat0mR-vywcdRVzTmOVZRm-UG08YmtpPy67WtyZ31C36irZ7"/>
-<div class="min-w-0 flex-1">
-<div class="flex items-center gap-1">
-<span class="text-xs font-bold text-slate-900 truncate">اکیپ برادران رمضانی</span>
-<span class="material-symbols-outlined text-brand-600 text-[14px] material-symbols-fill shrink-0">verified</span>
-</div>
-<span class="text-[11px] text-slate-500 truncate block">سفت‌کاری و بتن‌ریزی مسلح</span>
-<span class="text-[10px] font-bold text-emerald-600 flex items-center gap-1 mt-0.5">
-<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                تجهیزات کامل · آماده ورود به کارگاه
-              </span>
-</div>
-</div>
-<!-- Micro Card 2 -->
-<div class="bg-white border border-slate-200 hover:border-brand-300 rounded-xl p-3 flex items-center gap-3 transition-all hover:shadow-card">
-<img alt="استاد کاظم یزدانی" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPgEwVQuDhmxy_3pnVa9WKXNgJtBFUrtIJLTR7GhX3hgt_AZ3nfp7K0MX9vzvW4RwRL2rBSltdq9q_PkN9MQOUk3gEQ_xshTRf5-6uiY0NE5urvetrX2zu92D2AgvPmQL2QWWx9NnsHfImuj8vWBNwoBMV7MTrvBRa-QPm6_6K3AUAseqrMkNglT6-Y-NCUYlF3OPBTxLcjdGw16wzcjVjOWwmJZYUAnSaNV_3i9kDcU8Qed_KgdfW"/>
-<div class="min-w-0 flex-1">
-<div class="flex items-center gap-1">
-<span class="text-xs font-bold text-slate-900 truncate">استاد کاظم یزدانی</span>
-<span class="material-symbols-outlined text-brand-600 text-[14px] material-symbols-fill shrink-0">verified</span>
-</div>
-<span class="text-[11px] text-slate-500 truncate block">کاشی‌کاری پرسلان و اسلب</span>
-<span class="text-[10px] font-bold text-emerald-600 flex items-center gap-1 mt-0.5">
-<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                دستگاه برش آبی و قاپک برقی
-              </span>
-</div>
-</div>
-<!-- Micro Card 3 -->
-<div class="bg-white border border-slate-200 hover:border-brand-300 rounded-xl p-3 flex items-center gap-3 transition-all hover:shadow-card">
-<img alt="مهندس سلیمانی" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-slate-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5TG_TexO_DKZZR6-Lq4MBZXeLitqh8p2JjvNlSUWu_xpRRgi7lS4AF7xKs9TNvtkpUt-4Fs5U2UOlMzO-EemjeV2-oBVjZATa-knCg1iU-FEx4qfmMQiKMYQp9V5fE4CX0fylPUk429ovzgIpDDD5ZO1SJeGFyYMBcRTskY3GLdi6yyzwsTUhLP4IpdFSeDtZZVDJLzqJWTtk9a9LlkalPPwFjzrWLzejE6KUdoJhZmymifs89wTE"/>
-<div class="min-w-0 flex-1">
-<div class="flex items-center gap-1">
-<span class="text-xs font-bold text-slate-900 truncate">مهندس سلیمانی</span>
-<span class="material-symbols-outlined text-brand-600 text-[14px] material-symbols-fill shrink-0">verified</span>
-</div>
-<span class="text-[11px] text-slate-500 truncate block">تاسیسات مکانیک و گرمایش کف</span>
-<span class="text-[10px] font-bold text-emerald-600 flex items-center gap-1 mt-0.5">
-<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                پروانه نظام مهندسی پایه ۱
-              </span>
-</div>
-</div>
-</div>
-</div>
-<!-- Sorting Bar -->
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white px-4 py-3 rounded-2xl border border-slate-200 shadow-subtle">
-<div class="flex items-center gap-2 text-xs">
-<span class="text-slate-400 font-medium">مرتب‌سازی:</span>
-<button class="px-3 py-1.5 rounded-lg bg-brand-50 text-brand-700 font-bold border border-brand-200">
-            جدیدترین‌ها
-          </button>
-<button class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium transition-colors">
-            بالاترین امتیاز کارفرمایان
-          </button>
-<button class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium transition-colors">
-            بیشترین پروژه‌های موفق
-          </button>
-</div>
-<div class="text-xs text-slate-500 font-medium">
-          نمایش <span class="font-bold text-slate-900">۱ تا ۴</span> از — متخصص
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero-content">
+        <div class="hero-copy">
+          <span class="eyebrow"><span class="eyebrow-dot"></span> کمچه؛ بازار تخصصی اجرای ساختمان</span>
+          <h1 id="hero-title">نیروی مناسب، برای هر پروژه.</h1>
+          <p>متخصصان و اکیپ‌ها را پیدا کن، نمونه‌کار ببین و درخواست همکاری ثبت کن.</p>
         </div>
-</div>
-<!-- CONTRACTOR CARDS GRID (High Density, World-Class Polish) -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-<!-- ================= CARD 1 ================= -->
-<article class="bg-white border border-slate-200 hover:border-brand-400 rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-all duration-200 flex flex-col justify-between group">
-<div class="space-y-3.5">
-<!-- Header Row -->
-<div class="flex items-start justify-between gap-3">
-<div class="flex items-center gap-3">
-<div class="relative">
-<img alt="اکیپ برادران رضایی" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shadow-subtle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGSqPKROBtdl7Fzu_gKpIFQh85hTmKEVIzPNx5Y4BZ195uShzDHZUl-NCaBTn0liIC14yCtKC1vyrFyxnrbNq4zrm1WL40ZatHrAu3dfbYPHvjVb6UB1l70J-DCiu28EekBzn2p19s187JiGUJpWumBqHItqhS36xkhuhBjXxIU945-YkvampkOSYXet-Tyhd6WYixn0ajBNVGyqsk1z3ovA8xJmVsGuR-b4wgRu9dpFXkVe3nCaBa"/>
-<span class="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-white"></span>
-</div>
-<div>
-<div class="flex items-center gap-1.5">
-<h3 class="font-bold text-slate-900 text-sm group-hover:text-brand-600 transition-colors">اکیپ برادران رضایی</h3>
-<span class="material-symbols-outlined text-brand-600 text-[17px] material-symbols-fill" title="هویت و صلاحیت تایید شده">verified</span>
-</div>
-<p class="text-xs text-slate-500 mt-0.5">سفت‌کاری، قالب‌بندی فلزی و آرماتوربندی تخصصی</p>
-<div class="flex items-center gap-2 mt-1.5">
-<span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold border border-brand-100">
-                      اکیپ ۶ نفره مجهز
-                    </span>
-<span class="text-[11px] text-slate-400">مشهد، منطقه ۱۱ (وکیل‌آباد) · ۱۲ سال سابقه</span>
-</div>
-</div>
-</div>
-<button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-brand-600 hover:bg-slate-50 transition-colors" title="نشان کردن">
-<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
-</button>
-</div>
-<!-- Rating & Realtime Availability -->
-<div class="flex items-center justify-between py-2 px-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-amber-500 text-[17px] material-symbols-fill">star</span>
-<span class="font-bold text-slate-900">۴.۹</span>
-<span class="text-slate-400 text-[11px]">(۳۸ نظر کارفرما)</span>
-</div>
-<div class="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px]">
-<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-<span>آماده به کار از شنبه</span>
-</div>
-</div>
-<!-- Trade Tags -->
-<div class="flex flex-wrap gap-1.5">
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">اسکلت بتنی</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">سقف وافل و یوبوت</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">قالب‌بندی مدولار</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">دارای بالابر و تخته</span>
-</div>
-<!-- Portfolio Thumbnails (3 Photos) -->
-<div class="grid grid-cols-3 gap-2 pt-1">
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="آرماتوربندی فونداسیون" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACubgn24ki0THc2A35ISMZMUhf9AjmL3q4ZfmMR6g14t6Vl5BCRxx6BPsfS6ElJ7bhGBwlDrPGE0rIsZaHZdsxlAFumVYfb3iTHIQ7IuKA834p7_8l1xSewfkxZT4fsTfe7U0ARhF5_w7LB55JD73Lqk4Lb1ImW3A6aiu8QMwmlZBU4hLQR4zFuzaWOBBjjzMPpN3lzU6vaGFgySScdU6IEvR9FQFiHy6CK0pWqVnHlb1-a6WWviRm"/>
-</div>
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="سقف وافل بتنی" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7sNceyCFmCS-Mh0MAKUg827VUihb4vjvbIYybwGuMhe7bPyzJXn_8V1vHXjEIfNvhJJVS5Cad-h_gnowctisbzNwvQ61vjZgE4mJUToP_spJZynNyT-laEOJfjrHepuk7BRj3YooAL352bwnf5GzYRP4AzdMJwhNbPbYEm9a1cVM23CdJpJFC56pvlaqS6jyH1-EjOoVO1P2ULftlm5JtVEeBf79HwdQaHlix-HRqONivwSEwdJpO"/>
-</div>
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="بتن‌ریزی با پمپ دکل" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3A5PpHlOVPIYs-KP-wKLEVAoR9LcuIW4V-wWs3AyMinyuPgA929FsK7T4sowM3vgZCj_SrX2g-YFOfpRCMbW9vTcoEJHE8pxP6XLAPFnguRg6iWBMdCZON1dThmAXIOjqdAh0SvEedTbjxe9TANedbaBLE6zV0BXQCC1psF_3g2r5-i_vj2qAt8k-LVwNzz76CdKmXFiu01U_gxxfMSeK2FGAjJyYvnFk6grp0KLq4C2GpzF9sYgW"/>
-</div>
-</div>
-</div>
-<!-- Footer Action & Pricing -->
-<div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-<div>
-<span class="text-[11px] text-slate-400 block font-medium">نرخ دستمزد پایه</span>
-<span class="text-sm font-black text-brand-600">متری از ۳۸۰,۰۰۰ تومان</span>
-</div>
-<div class="flex items-center gap-2">
-<a class="px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all" href="gallery.html">
-                رزومه و سوابق
-              </a>
-<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-xs transition-all">
-<span class="material-symbols-outlined text-[17px]">call</span>
-<span>تماس و استعلام</span>
-</button>
-</div>
-</div>
-</article>
-<!-- ================= CARD 2 ================= -->
-<article class="bg-white border border-slate-200 hover:border-brand-400 rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-all duration-200 flex flex-col justify-between group">
-<div class="space-y-3.5">
-<!-- Header Row -->
-<div class="flex items-start justify-between gap-3">
-<div class="flex items-center gap-3">
-<div class="relative">
-<img alt="استاد علی اکبری" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shadow-subtle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUhIe1pV6EbD97DGmvLyXAfxYC5tjeQkH8l4JhlDwJ-D2v3tKPPfoQU4L8KCz55FL6B6S6q12NlUeUbs8os0ni0UrpNmhKp_3h86mP7zuRYSxiB7T1JoLONZ490v3hUw1HH0DTUNr9F6g9BRzKhZRimeJ2uEPPEBoOpgQ57n1B_a9NkBJsO4eu6AK0hsXK44_h4YyDZFc4Vpu6QO-3QhyKhnbJ_q2JzRIqkRqsLWrFVGoszzpM6Czo"/>
-<span class="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-white"></span>
-</div>
-<div>
-<div class="flex items-center gap-1.5">
-<h3 class="font-bold text-slate-900 text-sm group-hover:text-brand-600 transition-colors">استاد علی اکبری</h3>
-<span class="material-symbols-outlined text-brand-600 text-[17px] material-symbols-fill" title="هویت و صلاحیت تایید شده">verified</span>
-</div>
-<p class="text-xs text-slate-500 mt-0.5">کاشی‌کاری پرسلان، سنگ اسلب و بین‌کابینتی مدرن</p>
-<div class="flex items-center gap-2 mt-1.5">
-<span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold border border-brand-100">
-                      استادکار + ۲ وردست
-                    </span>
-<span class="text-[11px] text-slate-400">مشهد، منطقه ۹ (هنرستان) · ۱۸ سال سابقه</span>
-</div>
-</div>
-</div>
-<button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-brand-600 hover:bg-slate-50 transition-colors" title="نشان کردن">
-<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
-</button>
-</div>
-<!-- Rating & Realtime Availability -->
-<div class="flex items-center justify-between py-2 px-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-amber-500 text-[17px] material-symbols-fill">star</span>
-<span class="font-bold text-slate-900">۵.۰</span>
-<span class="text-slate-400 text-[11px]">(۵۲ پروژه تایید شده)</span>
-</div>
-<div class="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px]">
-<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-<span>آماده به کار فوری</span>
-</div>
-</div>
-<!-- Trade Tags -->
-<div class="flex flex-wrap gap-1.5">
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">اسلب ۱۲۰×۲۴۰</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">نصب چسبی و ملاتی</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">هم‌تراز پلاستیکی کلیپس</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">برش فارسی ۴۵ درجه</span>
-</div>
-<!-- Portfolio Thumbnails (3 Photos) -->
-<div class="grid grid-cols-3 gap-2 pt-1">
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="نصب اسلب حمام مستر" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTlt54ClJv8T4yCTJVj8mQQuQFUpx-Xd2KoNIkegjVUGtyUjQyIq97R4MJLqiXIZzySAPMe1afuH31jDkv1eLJObYJtZDaf6pAblz1EtZ1St2Lllnf0Fh2eSswNfNafzBHpAxbW7WE7dcfrCH0qfN_ff_Ql3vTBZvv6XrSfVI6p_RZGlfa8P6HoM_DFv_hJkSdtXgFjfnYlHTyGmI8xlj9jXs4eZqb2uNjOlMmYzPoNGEI1FpePR8-"/>
-</div>
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="پرسلان کف سالن پذیرایی" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqQbxEvslFU6c-FPHsaiPbEFwkNkUKHy64SkcfdkRABnIzLbW5gt5VffD9R2Dvr-wgWypRqxxlJePuE0c85XinFAl8i8Hy6_O8a42zuEhnx9tl_relwNaa-VSm8my5C_hQ3NV5GARSd209tSqkNIa9i0SdjO_kr1oXFpu8LQOyUt9Q47mPmZatd7x7Yu8NoCt3-X_qEcdqQnnV_4-oLhgSWWGM8UFQYzVB8ZH1w5hywBaJad8ux5tA"/>
-</div>
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="فارسی‌بر روشویی سرامیکی" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb-QCAduum6W3umOdyMkxFiP3Ovn2-s5NvdvmGv-AmjoPUiUTI2nmxKVqI5NC0Hs-099e2WY9XmpyHDRWkZ3OdyT3V_42eCFOXwwoCGyCmXqJ8dEGYRfVCEvgdXwgS6c5o9Y_mGmLHVS3CWxSyNM0A7C8XcjnporGHDpfLx2yX3CzUWUXrmfTwXS1NWAs8fpUIQn00OHfpsaDrNotzndmOyo8rjSqRv-WHWtdNTubVw7c7Rf8UKHfK"/>
-</div>
-</div>
-</div>
-<!-- Footer Action & Pricing -->
-<div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-<div>
-<span class="text-[11px] text-slate-400 block font-medium">نرخ دستمزد پایه</span>
-<span class="text-sm font-black text-brand-600">متری از ۲۹۰,۰۰۰ تومان</span>
-</div>
-<div class="flex items-center gap-2">
-<a class="px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all" href="gallery.html">
-                رزومه و سوابق
-              </a>
-<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-xs transition-all">
-<span class="material-symbols-outlined text-[17px]">call</span>
-<span>تماس و استعلام</span>
-</button>
-</div>
-</div>
-</article>
-<!-- ================= CARD 3 ================= -->
-<article class="bg-white border border-slate-200 hover:border-brand-400 rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-all duration-200 flex flex-col justify-between group">
-<div class="space-y-3.5">
-<!-- Header Row -->
-<div class="flex items-start justify-between gap-3">
-<div class="flex items-center gap-3">
-<div class="relative">
-<img alt="مهندس سید محمد حسینی" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shadow-subtle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOM5JUZm43SmR_apNDhQlCyZ4rureOdW3PAgjjfFlh2pgJ56-EU0TAPbWHKeRsQ8uvjlrwS35QV1qD-KKg1dJHcNL6-2WrC7gBn_-92IKx_l-nDTDyc53YTaf4egoTSVRHBR_vzN9FoO_cgoX6LfBP-ydA2W3ndHhtCnBDHzyoOuJlHhj5LbWqW3oXWF0CymGnn_26Cb-PORaB3__R8YNrXdymVvl8yxM5ueu-INmfvd7f3NZ4i06Z"/>
-<span class="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-white"></span>
-</div>
-<div>
-<div class="flex items-center gap-1.5">
-<h3 class="font-bold text-slate-900 text-sm group-hover:text-brand-600 transition-colors">مهندس سید محمد حسینی</h3>
-<span class="material-symbols-outlined text-brand-600 text-[17px] material-symbols-fill" title="هویت و صلاحیت تایید شده">verified</span>
-</div>
-<p class="text-xs text-slate-500 mt-0.5">تاسیسات مکانیکی، موتورخانه، گرمایش از کف و اطفا حریق</p>
-<div class="flex items-center gap-2 mt-1.5">
-<span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold border border-brand-100">
-                      اکیپ ۴ نفره تخصصی
-                    </span>
-<span class="text-[11px] text-slate-400">مشهد، منطقه ۱ (سجاد و فلسطین) · ۱۵ سال سابقه</span>
-</div>
-</div>
-</div>
-<button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-brand-600 hover:bg-slate-50 transition-colors" title="نشان کردن">
-<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
-</button>
-</div>
-<!-- Rating & Realtime Availability -->
-<div class="flex items-center justify-between py-2 px-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-amber-500 text-[17px] material-symbols-fill">star</span>
-<span class="font-bold text-slate-900">۴.۸</span>
-<span class="text-slate-400 text-[11px]">(۲۹ نظر کارفرما)</span>
-</div>
-<div class="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px]">
-<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-<span>آماده عقد قرارداد</span>
-</div>
-</div>
-<!-- Trade Tags -->
-<div class="flex flex-wrap gap-1.5">
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">لوله ۵ لایه نیوپایپ</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">گرمایش از کف با گارانتی</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">تست فشار هیدرواستاتیک</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">اسپرینکلر و آتشنشانی</span>
-</div>
-<!-- Portfolio Thumbnails (3 Photos) -->
-<div class="grid grid-cols-3 gap-2 pt-1">
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="لوله‌کشی گرمایش از کف" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtN5EKlRp7igXD8UMuxHscOJTYu-RfmsfLM7AJt4b5DZkHzUGKBrG7UAPIpe8GdtMXtqKS-_rHfoo1EaOEoEPZ3Ossg6tIGUVqh0g13hgg0aDX2Ke8tOxZXqkwDuuN2eQygLwm5qMQgvTfsYf3_viV4IqGHdedG_fS80ps4bbzYCc83P2q9g8nnLx63StSKPB2n6AabBgUF6ethA5FqX8K5f8vPHpqa87qzLKeCg8WJpSbgXPyD9Zt"/>
-</div>
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="کلکتور و سیستم مرکزی موتورخانه" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl184JSxOHVc4Ss0vRJlNnTQB7UjTrn5P4rURQvW5V-lBYVyk-ESpycNNsKbzPcE_nC5vL7JMlKvabBQ1LbD9PEuQRsDET9tnqZhFELFAoreyYjOgH8leY8QK2isiZ4-vMEPX1qqg9HWqwsRN9CMH8gtth1hEWFWuyChBh_6PfLFVRcwzcMM7A3NBy7OKIPjwMfvfO50qe9FFY4qgmffZdZjFX0QU3ulQZReekuY8YMwMI_Icsb28u"/>
-</div>
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="خطوط بهداشتی چندلایه" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIQugMQX2CuWXSk06HHL-5VOn-LkHAkVRgb2Dev2yQ0PLVg7IGFiEpAUy4O0wgYmfvKc3aQaJ6mGD0bcbLS23o3kIwehYaV3Iobxhd8e4OaiJNdEL4w0XDNtyFZhwUJOOhAtplXFyxFREBr560pVzgO_TOWFJkfZ4OhHZOgHgqzwwZ_YLXCzTBYF2Dlpwe5XZcN8gIuUGp2nAU6IZDRxheBGPizoW9Dl4HFZIu2q1OA3gtxwoy01q_"/>
-</div>
-</div>
-</div>
-<!-- Footer Action & Pricing -->
-<div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-<div>
-<span class="text-[11px] text-slate-400 block font-medium">برآورد اولیه هزینه</span>
-<span class="text-sm font-black text-brand-600">توافقی بر اساس نقشه</span>
-</div>
-<div class="flex items-center gap-2">
-<a class="px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all" href="gallery.html">
-                رزومه و سوابق
-              </a>
-<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-xs transition-all">
-<span class="material-symbols-outlined text-[17px]">call</span>
-<span>تماس و استعلام</span>
-</button>
-</div>
-</div>
-</article>
-<!-- ================= CARD 4 ================= -->
-<article class="bg-white border border-slate-200 hover:border-brand-400 rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-all duration-200 flex flex-col justify-between group">
-<div class="space-y-3.5">
-<!-- Header Row -->
-<div class="flex items-start justify-between gap-3">
-<div class="flex items-center gap-3">
-<div class="relative">
-<img alt="اکیپ گچ‌کاری و کناف مدرن مشهد" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shadow-subtle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxga0U4y2GjRK5qJPj8Cuq7FpsBX_XMJpui2h8HUm7ajC0TMJhfqKyA5dLwjR65CFkEs5Cs3Lk8SAYVBEYGSl-j5k62XUS4KV3hUvJo_jrRL-zv4qdmed3V1qMxsXtkNJXd9Q-uoP_Wy3rVPkIDKJcXvjVpA7umWw8O9hRLlaj1jps3UEGDqtjcdm-K9Fck2RNYP4G8fOXzcstT1G3svZ6EyhM_eQ8NWzRFG6Sida_wbXGbrZRsL6B"/>
-<span class="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-white"></span>
-</div>
-<div>
-<div class="flex items-center gap-1.5">
-<h3 class="font-bold text-slate-900 text-sm group-hover:text-brand-600 transition-colors">اکیپ گچ‌کاری و کناف مدرن</h3>
-<span class="material-symbols-outlined text-brand-600 text-[17px] material-symbols-fill" title="هویت و صلاحیت تایید شده">verified</span>
-</div>
-<p class="text-xs text-slate-500 mt-0.5">گچ و خاک، سفیدکاری صیقلی، ابزار دستی و سقف کناف</p>
-<div class="flex items-center gap-2 mt-1.5">
-<span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold border border-brand-100">
-                      اکیپ ۸ نفره با سرعت بالا
-                    </span>
-<span class="text-[11px] text-slate-400">مشهد، منطقه ۱۲ (الهیه) · ۹ سال سابقه</span>
-</div>
-</div>
-</div>
-<button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-brand-600 hover:bg-slate-50 transition-colors" title="نشان کردن">
-<span class="material-symbols-outlined text-[20px]">bookmark_border</span>
-</button>
-</div>
-<!-- Rating & Realtime Availability -->
-<div class="flex items-center justify-between py-2 px-3 rounded-xl bg-slate-50 border border-slate-100 text-xs">
-<div class="flex items-center gap-1.5">
-<span class="material-symbols-outlined text-amber-500 text-[17px] material-symbols-fill">star</span>
-<span class="font-bold text-slate-900">۴.۷</span>
-<span class="text-slate-400 text-[11px]">(۲۱ پروژه تکمیل شده)</span>
-</div>
-<div class="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px]">
-<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-<span>آماده بازدید پروژه امروز</span>
-</div>
-</div>
-<!-- Trade Tags -->
-<div class="flex flex-wrap gap-1.5">
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">سفیدکاری صیقلی</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">لاین نوری و نور مخفی</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">گچبری نئوکلاسیک</span>
-<span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium">داربست و تخته آماده</span>
-</div>
-<!-- Portfolio Thumbnails (3 Photos) -->
-<div class="grid grid-cols-3 gap-2 pt-1">
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="سقف کاذب و نورپردازی" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkzgApGWnsm5RlhHlzIpJzDU8B5k-cfiNSyqPVAV9UusBwOD4eMcP9RiVrkap6dGmwm85QdGOP1U_G1SWI5axf6wKlb9lBSG4E156kxjD8RkWFOrGt-gz1jsP5_kYjxzE2v7BGLjiIa0hMb45soIqW2ZWiMtlUao76vo5Noy93AD11WSnFW6h2v4aYxIgDveSAg_Gs3m8XmnvLs1PrCqPvJc3VvTxfl4NkxveYVjmJIqqEw_B46TcA"/>
-</div>
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="ابزار گچبری دستی" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwRDRVLkpZW2ITFdxsu6DiOfsuj0LnWaa7qjEom7kDtGT819TSPGtxOWVp87EE-cTJYaGwHX2LCoY_8Of0q2ftr1F6LXG2B3wzglyLDM8wDFtWj6P1Am2ZVcFQ3bdpLs-CKir-o-WaoSweA9ObDEPDynaG3JIXq6KFZNPyGk9-iFT14MTfpXz6VljJOjDY7HyoQOeMBWwlWvEMuYRglmzfjUyYJZaZ365wTv3rqKrrziJkiu0y6JEt"/>
-</div>
-<div class="group/img relative overflow-hidden rounded-xl border border-slate-200 aspect-[4/3]">
-<img alt="سفیدکاری سالن" class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRhS0RvetJ2nPKWvTrE4QCY7P0mTgMhi0WIDWGA_lT9VJ0g9Vjknv9lJde5V0SgSdapa4u8M49PF1rfb1VuoXpVl0uV0uOrfSBFWgzKS2vyEGK6SLdkbrtcL8DRwlnr92QiraCq5vcQXNU2T029_JvXmxzicJLTd_d9sHUia2yOXcrcLTmSxwoBHAwjyeqe8xaWisVdmg3foW3wUe2EuRQsUOeaLuCv9w6XOXu2fBUoV3ohszyJoju"/>
-</div>
-</div>
-</div>
-<!-- Footer Action & Pricing -->
-<div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-<div>
-<span class="text-[11px] text-slate-400 block font-medium">نرخ دستمزد پایه</span>
-<span class="text-sm font-black text-brand-600">متری از ۱۱۰,۰۰۰ تومان</span>
-</div>
-<div class="flex items-center gap-2">
-<a class="px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all" href="gallery.html">
-                رزومه و سوابق
-              </a>
-<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-xs transition-all">
-<span class="material-symbols-outlined text-[17px]">call</span>
-<span>تماس و استعلام</span>
-</button>
-</div>
-</div>
-</article>
-</div>
-<!-- ================================================================= -->
-<!-- 4C. RECENT LIVE PROJECT REQUESTS (Crisp Bidding Leads)            -->
-<!-- ================================================================= -->
-<section class="mt-8 bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-card k-sample-section">
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
-<div>
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-brand-600 text-[24px]">assignment</span>
-<h2 class="text-base font-bold text-slate-900">تازه‌ترین درخواست‌های کار ساختمانی در مشهد</h2>
-</div>
-<p class="text-xs text-slate-500 mt-1">کارفرمایان و انبوه‌سازانی که هم‌اکنون به دنبال اکیپ اجرایی هستند</p>
-</div>
-<a class="text-xs font-bold text-brand-600 hover:text-brand-800 flex items-center gap-1 group" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span>مشاهده همه — درخواست کار</span>
-<span class="material-symbols-outlined text-[16px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
-</a>
-</div>
-<!-- Project Items -->
-<div class="mt-4 space-y-3">
-<!-- Project 1 -->
-<div class="p-4 rounded-xl border border-slate-200 hover:border-brand-300 bg-slate-50/50 hover:bg-white transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
-<div class="space-y-2">
-<div class="flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold">فوری</span>
-<h3 class="font-bold text-slate-900 text-sm">نیاز به اکیپ گچ‌کاری و سفیدکاری — حدود ۶۵۰ متر زیربنا</h3>
-<span class="text-[11px] text-slate-400">۲۵ دقیقه پیش</span>
-</div>
-<div class="flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-slate-600">
-<span class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-slate-400">location_on</span>
-<span>مشهد، الهیه (خیابان سجادیه)</span>
-</span>
-<span class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-slate-400">calendar_today</span>
-<span>شروع پروژه: شنبه آینده</span>
-</span>
-<span class="flex items-center gap-1 text-brand-600 font-bold">
-<span class="material-symbols-outlined text-[16px]">payments</span>
-<span>بودجه: متری توافقی (تسویه هر طبقه)</span>
-</span>
-</div>
-</div>
-<div class="flex items-center justify-between md:justify-end gap-3 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-200">
-<span class="text-xs text-slate-400 font-medium">۱۴ پیشنهاد ارسال شده</span>
-<button class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white font-bold text-xs shadow-xs transition-all" disabled="disabled" title="این مورد صرفاً نمونه طراحی است">
-                ارسال پیشنهاد قیمت
-              </button>
-</div>
-</div>
-<!-- Project 2 -->
-<div class="p-4 rounded-xl border border-slate-200 hover:border-brand-300 bg-slate-50/50 hover:bg-white transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
-<div class="space-y-2">
-<div class="flex items-center gap-2">
-<span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold">پروژه متوسط</span>
-<h3 class="font-bold text-slate-900 text-sm">آرماتوربندی و قالب‌بندی اسکلت بتنی — ۴ طبقه روی پیلوت</h3>
-<span class="text-[11px] text-slate-400">۱ ساعت پیش</span>
-</div>
-<div class="flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-slate-600">
-<span class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-slate-400">location_on</span>
-<span>مشهد، بلوار وکیل‌آباد (خیابان حافظ)</span>
-</span>
-<span class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px] text-slate-400">groups</span>
-<span>اکیپ مجهز دارای ابزار کامل و جک</span>
-</span>
-<span class="flex items-center gap-1 text-brand-600 font-bold">
-<span class="material-symbols-outlined text-[16px]">payments</span>
-<span>دستمزد برآورد: کیلویی / متری توافقی</span>
-</span>
-</div>
-</div>
-<div class="flex items-center justify-between md:justify-end gap-3 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-200">
-<span class="text-xs text-slate-400 font-medium">۸ پیشنهاد ارسال شده</span>
-<button class="px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white font-bold text-xs shadow-xs transition-all" disabled="disabled" title="این مورد صرفاً نمونه طراحی است">
-                ارسال پیشنهاد قیمت
-              </button>
-</div>
-</div>
-</div>
-</section>
-</div>
-</div>
-</main>
-<!-- ========================================================================= -->
-<!-- 5. FOOTER (Professional, 4 Columns, Clean Construction Identity)          -->
-<!-- ========================================================================= -->
-<footer class="bg-white border-t border-slate-200 mt-16 pt-12 pb-10 text-slate-600">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-slate-200">
-<!-- Col 1: Identity -->
-<div class="space-y-3">
-<div class="flex items-center gap-2.5">
-<div class="w-8 h-8 rounded-lg bg-brand-500 text-white flex items-center justify-center">
-<span class="material-symbols-outlined text-[20px]">construction</span>
-</div>
-<span class="text-lg font-black text-slate-900 tracking-tight">کَمچه</span>
-</div>
-<p class="text-xs leading-relaxed text-slate-500">
-          بازار مستقیم ارتباط سازندگان، پیمانکاران، مهندسان و استادکاران صنعت ساختمان ایران. تسهیل استعلام قیمت، عقد قرارداد رسمی و تایید صلاحیت فنی اکیپ‌های اجرایی.
-        </p>
-<div class="flex items-center gap-2 pt-2 text-xs font-semibold text-emerald-700">
-<span class="material-symbols-outlined text-[18px] material-symbols-fill">verified</span>
-<span>در حال آزمایش و تکمیل سامانه</span>
-</div>
-</div>
-<!-- Col 2: For Contractors -->
-<div class="space-y-3">
-<h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">برای متخصصان و اکیپ‌ها</h4>
-<ul class="space-y-2 text-xs">
-<li><a class="hover:text-brand-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">ثبت رزومه و تشکیل پرونده فنی</a></li>
-<li><a class="hover:text-brand-600 transition-colors" href="index.html#kamcheh-requests">لیست درخواست‌های روزانه کار</a></li>
-<li><a class="hover:text-brand-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">دریافت گواهی مهارت و سنجش صلاحیت</a></li>
-<li><a class="hover:text-brand-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">تعرفه‌ها و قوانین نظام صنفی ساختمانی</a></li>
-<li><a class="hover:text-brand-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">بیمه حوادث کارگاهی و مسئولیت</a></li>
-</ul>
-</div>
-<!-- Col 3: For Builders -->
-<div class="space-y-3">
-<h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">برای کارفرمایان و سازندگان</h4>
-<ul class="space-y-2 text-xs">
-<li><a class="hover:text-brand-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">ثبت رایگان آگهی پروژه ساختمانی</a></li>
-<li><a class="hover:text-brand-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">راهنمای استعلام قیمت روز دستمزد و مصالح</a></li>
-<li><a class="hover:text-brand-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">ضمانت قرارداد و امانت‌داری مالی (Escrow)</a></li>
-<li><a class="hover:text-brand-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">دانلود نمونه قراردادهای تیپ ساختمانی</a></li>
-<li><a class="hover:text-brand-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">نظارت فنی و داوری تخصصی اختلاف</a></li>
-</ul>
-</div>
-<!-- Col 4: Support & Contact -->
-<div class="space-y-3">
-<h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">مرکز پشتیبانی کارگاهی</h4>
-<div class="space-y-2 text-xs text-slate-600">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-brand-600 text-[18px]">support_agent</span>
-<span class="font-bold text-slate-900">پشتیبانی به‌زودی فعال می‌شود</span>
-</div>
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-brand-600 text-[18px]">schedule</span>
-<span>شنبه تا پنج‌شنبه: ۷:۳۰ الی ۱۹:۰۰</span>
-</div>
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-brand-600 text-[18px]">location_on</span>
-<span>محدوده آزمایشی: مشهد و حومه</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Bottom Copyright & Legal Links -->
-<div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-<span>© تمامی حقوق متعلق به سامانه بازار تخصصی ساخت‌وساز «کمچه» است.</span>
-<div class="flex items-center gap-4">
-<a class="hover:text-slate-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">قوانین و مقررات بازار</a>
-<a class="hover:text-slate-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">حریم خصوصی استادکاران</a>
-<a class="hover:text-slate-600 transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">شورای داوری فنی</a>
-</div>
-</div>
-</div>
-</footer>
-<!-- ========================================================================= -->
-<!-- 6. MOBILE BOTTOM NAV (App-like Dock)                                      -->
-<!-- ========================================================================= -->
-<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 md:hidden bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg">
-<a class="flex flex-col items-center justify-center text-brand-600 text-[10px] font-bold" href="index.html#kamcheh-services">
-<span class="material-symbols-outlined text-[22px] material-symbols-fill">search</span>
-<span>کاوش بازار</span>
-</a>
-<a class="flex flex-col items-center justify-center text-slate-500 hover:text-brand-600 text-[10px] font-medium" href="index.html#kamcheh-requests">
-<span class="material-symbols-outlined text-[22px]">engineering</span>
-<span>درخواست‌ها</span>
-</a>
-<a class="flex flex-col items-center justify-center text-brand-600 text-[10px] font-bold -mt-3" data-k-action="post-need" href="index.html#kamcheh-marketplace">
-<div class="w-10 h-10 rounded-full bg-brand-500 text-white flex items-center justify-center shadow-md">
-<span class="material-symbols-outlined text-[24px]">add</span>
-</div>
-<span class="mt-0.5">ثبت پروژه</span>
-</a>
-<a class="flex flex-col items-center justify-center text-slate-500 hover:text-brand-600 text-[10px] font-medium" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
-<span class="material-symbols-outlined text-[22px]">chat</span>
-<span>پیام‌ها</span>
-</a>
-<a class="flex flex-col items-center justify-center text-slate-500 hover:text-brand-600 text-[10px] font-medium" data-k-action="account" href="#">
-<span class="material-symbols-outlined text-[22px]">person</span>
-<span>حساب من</span>
-</a>
-</nav>
-<div class="k-site-footer">کمچه: وب دسکتاپ با طراحی Stitch | نسخه نصب‌شدنی Android با Flutter</div><div aria-live="polite" class="k-toast" id="k-toast" role="status"></div>
-<dialog class="k-dialog" id="k-dialog"><form id="k-form" method="dialog"><button aria-label="بستن" class="k-close" data-k-action="close" type="button">×</button><div id="k-form-content"></div></form></dialog>
-<script src="assets/config.js"></script><script src="assets/kamcheh.js" type="module"></script></body></html>
+        <form class="hero-search" id="search-form" role="search">
+          <label class="search-field" for="k-search">
+            <span class="material-icons-outlined" aria-hidden="true">search</span>
+            <input id="k-search" type="search" autocomplete="off" placeholder="چه تخصص یا خدماتی نیاز داری؟" aria-label="جست‌وجوی تخصص، خدمات یا پروژه">
+          </label>
+          <label class="city-field" for="k-city">
+            <span class="material-icons-outlined" aria-hidden="true">location_on</span>
+            <select id="k-city" aria-label="انتخاب شهر">
+              <option value="">همه شهرها</option><option>مشهد</option><option>طرقبه</option><option>شاندیز</option><option>گلبهار</option><option>چناران</option>
+            </select>
+          </label>
+          <button class="btn btn-primary search-submit" type="submit">جست‌وجو <span class="material-icons-outlined">arrow_back</span></button>
+        </form>
+        <div class="quick-categories" aria-label="تخصص‌های پرجست‌وجو">
+          <button type="button" data-k-category="" class="category-chip is-active">همه تخصص‌ها</button>
+          <button type="button" data-k-category="اسکلت">اسکلت و بتن</button>
+          <button type="button" data-k-category="تأسیسات">تأسیسات</button>
+          <button type="button" data-k-category="نازک">نازک‌کاری</button>
+          <button type="button" data-k-category="نما">نما و سنگ</button>
+          <button type="button" data-k-category="برق">برق‌کاری</button>
+          <button type="button" data-k-category="کناف">کناف</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="market wrap" id="marketplace" aria-label="فهرست متخصصان و پروژه‌ها">
+      <div class="market-top">
+        <div class="market-title">
+          <h2 id="market-heading">متخصصان و اکیپ‌ها</h2>
+          <p id="market-subtitle">نیروی اجرایی و پیمانکار برای پروژه‌های ساختمانی</p>
+        </div>
+        <div class="market-cta">
+          <button type="button" class="btn btn-secondary" data-k-action="post-service"><span class="material-icons-outlined">badge</span>معرفی خدمات</button>
+        </div>
+      </div>
+      <div class="market-controls">
+        <div class="tab-list" role="tablist" aria-label="نوع فهرست">
+          <button type="button" role="tab" id="tab-services" aria-controls="kamcheh-services" aria-selected="true" class="tab is-selected" data-k-tab="services">متخصصان و اکیپ‌ها</button>
+          <button type="button" role="tab" id="tab-needs" aria-controls="kamcheh-requests" aria-selected="false" class="tab" data-k-tab="needs">درخواست‌های کار</button>
+        </div>
+        <div class="list-tools">
+          <span class="result-count" id="k-result-count" aria-live="polite"></span>
+          <label class="sort-control" for="k-sort"><span class="material-icons-outlined" aria-hidden="true">sort</span>
+            <select id="k-sort" aria-label="مرتب‌سازی"><option value="new">جدیدترین</option><option value="az">عنوان (الفبا)</option></select>
+          </label>
+        </div>
+      </div>
+      <div id="k-mode-note" class="mode-note" role="status"><span class="material-icons-outlined">info</span><span id="k-status">در حال آماده‌سازی اطلاعات…</span></div>
+      <div class="market-grid" id="kamcheh-services" role="tabpanel" aria-labelledby="tab-services" aria-live="polite"></div>
+      <div class="market-grid" id="kamcheh-requests" role="tabpanel" aria-labelledby="tab-needs" aria-live="polite" hidden></div>
+    </section>
+
+    <section class="bottom-callout wrap" aria-label="ثبت درخواست کار">
+      <div><h2>برای پروژه‌ات نیرو می‌خواهی؟</h2><p>درخواست کار را ثبت کن تا متخصصان مرتبط آن را ببینند.</p></div>
+      <button class="btn btn-primary" type="button" data-k-action="post-need">ثبت درخواست کار <span class="material-icons-outlined">arrow_back</span></button>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-inner"><span>کمچه — بازار اجرای ساختمان</span><nav aria-label="پیوندهای پایانی"><a href="gallery.html">نمونه‌کارها</a><a href="investment.html">سرمایه‌گذاری <small>(آزمایشی)</small></a><a href="magazine.html">مجله</a><a href="app/">اپ کمچه</a></nav><small>نسخه آزمایشی</small></div></footer>
+  <div class="k-toast" id="k-toast" role="status" aria-live="polite"></div>
+  <dialog class="k-dialog" id="k-dialog"><form id="k-form" method="dialog"><button class="k-close" type="button" data-k-action="close" aria-label="بستن">×</button><div id="k-form-content"></div></form></dialog>
+</body>
+</html>
