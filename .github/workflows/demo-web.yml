@@ -1,45 +1,44 @@
-name: Demo web
-
+name: Kamcheh unified web
 on:
   workflow_dispatch:
   push:
     branches: [main]
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: pages
   cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Install Flutter from official repository
         run: |
           git clone --depth 1 --branch 3.47.6 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
           echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
-
+      - name: Validate desktop JavaScript
+        run: |
+          node --check site/assets/config.js
+          node --check site/assets/kamcheh.js
       - run: flutter pub get
       - run: flutter analyze
-      - run: flutter test test/kamcheh_test.dart test/stages_14_17_test.dart test/stages_7_13_test.dart test/structure_test.dart test/package2_test.dart test/package3_test.dart
-
-      - name: Build Flutter web for GitHub Pages
-        run: flutter build web --base-href "/kamcheh/" --no-web-resources-cdn
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Domain tests
+        run: flutter test test/kamcheh_test.dart test/stages_14_17_test.dart test/stages_7_13_test.dart test/structure_test.dart test/package2_test.dart test/package3_test.dart
+      - name: Build existing Flutter web application
+        run: flutter build web --base-href "/kamcheh/app/" --no-web-resources-cdn
+      - name: Assemble desktop website and app
+        run: |
+          rm -rf public
+          mkdir -p public/app
+          cp -a site/. public/
+          cp -a build/web/. public/app/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          path: build/web
-
+          path: public
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -47,6 +46,5 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - uses: actions/deploy-pages@v4
         id: deployment
-        uses: actions/deploy-pages@v4

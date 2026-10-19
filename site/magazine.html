@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" dir="rtl" lang="fa"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>کمچه | بازار آنلاین ساختمانی - اخبار، تحلیل بازار و مجله تخصصی</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;family=Vazirmatn:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "background": "#f9f9ff",
+            "on-primary-fixed-variant": "#00458d",
+            "on-primary-fixed": "#001b3e",
+            "surface-variant": "#d4e3ff",
+            "on-tertiary-fixed-variant": "#76330d",
+            "primary-fixed": "#d6e3ff",
+            "surface-container-lowest": "#ffffff",
+            "on-primary": "#ffffff",
+            "tertiary": "#6d2c06",
+            "outline-variant": "#c2c6d3",
+            "secondary-container": "#fea94d",
+            "primary": "#003e80",
+            "inverse-primary": "#aac7ff",
+            "on-secondary-fixed": "#2d1600",
+            "surface-container-high": "#dde9ff",
+            "surface-tint": "#295ea8",
+            "error": "#ba1a1a",
+            "primary-container": "#1e56a0",
+            "tertiary-container": "#8b421c",
+            "on-secondary-fixed-variant": "#693c00",
+            "on-error-container": "#93000a",
+            "on-secondary-container": "#703f00",
+            "secondary": "#8b5000",
+            "on-surface": "#0c1c30",
+            "surface-dim": "#ccdbf7",
+            "outline": "#737782",
+            "secondary-fixed": "#ffdcbe",
+            "inverse-surface": "#223146",
+            "surface": "#f9f9ff",
+            "on-tertiary-fixed": "#351000",
+            "on-secondary": "#ffffff",
+            "inverse-on-surface": "#ebf1ff",
+            "tertiary-fixed": "#ffdbcc",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#ffb694",
+            "on-background": "#0c1c30",
+            "secondary-fixed-dim": "#ffb870",
+            "on-tertiary": "#ffffff",
+            "surface-container": "#e6eeff",
+            "on-primary-container": "#b4cdff",
+            "surface-container-low": "#f0f3ff",
+            "primary-fixed-dim": "#aac7ff",
+            "on-error": "#ffffff",
+            "surface-container-highest": "#d4e3ff",
+            "surface-bright": "#f9f9ff",
+            "on-surface-variant": "#424751",
+            "on-tertiary-container": "#ffbea1"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "margin-desktop": "2.5rem",
+            "space-md": "1rem",
+            "space-xl": "2.5rem",
+            "gutter": "1.25rem",
+            "space-lg": "1.5rem",
+            "margin-tablet": "1.5rem",
+            "margin": "1rem",
+            "gutter-desktop": "1.5rem",
+            "space-sm": "0.5rem"
+          },
+          "fontFamily": {
+            "display-lg-mobile": ["Vazirmatn", "Space Grotesk", "sans-serif"],
+            "headline-lg": ["Vazirmatn", "Space Grotesk", "sans-serif"],
+            "headline-md": ["Vazirmatn", "Space Grotesk", "sans-serif"],
+            "label-md": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "display-lg": ["Vazirmatn", "Space Grotesk", "sans-serif"],
+            "headline-sm": ["Vazirmatn", "Space Grotesk", "sans-serif"],
+            "label-sm": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "body-lg": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "body-sm": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "title-md": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "title-lg": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "body-md": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "label-lg": ["Vazirmatn", "Plus Jakarta Sans", "sans-serif"],
+            "headline-lg-mobile": ["Vazirmatn", "Space Grotesk", "sans-serif"]
+          },
+          "fontSize": {
+            "display-lg-mobile": ["32px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+            "headline-lg": ["32px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+            "headline-md": ["24px", {"lineHeight": "34px", "fontWeight": "600"}],
+            "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+            "display-lg": ["48px", {"lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+            "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+            "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}],
+            "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+            "title-md": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+            "title-lg": ["18px", {"lineHeight": "26px", "fontWeight": "600"}],
+            "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+            "label-lg": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+            "headline-lg-mobile": ["24px", {"lineHeight": "34px", "letterSpacing": "0", "fontWeight": "700"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #FAFAF7;
+      color: #0c1c30;
+      font-family: 'Vazirmatn', 'Plus Jakarta Sans', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .structural-card {
+      background-color: #FFFFFF;
+      border: 1px solid #E7E2DA;
+      box-shadow: 0 1px 3px rgba(26, 41, 62, 0.04), 0 2px 6px rgba(26, 41, 62, 0.03);
+      transition: all 0.2s ease-in-out;
+    }
+    .structural-card:hover {
+      box-shadow: 0 4px 12px rgba(26, 41, 62, 0.07), 0 1px 3px rgba(26, 41, 62, 0.05);
+      border-color: #D8D2C5;
+    }
+  </style>
+<link href="assets/kamcheh.css" rel="stylesheet"/></head>
+<body class="bg-[#FAFAF7] text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><div class="k-demo-label" role="note">این صفحه فعلاً طراحی اولیه است. اطلاعات نمونه واقعی یا تأییدشده نیستند. ثبت اطلاعات در بخش «بازار واقعی کمچه» انجام می‌شود. <a href="index.html#kamcheh-marketplace">ورود به بازار واقعی</a></div>
+<!-- ========================================================
+       TOP TICKER: Live Pulse of Construction Material Rates
+  ======================================================== -->
+<div class="bg-inverse-surface text-inverse-on-surface text-xs py-2 px-margin md:px-margin-tablet lg:px-margin-desktop border-b border-outline">
+<div class="max-w-[1360px] mx-auto flex flex-col md:flex-row items-center justify-between gap-2">
+<!-- Title Badge -->
+<div class="flex items-center gap-2 shrink-0">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-secondary text-on-secondary font-label-md text-label-md tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed animate-ping"></span>
+          نبض بازار آهن و مصالح
+        </span>
+<span class="font-body-sm text-label-sm text-outline-variant hidden sm:inline">بروزرسانی لحظه‌ای: ساعت ۱۲:۴۵</span>
+</div>
+<!-- Marquee Ticker Units -->
+<div class="flex items-center gap-4 sm:gap-6 overflow-x-auto no-scrollbar w-full md:w-auto py-1 font-body-sm text-label-sm">
+<!-- Rebar item -->
+<div class="flex items-center gap-2 whitespace-nowrap bg-inverse-surface/60 px-2 py-1 rounded border border-outline/30">
+<span class="text-surface-variant font-medium">میلگرد ۱۴ اصفهان:</span>
+<span class="font-bold text-inverse-on-surface">۲۷,۴۵۰ ت</span>
+<span class="text-emerald-400 flex items-center text-[10px] font-bold" dir="ltr">
+            +۱.۲% <span class="material-symbols-outlined text-[14px]">arrow_drop_up</span>
+</span>
+</div>
+<!-- Cement Type 2 -->
+<div class="flex items-center gap-2 whitespace-nowrap bg-inverse-surface/60 px-2 py-1 rounded border border-outline/30">
+<span class="text-surface-variant font-medium">سیمان تیپ ۲ (کیسه ۵۰ک):</span>
+<span class="font-bold text-inverse-on-surface">۶۸,۵۰۰ ت</span>
+<span class="text-rose-400 flex items-center text-[10px] font-bold" dir="ltr">
+            -۰.۸% <span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</span>
+</div>
+<!-- Steel Beam -->
+<div class="flex items-center gap-2 whitespace-nowrap bg-inverse-surface/60 px-2 py-1 rounded border border-outline/30">
+<span class="text-surface-variant font-medium">تیرآهن ۱۸ ذوب‌آهن (شاخه):</span>
+<span class="font-bold text-inverse-on-surface">۵,۸۲۰,۰۰۰ ت</span>
+<span class="text-emerald-400 flex items-center text-[10px] font-bold" dir="ltr">
+            +۲.۴% <span class="material-symbols-outlined text-[14px]">arrow_drop_up</span>
+</span>
+</div>
+<!-- Labor wage -->
+<div class="flex items-center gap-2 whitespace-nowrap bg-inverse-surface/60 px-2 py-1 rounded border border-outline/30">
+<span class="text-surface-variant font-medium">مزد روزمزد آرماتوربند (تهران):</span>
+<span class="font-bold text-inverse-on-surface">۱,۴۵۰,۰۰۰ ت</span>
+<span class="text-amber-400 flex items-center text-[10px] font-bold">ثابت</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================
+       TOP NAVBAR (Derived directly from Shared Components JSON)
+  ======================================================== -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface docked full-width top-0 sticky z-50 border-b border-outline-variant dark:border-outline shadow-sm dark:shadow-none">
+<div class="w-full max-w-[1360px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between h-20 rtl">
+<!-- Brand Logo & Main Links -->
+<div class="flex items-center gap-8">
+<a class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight flex items-center gap-2" href="index.html">
+<span class="p-2 bg-primary-container text-on-primary rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl" data-weight="fill" style="font-variation-settings: 'FILL' 1;">construction</span>
+</span>
+<span>کمچه | بازار آنلاین ساختمانی</span>
+</a>
+<!-- Desktop Navigation Items -->
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface font-medium pb-1 transition-colors duration-200" href="gallery.html">
+            متخصصان و گالری
+          </a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface font-medium pb-1 transition-colors duration-200" href="investment.html">
+            سرمایه‌گذاری و ملک
+          </a>
+<!-- Active Tab: اخبار و تحلیل -->
+<a class="text-primary dark:text-inverse-primary font-bold border-b-2 border-secondary pb-1" href="magazine.html">
+            اخبار و تحلیل
+          </a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface font-medium pb-1 transition-colors duration-200" data-k-action="post-need" href="index.html#kamcheh-marketplace">
+            ثبت درخواست
+          </a>
+</nav>
+</div>
+<!-- Search & Trailing Actions -->
+<div class="flex items-center gap-3">
+<!-- Live Search Field -->
+<div class="relative hidden sm:block">
+<input class="bg-surface border border-outline-variant rounded-xl text-body-sm font-body-sm text-on-surface pl-10 pr-4 py-2 w-64 focus:w-72 focus:outline-none focus:border-primary transition-all duration-200 shadow-sm" placeholder="جستجوی مصالح، مباحث مقررات، یا تحلیل بازار..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-lg">search</span>
+</div>
+<!-- City Selector -->
+<button class="flex items-center gap-1.5 px-3 py-2 text-on-surface-variant hover:text-secondary rounded-lg border border-outline-variant/60 font-label-md text-label-md hover:bg-surface-container transition-colors duration-200">
+<span class="material-symbols-outlined text-lg">location_on</span>
+<span>انتخاب شهر</span>
+</button>
+<!-- Login / Registration Action -->
+<button class="bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg px-4 py-2 rounded-xl transition-all duration-200 active:scale-95 shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-lg">account_circle</span>
+<span>ورود / عضویت</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ========================================================
+       HERO EDITORIAL & FEATURED ANALYSIS OF THE WEEK
+  ======================================================== -->
+<main class="w-full max-w-[1360px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-8 md:py-12">
+<!-- Breadcrumb & Date -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6 text-on-surface-variant font-label-md text-label-md">
+<div class="flex items-center gap-2">
+<a class="hover:text-primary transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">خانه</a>
+<span>/</span>
+<a class="hover:text-primary transition-colors" href="magazine.html">اتاق خبر و تحلیل کمچه</a>
+<span>/</span>
+<span class="text-on-surface font-semibold">تحلیل‌های اقتصادی و مهندسی</span>
+</div>
+<div class="flex items-center gap-2 text-outline">
+<span class="material-symbols-outlined text-base">calendar_month</span>
+<span>سه‌شنبه، ۲۹ آبان ۱۴۰۳</span>
+</div>
+</div>
+<!-- Featured Editorial Hero Card -->
+<section class="structural-card rounded-2xl overflow-hidden mb-12">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
+<!-- Editorial Image Container -->
+<div class="lg:col-span-7 relative h-72 sm:h-96 lg:h-auto min-h-[380px] overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out" data-alt="A cinematic architectural construction site photograph in Tehran during twilight, showcasing towering steel frame skeletons, active tower cranes against an amber-lit horizon, textured raw concrete columns, and industrious civil engineers in hard hats reviewing architectural blueprints on site with warm tactical work lights casting geometric shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm-7Z5_Y7TUd5u5YErsMNiI5nXq4I_9lUuUKrIwMBfmiy_c9KKk-cT8hgsiaeH1J-p7CLiC6sFGh7nd1BjqgS8wsm7JCSgtep6dgScthQASrw88zYq2s0jNplwJXwNLkYV2JGyiILp-y9VItYFZ4YbbieDRxzZ-0kDdIM3GLYDy5qpFGeWkmTUt0embJk7QEZUs9vtYnQtG-SQYlIgtGE77KRbMQVQHzzZpjVldlxXtNkU6OQyGgLm"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/90 via-inverse-surface/30 to-transparent lg:hidden"></div>
+<div class="absolute top-4 right-4 z-10 flex gap-2">
+<span class="bg-[#E6953B] text-on-primary font-label-md text-label-md px-3 py-1 rounded shadow-md">
+              گزارش تحلیلی ویژه هفته
+            </span>
+<span class="bg-primary/90 text-on-primary font-label-md text-label-md px-3 py-1 rounded backdrop-blur-sm">
+              شماره تحلیلی: ۳۴۲
+            </span>
+</div>
+</div>
+<!-- Editorial Content -->
+<div class="lg:col-span-5 p-6 sm:p-8 md:p-10 flex flex-col justify-between bg-surface-container-lowest">
+<div>
+<div class="flex items-center gap-3 text-secondary font-label-md text-label-md mb-3">
+<span class="flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-base">query_stats</span>
+                مدل‌سازی هزینه و سرمایه‌گذاری
+              </span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="text-on-surface-variant">زمان مطالعه: ۱۲ دقیقه</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-4 leading-tight">
+              پیش‌بینی جامع بهای تمام‌شده ساخت مسکن در زمستان ۱۴۰۳؛ تحلیل اثر متقابل عوارض نوسازی و تثبیت ارزی شمش فولاد
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 line-clamp-4 leading-relaxed text-justify">
+              بررسی میدانی کمچه از ۵۰۰ کارگاه ساختمانی فعال در پایتخت و مراکز استان‌ها نشان می‌دهد افزایش تصاعدی دستمزد اکیپ‌های تخصصی آرماتوربند و سفت‌کاری همراه با بازنگری در ضرایب مبحث نوزدهم، ساختار قیمت تمام‌شده در هر مترمربع بنای مفید را دستخوش بازتعریف کرده است. آیا ورود به چرخه سفت‌کاری قبل از دی‌ماه توجیه مالی دارد؟
+            </p>
+</div>
+<!-- Author Info & Action -->
+<div class="pt-6 border-t border-outline-variant/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-full bg-surface-variant flex items-center justify-center text-primary font-bold border border-outline-variant">
+                مه
+              </div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">دکتر مهدی ارجمند</p>
+<p class="font-body-sm text-label-sm text-outline">مشاور ارشد نظام مهندسی و مدیریت پروژه</p>
+</div>
+</div>
+<a class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg px-5 py-2.5 rounded-lg transition-all duration-200 self-start sm:self-auto shadow-sm" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span>مطالعه مقاله کامل</span>
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================
+         MAIN CONTENT GRID & TACTICAL SIDEBAR
+    ======================================================== -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- ==========================================
+           MAIN ARTICLES COLUMN (8 COLS)
+      ========================================== -->
+<div class="lg:col-span-8 space-y-12">
+<!-- SECTION 1: تحلیل‌های بازار مسکن و سرمایه‌گذاری -->
+<section>
+<div class="flex items-center justify-between mb-6 pb-3 border-b-2 border-primary/20">
+<div class="flex items-center gap-3">
+<span class="p-2 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">analytics</span>
+</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">تحلیل بازار مسکن، اقتصاد کلان و سرمایه‌گذاری</h2>
+<p class="font-body-sm text-label-sm text-on-surface-variant">رونق و رکود معاملاتی، نرخ بازدهی خواب سرمایه و قیمت تمام‌شده</p>
+</div>
+</div>
+<a class="text-primary hover:text-secondary font-label-md text-label-md flex items-center gap-1 font-semibold transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span>مشاهده همه</span>
+<span class="material-symbols-outlined text-base">chevron_left</span>
+</a>
+</div>
+<!-- Cards Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Article 1 -->
+<article class="structural-card rounded-xl overflow-hidden flex flex-col justify-between group">
+<div>
+<div class="relative h-48 overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An expansive panoramic view of a modern urban residential development under structural construction in Tehran, displaying high-grade concrete slabs, precision tower cranes against the morning skyline, warm golden ambient sunlight reflecting off reinforcing steel rebars and industrial formwork with sharp crisp architectural textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbV47WvRkZIIbYsPDXyClG1sc-dspZXCppBmDN0sTRVh-UvsciXaqiqP0jLnB4Ae1ayGeorjBIVW-QY4q0W2CYW-FH_hgjcfsvht5dSFcZSHFQLEY_LqY3m144xpnkQBdA-7FFwDhrCfnxk8QvrSI7u4Eg32g1WGyh_ajGrqZwZ2Zp1O06exvnz59ATg6hUU_blLNVBnpJA9ilSlf-sHA8TNikbMzlo3IswP5LsFlxFcP-gesoGS8b"/>
+<span class="absolute bottom-3 right-3 bg-inverse-surface/85 text-inverse-on-surface text-label-sm font-label-sm px-2.5 py-1 rounded backdrop-blur-sm">
+                    تحلیل رکود / رونق
+                  </span>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-2 text-outline font-label-sm text-label-sm mb-2">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span>۸ دقیقه مطالعه</span>
+<span>•</span>
+<span>۲ روز پیش</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface font-bold group-hover:text-primary transition-colors leading-snug mb-3">
+                    کالبدشکافی دوره رکود معاملاتی پاییز: چرا قیمت مصالح بر مدار کاهشی حرکت نکرد؟
+                  </h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3">
+                    واکاوی داده‌های بورس کالا در بخش میلگرد کلاف و ورق سیاه؛ بررسی چسبندگی نرخ تمام‌شده در پروژه‌های انبوه‌سازی و استراتژی فروش پیش‌خریدها در منطقه ۲۲ تهران و الهیه مشهد.
+                  </p>
+</div>
+</div>
+<div class="px-5 pb-5 pt-3 border-t border-outline-variant/40 flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary font-bold">مهندس علیرضا صبوری</span>
+<span class="text-secondary flex items-center gap-1 text-label-md font-semibold group-hover:translate-x-[-4px] transition-transform">
+                  خواندن
+                  <span class="material-symbols-outlined text-sm">arrow_back</span>
+</span>
+</div>
+</article>
+<!-- Article 2 -->
+<article class="structural-card rounded-xl overflow-hidden flex flex-col justify-between group">
+<div>
+<div class="relative h-48 overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close-up detailed view of high-rise structural foundations with dense rebar tie grids, vibrating concrete casting equipment, professional surveyor transit level in focus, bathed in warm afternoon natural daylight on an active commercial building foundation project." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDs1x9_L-xSc-wGZ1aEaQe1qWGZUREA0Vv_LqvrsqXmkMjehGSYmQ3czVGadld46TXy52R6_bDTDX1f6sGV_ZnXY8Q-PI_x0CHphLW6v2UwMcvT2s1rjNur4K3ePxm_w3ExUEwYsq3uK0QB-Gz6il0cELItf9OPIfavyrCn0Fk4nR7-qeIjuEKjIRGXvrQd25Jiz91YIHSSTDd_wkrbQhNvDLvZKmxxT9hTCY6mCXbLIz2g5C29cMFo"/>
+<span class="absolute bottom-3 right-3 bg-[#E6953B] text-on-primary text-label-sm font-label-sm px-2.5 py-1 rounded">
+                    پیش‌بینی تورم ساخت
+                  </span>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-2 text-outline font-label-sm text-label-sm mb-2">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span>۶ دقیقه مطالعه</span>
+<span>•</span>
+<span>۳ روز پیش</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface font-bold group-hover:text-primary transition-colors leading-snug mb-3">
+                    ماتریس بودجه‌ریزی پروژه‌های بتنی: محاسبه نرخ استهلاک قالب‌بندی مدولار در سال جدید
+                  </h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3">
+                    جدول مقایسه‌ای هزینه‌های اجرای اسکلت بتنی با تیرچه بلوک صنعتی در مقابل دال بتنی وافل دوطرفه؛ نکات کلیدی قراردادهای تامین با بتن آماده و مدیریت ریسک آزمایشگاه ژئوتکنیک.
+                  </p>
+</div>
+</div>
+<div class="px-5 pb-5 pt-3 border-t border-outline-variant/40 flex items-center justify-between">
+<span class="font-label-md text-label-md text-primary font-bold">دکتر بهنام فرخی</span>
+<span class="text-secondary flex items-center gap-1 text-label-md font-semibold group-hover:translate-x-[-4px] transition-transform">
+                  خواندن
+                  <span class="material-symbols-outlined text-sm">arrow_back</span>
+</span>
+</div>
+</article>
+</div>
+</section>
+<!-- SECTION 2: قوانین، مقررات ملی و نظام مهندسی -->
+<section>
+<div class="flex items-center justify-between mb-6 pb-3 border-b-2 border-secondary/30">
+<div class="flex items-center gap-3">
+<span class="p-2 rounded-lg bg-secondary text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">gavel</span>
+</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">قوانین و ضوابط نظام مهندسی، حقوقی و شهرداری</h2>
+<p class="font-body-sm text-label-sm text-on-surface-variant">مقررات ملی ساختمان، مبحث ۱۹، نکات حقوقی پیش‌فروش و قرارداد پیمانکاری</p>
+</div>
+</div>
+<a class="text-primary hover:text-secondary font-label-md text-label-md flex items-center gap-1 font-semibold transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span>مشاهده همه</span>
+<span class="material-symbols-outlined text-base">chevron_left</span>
+</a>
+</div>
+<div class="space-y-4">
+<!-- Linear Technical Article 1 -->
+<div class="structural-card rounded-xl p-5 hover:border-primary/50 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary shrink-0 font-bold border border-outline-variant/40">
+<span class="material-symbols-outlined">menu_book</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-label-sm font-label-sm font-bold">مبحث ۱۹ جدید</span>
+<span class="text-outline text-label-sm font-label-sm">بخشنامه سازمان نظام مهندسی</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface font-bold hover:text-primary transition-colors cursor-pointer">
+                    الزام اجرایی پنجره‌های سه‌جداره ترمال‌بریک و عایق‌کاری جداره‌های نورگذر در مناطق اقلیمی ۱ و ۲
+                  </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                    بررسی جریمه‌های عدم اخذ گواهی برچسب انرژی ساختمان در مرحله پایان‌کار شهرداری و چک‌لیست بازرسان ناظر تاسیسات مکانیکی.
+                  </p>
+</div>
+</div>
+<div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto shrink-0 gap-2">
+<span class="font-label-sm text-label-sm text-outline">تاریخ اجرا: آذر ۱۴۰۳</span>
+<a class="bg-surface hover:bg-surface-variant text-primary px-3 py-1.5 rounded border border-outline-variant text-label-sm font-label-sm flex items-center gap-1 font-semibold" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span>دانلود آیین‌نامه</span>
+<span class="material-symbols-outlined text-sm">download</span>
+</a>
+</div>
+</div>
+<!-- Linear Technical Article 2 -->
+<div class="structural-card rounded-xl p-5 hover:border-primary/50 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-lg bg-[#FEF6ED] flex items-center justify-center text-secondary shrink-0 font-bold border border-secondary-fixed">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-[#FEF6ED] text-secondary px-2 py-0.5 rounded text-label-sm font-label-sm font-bold">حقوق مهندسی</span>
+<span class="text-outline text-label-sm font-label-sm">قراردادهای مشارکت و پیمان مدیریت</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface font-bold hover:text-primary transition-colors cursor-pointer">
+                    ۵ بند حقوقی سرنوشت‌ساز در قراردادهای پیمانکاری اجرای سفت‌کاری و نازک‌کاری
+                  </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                    چگونه شرط تعدیل نرخ مصالح پای‌کار و فورس‌ماژور ناشی از نوسان قیمت میلگرد را بدون باطل شدن اصل قرارداد گنجانده شود؟
+                  </p>
+</div>
+</div>
+<div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto shrink-0 gap-2">
+<span class="font-label-sm text-label-sm text-outline">نویسنده: وکیل پایه یک</span>
+<a class="bg-surface hover:bg-surface-variant text-primary px-3 py-1.5 rounded border border-outline-variant text-label-sm font-label-sm flex items-center gap-1 font-semibold" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span>بررسی نکات</span>
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: متریال نوین، فناوری کارگاهی و روش‌های مدرن -->
+<section>
+<div class="flex items-center justify-between mb-6 pb-3 border-b-2 border-primary/20">
+<div class="flex items-center gap-3">
+<span class="p-2 rounded-lg bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-xl">precision_manufacturing</span>
+</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">متریال نوین و فناوری‌های کارگاهی</h2>
+<p class="font-body-sm text-label-sm text-on-surface-variant">فوم بتن، وال‌پست نوین (پیوست ششم ۲۸۰۰)، چسب‌های نانو اسلب و افزودنی‌ها</p>
+</div>
+</div>
+<a class="text-primary hover:text-secondary font-label-md text-label-md flex items-center gap-1 font-semibold transition-colors" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span>مشاهده همه</span>
+<span class="material-symbols-outlined text-base">chevron_left</span>
+</a>
+</div>
+<!-- 3-Column Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Material Item 1 -->
+<article class="structural-card rounded-xl overflow-hidden flex flex-col justify-between group">
+<div>
+<div class="h-36 overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Modern construction installation of galvanized steel wall post seismic restraint systems according to modern building codes in a masonry brick partition wall, illuminated by crisp neutral job site work lights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBB9VHnEDYsYIYJ-BgFANcQP7IgqohUpP01qaUi4IflPsxO_eIiy_4tlSHjDG-2OZm-mj9THxtT3LHy2323dO5Kp-BVpqVGIE6fG6-nqzE3GiVY1U0_VQYdZfdp46pqfR44FFpRw-j0k0lyKlxy8GiZEytlxZ_mhJcP-SxB_9orItariaw-UiEMicdwv9_AxLvCqOUEJ6XmNgIjp0BW5iplHW1oefRrEBBbo5I4GaYROhGllGX4XgJX"/>
+</div>
+<div class="p-4">
+<span class="text-secondary font-label-sm text-label-sm font-semibold">پیوست ششم زلزله</span>
+<h4 class="font-title-md text-title-md text-on-surface font-bold mt-1 group-hover:text-primary transition-colors">
+                    وال‌پست‌های ناودانی منقطع در مقایسه با میلگرد بستر سنتی
+                  </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 line-clamp-2">
+                    بررسی سرعت اجرا و کاهش ۲۵ درصدی هزینه‌های آهن‌کشی در دیوارهای پیرامونی لیکا و هبلکس.
+                  </p>
+</div>
+</div>
+<div class="p-4 pt-0">
+<a class="text-primary font-label-md text-label-md font-bold flex items-center gap-1 hover:text-secondary" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span>بررسی فنی و تست مقاومت</span>
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</a>
+</div>
+</article>
+<!-- Material Item 2 -->
+<article class="structural-card rounded-xl overflow-hidden flex flex-col justify-between group">
+<div>
+<div class="h-36 overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Interior luxury construction workers carefully placing oversized porcelain nano slab tiles on floor mortar with suction lifters, precision level spacers, and cementitious adhesive in a contemporary architectural setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlyABWZMsxO3T-fph4swI4GoGVVPFRj4OcoCvSiv-oCzAq4A6u560pZrzwl0R-OVBShm34SZpFPL60_Mogk2_kjuHLkE-WyrrOPbXufWC0E_mG3rjPdqkfBUJ3pQVljp4fxS0KdVAIOBavKZiBcCYCw8B6KBzXrQz3vV09wdM48IzHyl20SE0zA9Rek5cH-A76OQYDHrps6R4_XAZvDHed2wxYf_40EnDJoOjKaLRPJ6MPcpYHEVXk"/>
+</div>
+<div class="p-4">
+<span class="text-secondary font-label-sm text-label-sm font-semibold">سرامیک و اسلب</span>
+<h4 class="font-title-md text-title-md text-on-surface font-bold mt-1 group-hover:text-primary transition-colors">
+                    چسب‌های پایه پلیمری C2TE S1 برای اسلب‌های بزرگ مقیاس
+                  </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 line-clamp-2">
+                    جلوگیری از خطر افتادن اسلب‌های ۱۲۰ در ۲۸۰ در نما و فضاهای مشاع به همراه استانداردهای آزمون کششی.
+                  </p>
+</div>
+</div>
+<div class="p-4 pt-0">
+<a class="text-primary font-label-md text-label-md font-bold flex items-center gap-1 hover:text-secondary" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span>بررسی فنی و تست مقاومت</span>
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</a>
+</div>
+</article>
+<!-- Material Item 3 -->
+<article class="structural-card rounded-xl overflow-hidden flex flex-col justify-between group">
+<div>
+<div class="h-36 overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Cellular lightweight concrete foam pouring machinery in action on a rooftop insulation project, showing velvety aerated texture and leveling rulers under sunlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBx_H2sv9wUWpP7jyUKBQo3yO_C7KtCtcQ1HzDe15cGB5NUW0r13rH35mgvSQLGQLvpebQGiC4B1ifvf6XdP3h_iLjAt8Ktdnkea6vG-xDEwdm1E9CLTJa8QKLffOjA8Aje-VueCGpLK-mL-6XCtc_JbXDFdzwifT4dPQgSLw1HXIMbKgvqRJhEifUyIFbVVw7auzKGkx5QualnZj2XylVCWG9CF1wfjkLAxI0CHWd9rkvLb0m1O6CK"/>
+</div>
+<div class="p-4">
+<span class="text-secondary font-label-sm text-label-sm font-semibold">کفسازی و عایق</span>
+<h4 class="font-title-md text-title-md text-on-surface font-bold mt-1 group-hover:text-primary transition-colors">
+                    فوم بتن یا پوکه‌ریزی سنتی معدنی؟ تحلیل وزن مرده سازه
+                  </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2 line-clamp-2">
+                    چگونگی کاهش بار مرده طبقات تا ۶۰ کیلوگرم بر مترمربع و کاهش مصرف لوله‌های تاسیساتی زیرکار.
+                  </p>
+</div>
+</div>
+<div class="p-4 pt-0">
+<a class="text-primary font-label-md text-label-md font-bold flex items-center gap-1 hover:text-secondary" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span>بررسی فنی و تست مقاومت</span>
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</a>
+</div>
+</article>
+</div>
+</section>
+</div>
+<!-- ==========================================
+           TACTICAL SIDEBAR (4 COLS)
+      ========================================== -->
+<aside class="lg:col-span-4 space-y-8">
+<!-- SIDEBAR WIDGET 1: SMS Newsletter Subscription -->
+<div class="structural-card rounded-2xl p-6 bg-gradient-to-b from-surface-container-lowest to-surface-container-low border border-outline-variant">
+<div class="flex items-center gap-3 mb-3">
+<span class="w-10 h-10 rounded-xl bg-secondary text-on-secondary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined">sms</span>
+</span>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface font-bold">خبرنامه پیامکی قیمت مصالح</h3>
+<p class="font-body-sm text-label-sm text-outline">ارسال هر روز ساعت ۱۱ صبح رایگان</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4 leading-relaxed">
+            تغییرات قیمت کارخانه و انبار میلگرد، تیرآهن، سیمان فله و بتن آماده را بدون نیاز به چک کردن مکرر سایت در تلفن همراه دریافت کنید.
+          </p>
+<form class="space-y-3" onsubmit="event.preventDefault(); alert('شماره شما با موفقیت در فهرست پیامک روزانه ثبت شد.');">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface font-medium mb-1">شماره همراه (مالک، سازنده یا پیمانکار)</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-3 py-2.5 text-on-surface text-body-md font-body-md focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition" dir="ltr" placeholder="۰۹۱۲۳۴۵۶۷۸۹" required="" type="tel"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-outline text-lg">phone_android</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 text-label-sm font-label-sm">
+<label class="flex items-center gap-1.5 cursor-pointer bg-surface p-2 rounded border border-outline-variant/60">
+<input checked="" class="rounded text-primary focus:ring-primary w-4 h-4" type="checkbox"/>
+<span>بازار آهن و میلگرد</span>
+</label>
+<label class="flex items-center gap-1.5 cursor-pointer bg-surface p-2 rounded border border-outline-variant/60">
+<input checked="" class="rounded text-primary focus:ring-primary w-4 h-4" type="checkbox"/>
+<span>سیمان و فرآورده‌ها</span>
+</label>
+</div>
+<button class="w-full bg-[#E6953B] hover:bg-[#d0832f] text-on-primary font-label-lg text-label-lg py-2.5 rounded-lg transition duration-200 font-bold shadow-sm flex items-center justify-center gap-2" type="submit">
+<span>عضویت در سامانه پیامکی</span>
+<span class="material-symbols-outlined text-base">send</span>
+</button>
+</form>
+</div>
+<!-- SIDEBAR WIDGET 2: Most Read Analysis This Week -->
+<div class="structural-card rounded-2xl p-6">
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/60 mb-4">
+<h3 class="font-title-lg text-title-lg text-on-surface font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">trending_up</span>
+              پربازدیدترین تحلیل‌های این هفته
+            </h3>
+<span class="text-xs bg-surface-variant text-primary px-2 py-0.5 rounded font-bold">تاپ ۵</span>
+</div>
+<div class="space-y-4">
+<!-- Item 1 -->
+<a class="flex items-start gap-3 group pb-3 border-b border-outline-variant/30" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span class="font-headline-sm font-bold text-primary/40 group-hover:text-primary transition-colors text-xl w-6 shrink-0">۰۱</span>
+<div>
+<h4 class="font-title-md text-body-md font-bold text-on-surface group-hover:text-primary transition-colors leading-snug">
+                  فرمول محاسبه میزان پرت مصالح در اسکلت بتنی و نحوه کسر از فاکتور آرماتوربند
+                </h4>
+<div class="flex items-center gap-3 text-outline text-label-sm font-label-sm mt-1">
+<span>۲.۴ هزار بازدید</span>
+<span>•</span>
+<span>۱۸ نظر تخصصی</span>
+</div>
+</div>
+</a>
+<!-- Item 2 -->
+<a class="flex items-start gap-3 group pb-3 border-b border-outline-variant/30" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span class="font-headline-sm font-bold text-primary/40 group-hover:text-primary transition-colors text-xl w-6 shrink-0">۰۲</span>
+<div>
+<h4 class="font-title-md text-body-md font-bold text-on-surface group-hover:text-primary transition-colors leading-snug">
+                  جدول حداقل مقاومت فشاری نمونه‌های مکعبی بتن ۲۸ روزه بر اساس مبحث نهم
+                </h4>
+<div class="flex items-center gap-3 text-outline text-label-sm font-label-sm mt-1">
+<span>۱.۹ هزار بازدید</span>
+<span>•</span>
+<span>دانلود جدول اکسل</span>
+</div>
+</div>
+</a>
+<!-- Item 3 -->
+<a class="flex items-start gap-3 group pb-3 border-b border-outline-variant/30" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span class="font-headline-sm font-bold text-primary/40 group-hover:text-primary transition-colors text-xl w-6 shrink-0">۰۳</span>
+<div>
+<h4 class="font-title-md text-body-md font-bold text-on-surface group-hover:text-primary transition-colors leading-snug">
+                  آیا قراردادهای پیش‌فروش بدون ثبت در دفتر اسناد رسمی قابلیت پیگرد قضایی دارند؟
+                </h4>
+<div class="flex items-center gap-3 text-outline text-label-sm font-label-sm mt-1">
+<span>۱.۷ هزار بازدید</span>
+<span>•</span>
+<span>مشاوره حقوقی</span>
+</div>
+</div>
+</a>
+<!-- Item 4 -->
+<a class="flex items-start gap-3 group" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span class="font-headline-sm font-bold text-primary/40 group-hover:text-primary transition-colors text-xl w-6 shrink-0">۰۴</span>
+<div>
+<h4 class="font-title-md text-body-md font-bold text-on-surface group-hover:text-primary transition-colors leading-snug">
+                  بررسی فنی سیستم سقف‌های دال مجوف یوبوت و کوبیاکس در ساختمان‌های بالای ۸ طبقه
+                </h4>
+<div class="flex items-center gap-3 text-outline text-label-sm font-label-sm mt-1">
+<span>۱.۲ هزار بازدید</span>
+<span>•</span>
+<span>گزارش میدانی</span>
+</div>
+</div>
+</a>
+</div>
+</div>
+<!-- SIDEBAR WIDGET 3: Download Contract Templates -->
+<div class="structural-card rounded-2xl p-6 bg-surface-container-low border border-primary/20">
+<div class="flex items-center gap-2 mb-3 text-primary">
+<span class="material-symbols-outlined text-2xl">description</span>
+<h3 class="font-title-lg text-title-lg font-bold">بانک فرم خام قراردادهای تیپ ساختمانی</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">
+            دانلود فایل Word و PDF منطبق با ضوابط سازمان برنامه و بودجه و نظام مهندسی کشور.
+          </p>
+<div class="space-y-2 mb-4">
+<a class="flex items-center justify-between p-2.5 bg-surface-container-lowest rounded-lg border border-outline-variant/60 hover:border-primary transition text-body-sm font-body-sm" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base">article</span>
+<span>قرارداد پیمان مدیریت (درصدی)</span>
+</span>
+<span class="text-primary font-bold text-label-sm">DOCX</span>
+</a>
+<a class="flex items-center justify-between p-2.5 bg-surface-container-lowest rounded-lg border border-outline-variant/60 hover:border-primary transition text-body-sm font-body-sm" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base">article</span>
+<span>قرارداد آرماتوربندی و قالب‌بندی اسکلت</span>
+</span>
+<span class="text-primary font-bold text-label-sm">DOCX</span>
+</a>
+<a class="flex items-center justify-between p-2.5 bg-surface-container-lowest rounded-lg border border-outline-variant/60 hover:border-primary transition text-body-sm font-body-sm" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base">article</span>
+<span>فرم صورت‌مجلس تحویل مصالح پای‌کار</span>
+</span>
+<span class="text-primary font-bold text-label-sm">PDF</span>
+</a>
+</div>
+<a class="block text-center bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md py-2.5 rounded-lg transition duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+            مشاهده و دانلود کلیه فرم‌ها (۳۸ قرارداد)
+          </a>
+</div>
+<!-- SIDEBAR WIDGET 4: Engineering Accreditation Seal -->
+<div class="structural-card rounded-2xl p-5 border-dashed border-2 border-outline-variant flex items-center gap-4">
+<div class="p-3 bg-surface-container rounded-xl text-primary shrink-0">
+<span class="material-symbols-outlined text-3xl">verified</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface font-bold">مرجعیت علمی و استناد استانداردها</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">تمامی تحلیل‌ها و شاخص‌های کمچه منطبق بر استاندارد ملی ایران (ISIRI) و نشریه ۵۵ تدوین می‌شوند.</p>
+</div>
+</div>
+</aside>
+</div>
+<!-- ========================================================
+         EXPERT OPINION & PODCAST BANNER SECTION
+    ======================================================== -->
+<section class="mt-14 structural-card rounded-2xl bg-gradient-to-r from-primary to-primary-container text-on-primary p-8 overflow-hidden relative">
+<div class="relative z-10 max-w-2xl">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded text-label-md font-label-md font-bold mb-3 inline-block">
+          پادکست تخصصی «استحکام» کمچه
+        </span>
+<h2 class="font-headline-md text-headline-md font-bold text-on-primary mb-3">
+          اپیزود ۴۸: مدیریت بحران در پروژه‌های گودبرداری عمیق و مهار متقابل (Stut)
+        </h2>
+<p class="font-body-md text-body-md text-on-primary/90 mb-6 leading-relaxed">
+          گفتگو با مهندس حمید فرخی، مجری ذیصلاح پروژه‌های پایدارسازی نیلینگ و انکراژ در مجاورت بافت‌های فرسوده شهری.
+        </p>
+<div class="flex flex-wrap items-center gap-4">
+<button class="bg-on-primary text-primary hover:bg-surface-variant font-label-lg text-label-lg px-5 py-2.5 rounded-lg flex items-center gap-2 transition duration-200 font-bold shadow-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+<span>شنیدن اپیزود (۳۵ دقیقه)</span>
+</button>
+<a class="text-on-primary hover:underline font-label-md text-label-md flex items-center gap-1" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+<span>آرشیو تمام قسمت‌ها در کست‌باکس</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</div>
+<div class="absolute left-[-40px] bottom-[-40px] opacity-10 pointer-events-none hidden md:block">
+<span class="material-symbols-outlined text-[280px]">podcasts</span>
+</div>
+</section>
+</main>
+<!-- ========================================================
+       FOOTER (Derived directly from Shared Components JSON)
+  ======================================================== -->
+<footer class="bg-surface-container-low dark:bg-inverse-surface docked full-width border-t border-outline-variant dark:border-outline flat no shadows mt-16">
+<div class="w-full max-w-[1360px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-12 rtl">
+<!-- Top Row: Brand & Description -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-10 pb-8 border-b border-outline-variant/50">
+<div class="md:col-span-5">
+<div class="flex items-center gap-2 mb-3">
+<span class="p-1.5 bg-primary text-on-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">construction</span>
+</span>
+<span class="text-headline-sm font-headline-sm font-bold text-primary dark:text-inverse-primary">
+              کمچه | بازار آنلاین ساختمانی
+            </span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant max-w-md leading-relaxed">
+            مرجع تخصصی خرید و فروش مصالح ساختمانی، معرفی پیمانکاران رتبه‌بندی شده، اطلاع‌رسانی مناقصات عمرانی و تحلیل روزانه شاخص‌های اقتصادی بخش مسکن ایران.
+          </p>
+</div>
+<!-- Quick Links Hierarchy from JSON -->
+<div class="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6">
+<div>
+<h5 class="text-title-lg font-title-lg text-primary dark:text-inverse-primary font-bold mb-3">راهنمای سامانه</h5>
+<ul class="space-y-2">
+<li>
+<a class="text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-colors duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+                  درباره ما
+                </a>
+</li>
+<li>
+<a class="text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-colors duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+                  قوانین و مقررات
+                </a>
+</li>
+<li>
+<a class="text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-colors duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+                  راهنمای جامع مناقصات
+                </a>
+</li>
+</ul>
+</div>
+<div>
+<h5 class="text-title-lg font-title-lg text-primary dark:text-inverse-primary font-bold mb-3">مجوزها و اصالت</h5>
+<ul class="space-y-2">
+<li>
+<a class="text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-colors duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+                  انجمن‌های صنفی و سندیکاها
+                </a>
+</li>
+<li>
+<a class="text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-colors duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+                  استعلام اصالت پروانه مهندسی
+                </a>
+</li>
+</ul>
+</div>
+<div>
+<h5 class="text-title-lg font-title-lg text-primary dark:text-inverse-primary font-bold mb-3">مرکز پاسخگویی</h5>
+<ul class="space-y-2">
+<li>
+<a class="text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed-dim hover:underline transition-colors duration-200" data-k-unavailable="1" href="#" title="این بخش هنوز به سامانه متصل نشده است">
+                  پشتیبانی و تماس با مرکز
+                </a>
+</li>
+<li class="text-body-sm font-body-sm text-outline pt-2">
+                تلفن ویژه: ۰۲۱-۸۸۲۳۴۵۰۰
+              </li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Copyright Notice from JSON -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant">
+<p>
+          تمامی حقوق مادی و معنوی متعلق به بازار آنلاین ساخت و ساز کمچه می‌باشد © ۱۴۰۳
+        </p>
+<div class="flex items-center gap-4 text-label-md font-label-md">
+<span class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            سامانه پایدار و متصل به شبکه شتاب
+          </span>
+</div>
+</div>
+</div>
+</footer>
+<div class="k-site-footer">کمچه: وب دسکتاپ با طراحی Stitch | نسخه نصب‌شدنی Android با Flutter</div><div aria-live="polite" class="k-toast" id="k-toast" role="status"></div>
+<dialog class="k-dialog" id="k-dialog"><form id="k-form" method="dialog"><button aria-label="بستن" class="k-close" data-k-action="close" type="button">×</button><div id="k-form-content"></div></form></dialog>
+<script src="assets/config.js"></script><script src="assets/kamcheh.js" type="module"></script></body></html>
