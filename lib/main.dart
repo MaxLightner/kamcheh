@@ -1,4 +1,6 @@
 import 'package:flutter/services.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'cloud/cloud_marketplace.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'network_data.dart';
@@ -48,7 +50,16 @@ const ink = Color(0xFF222329);
 const muted = Color(0xFF777B84);
 const line = Color(0xFFE9EAED);
 
-void main() => runApp(const SakhtyarApp(persistDemo: true));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kamchehCloudEnabled) {
+    await Supabase.initialize(
+      url: kamchehSupabaseUrl,
+      anonKey: kamchehSupabaseKey,
+    );
+  }
+  runApp(const SakhtyarApp(persistDemo: true));
+}
 
 class SakhtyarApp extends StatelessWidget {
   const SakhtyarApp(
@@ -635,6 +646,12 @@ class _AppShellState extends State<AppShell> {
                     ),
               body: loadingDemo
                   ? const Center(child: CircularProgressIndicator())
+                  : kamchehCloudEnabled &&
+                          ['home', 'professionals', 'requests'].contains(page)
+                      ? CloudMarketplacePage(
+                          key: ValueKey('cloud-$page'),
+                          initialNeeds: page == 'requests',
+                        )
                   : page == 'me'
                       ? accountHome()
                       : page == 'chat'
@@ -651,7 +668,7 @@ class _AppShellState extends State<AppShell> {
               bottomNavigationBar: page == 'chat'
                   ? null
                   : Column(mainAxisSize: MainAxisSize.min, children: [
-                      if (page == 'home')
+                      if (page == 'home' && !kamchehCloudEnabled)
                         Padding(
                             padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
                             child: SizedBox(
