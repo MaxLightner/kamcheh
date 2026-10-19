@@ -15,14 +15,43 @@ void main() {
     expect(rightAngleDiagonalCm(300, 400), 500);
   });
 
-  test('adjusts both inputs to an exact nearby integer triple', () {
+  test('prefers both legs ending in zero when the adjustment is modest', () {
     final adjusted = nearestWholeCentimeterTriangle(300, 450);
-    expect(adjusted.firstCm, 300);
-    expect(adjusted.secondCm, 455);
-    expect(adjusted.diagonalCm, 545);
+    expect([adjusted.firstCm, adjusted.secondCm, adjusted.diagonalCm],
+        [280, 450, 530]);
+    expect(adjusted.firstCm % 10, 0);
+    expect(adjusted.secondCm % 10, 0);
+    expect(adjusted.diagonalCm % 10, 0);
     expect(adjusted.firstCm * adjusted.firstCm +
         adjusted.secondCm * adjusted.secondCm,
         adjusted.diagonalCm * adjusted.diagonalCm);
+  });
+
+  test('rounds even when previous triple was exact but not easy to mark', () {
+    final adjusted = nearestWholeCentimeterTriangle(33, 44);
+    expect([adjusted.firstCm, adjusted.secondCm, adjusted.diagonalCm],
+        [30, 40, 50]);
+  });
+
+  test('prefers one trailing zero if both would change too much', () {
+    final adjusted = nearestWholeCentimeterTriangle(44, 66);
+    expect([adjusted.firstCm, adjusted.secondCm, adjusted.diagonalCm],
+        [45, 60, 75]);
+    expect(adjusted.firstCm * adjusted.firstCm +
+        adjusted.secondCm * adjusted.secondCm,
+        adjusted.diagonalCm * adjusted.diagonalCm);
+  });
+
+  test('rounds worksite measurements 200 and 300 within 10 percent', () {
+    final adjusted = nearestWholeCentimeterTriangle(200, 300);
+    expect([adjusted.firstCm, adjusted.secondCm, adjusted.diagonalCm],
+        [210, 280, 350]);
+  });
+
+  test('avoids large changes just to add a trailing zero', () {
+    final adjusted = nearestWholeCentimeterTriangle(1, 1);
+    expect([adjusted.firstCm, adjusted.secondCm, adjusted.diagonalCm],
+        [3, 4, 5]);
   });
 
   test('keeps an already exact triangle unchanged', () {
@@ -74,10 +103,10 @@ void main() {
     expect(find.byType(SwitchListTile), findsNothing);
     await tester.tap(find.byKey(const Key('squaring-adjust-whole')));
     await tester.pumpAndSettle();
-    expect(find.text('۵۴۵ سانتی‌متر'), findsOneWidget);
+    expect(find.text('۵۳۰ سانتی‌متر'), findsOneWidget);
     final fields = tester.widgetList<TextField>(find.byType(TextField)).toList();
-    expect(fields[0].controller!.text, '300');
-    expect(fields[1].controller!.text, '455');
+    expect(fields[0].controller!.text, '280');
+    expect(fields[1].controller!.text, '450');
     expect(find.textContaining('علامت‌های کار را با ابعاد جدید بزن'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
