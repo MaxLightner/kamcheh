@@ -29,6 +29,9 @@ jobs:
           node --check site/assets/kamcheh.js
           node --check site/assets/demo-data.js
           node site/tests/ui-model.cjs
+          node --check site/ar-meter/app.mjs
+          node --check site/ar-meter/measure-core.mjs
+          node --test site/ar-meter/measure-core.test.mjs
       - run: flutter pub get
       - run: flutter analyze
       - name: Domain tests

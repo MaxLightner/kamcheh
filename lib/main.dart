@@ -19,6 +19,7 @@ import 'core.dart';
 import 'contract_document.dart';
 import 'estimate.dart';
 import 'squaring_tool.dart';
+import 'digital_meter.dart';
 import 'file_delivery.dart';
 import 'dart:convert';
 import 'dart:async';
@@ -358,6 +359,7 @@ class _AppShellState extends State<AppShell> {
     'requests': 'درخواست‌ها',
     'estimate': 'برآورد مصالح',
     'squaring': 'گونیا سازی',
+    'digitalMeter': 'متر دیجیتال',
     'reports': 'گزارش‌های من',
     'publicMissing': 'پروفایل',
     'rules': 'قوانین کمچه',
@@ -441,6 +443,10 @@ class _AppShellState extends State<AppShell> {
   }
 
   void go(String value) {
+    if (value == 'digitalMeter') {
+      launchDigitalMeter(context);
+      return;
+    }
     if (['project', 'supplier'].contains(value)) {
       notice('این بخش در نسخه اولیه فعال نیست.');
       return;
@@ -466,11 +472,10 @@ class _AppShellState extends State<AppShell> {
           'activities',
           'applicants',
           'request',
-          'post',
-          'squaring'
+          'post'
         ].contains(value)) {
       ensureAccess(() => go(value),
-          activity: !['inbox', 'settings', 'squaring'].contains(value));
+          activity: !['inbox', 'settings'].contains(value));
       return;
     }
     if (!canAct &&
