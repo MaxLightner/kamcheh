@@ -204,7 +204,7 @@ class _SquaringToolState extends State<SquaringTool> {
                 key: const Key('squaring-adjust-whole'),
                 onPressed: diagonal == null ? null : _adjustLegs,
                 icon: const Icon(Icons.square_foot_outlined),
-                label: const Text('تنظیم ضلع‌ها برای وتر صحیح'),
+                label: const Text('رند کردن ضلع‌ها با حفظ گونیا'),
               ),
               if (_adjustment != null)
                 Padding(
@@ -224,7 +224,8 @@ class _SquaringToolState extends State<SquaringTool> {
         const Text(
           'نکته: این عدد، وتر مورد انتظار است؛ برای اطمینان از گونیا بودن '
           'باید وتر واقعی را هم روی کار اندازه بگیری. '
-          'دکمه تنظیم، اندازه‌های ضلع‌ها را تغییر می‌دهد، نه فقط عدد نمایش وتر را. '
+          'این دکمه تا جای ممکن ضلع‌ها را به مضرب ۱۰ نزدیک می‌کند؛ ' 
+          'وتر همیشه دقیق محاسبه می‌شود. '
           'برای نتیجه صحیح، اندازه‌های جدید را روی کار پیاده کن.',
           style: TextStyle(fontSize: 12, color: Color(0xFF667085), height: 1.8),
         ),
