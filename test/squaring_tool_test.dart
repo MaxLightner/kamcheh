@@ -103,6 +103,8 @@ void main() {
     expect(find.text('گونیا سازی'), findsNothing);
     expect(tester.takeException(), isNull);
 
+    // Recreate AppShell: initial demo account is read only in initState.
+    await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpWidget(const SakhtyarApp(startWithDemoAccount: true));
     await tester.pumpAndSettle();
     await tester.tap(find.text('صفحه من').last);
