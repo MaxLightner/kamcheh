@@ -1,0 +1,16 @@
+/* Clearly identified display-only content. Never imported into a live database. */
+window.KAMCHEH_DEMO_DATA = Object.freeze({
+  services: [
+    {id:'sample-s1',title:'اکیپ آرماتوربندی و قالب‌بندی',details:'اجرای فونداسیون، اسکلت بتنی و سقف با اکیپ اجرایی.',city:'مشهد',district:'وکیل‌آباد',category:'اسکلت و بتن',skills:['آرماتوربندی','قالب‌بندی','اسکلت'],amount:null,image:'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=75',created_at:'2026-10-15T08:00:00Z',demo:true},
+    {id:'sample-s2',title:'اجرای تأسیسات مکانیکی ساختمان',details:'لوله‌کشی آب و فاضلاب، گرمایش و تأسیسات موتورخانه.',city:'مشهد',district:'سجاد',category:'تأسیسات',skills:['لوله‌کشی','تأسیسات','گرمایش'],amount:null,image:'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=75',created_at:'2026-10-14T08:00:00Z',demo:true},
+    {id:'sample-s3',title:'اکیپ گچ‌کاری و نازک‌کاری',details:'گچ‌کاری، سفیدکاری دیوار و سقف و اجرای ابزار.',city:'طرقبه',district:'',category:'نازک‌کاری',skills:['گچ‌کاری','سفیدکاری','نازک‌کاری'],amount:null,image:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=75',created_at:'2026-10-12T08:00:00Z',demo:true},
+    {id:'sample-s4',title:'اجرای نمای سنگ و آجر',details:'نصب سنگ نما، آجر نسوز و اجرای دیتیل‌های نما.',city:'شاندیز',district:'',category:'نما و سنگ',skills:['نمای سنگ','آجرنما','نما'],amount:null,image:'https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=900&q=75',created_at:'2026-10-10T08:00:00Z',demo:true},
+    {id:'sample-s5',title:'برق‌کاری و تابلو برق ساختمان',details:'سیم‌کشی، نصب تجهیزات روشنایی و تابلوهای برق.',city:'مشهد',district:'الهیه',category:'برق‌کاری',skills:['برق‌کاری','روشنایی','تابلو برق'],amount:null,image:'https://images.unsplash.com/photo-1485083269755-a7b559a4fe5e?auto=format&fit=crop&w=900&q=75',created_at:'2026-10-09T08:00:00Z',demo:true},
+    {id:'sample-s6',title:'اجرای سقف کاذب و کناف',details:'طراحی و اجرای سقف کاذب، کناف و نور مخفی.',city:'گلبهار',district:'',category:'کناف و نازک‌کاری',skills:['کناف','سقف کاذب','نازک‌کاری'],amount:null,image:'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=75',created_at:'2026-10-08T08:00:00Z',demo:true}
+  ],
+  needs: [
+    {id:'sample-n1',title:'نیاز به اکیپ اجرای اسکلت بتنی',details:'یک پروژه مسکونی چهار طبقه برای اجرای قالب‌بندی و آرماتوربندی.',city:'مشهد',district:'الهیه',category:'اسکلت و بتن',skills:['آرماتوربندی','قالب‌بندی'],budget:null,created_at:'2026-10-16T08:00:00Z',demo:true},
+    {id:'sample-n2',title:'نیاز به استادکار برق‌کشی',details:'اجرای سیم‌کشی و نصب روشنایی برای واحدهای مسکونی.',city:'مشهد',district:'قاسم‌آباد',category:'برق‌کاری',skills:['برق‌کاری'],budget:null,created_at:'2026-10-11T08:00:00Z',demo:true},
+    {id:'sample-n3',title:'درخواست اکیپ گچ و کناف',details:'اجرای نازک‌کاری و سقف کاذب در پروژه در حال ساخت.',city:'طرقبه',district:'',category:'نازک‌کاری',skills:['کناف','گچ‌کاری'],budget:null,created_at:'2026-10-06T08:00:00Z',demo:true}
+  ]
+});

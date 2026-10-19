@@ -1,0 +1,26 @@
+const fs=require('fs');const vm=require('vm');
+const docs={};
+for(const key of ['#kamcheh-services','#kamcheh-requests','#k-result-count','#market-heading','#market-subtitle','#k-mode-note','#k-status','#k-toast','#marketplace'])docs[key]={innerHTML:'',hidden:false,textContent:'',classList:{add(){},remove(){}},scrollIntoView(){},addEventListener(){}};
+const tabs=[{dataset:{kTab:'services'},classList:{toggle(){}},setAttribute(){},addEventListener(){}},{dataset:{kTab:'needs'},classList:{toggle(){}},setAttribute(){},addEventListener(){}}];
+const document={querySelector:s=>docs[s]||null,querySelectorAll:s=>s==='[data-k-tab]'?tabs:[],addEventListener(){}};
+const source={window:{KAMCHEH_CONFIG:{},KAMCHEH_DEMO_DATA:null},document,location:{hash:''},setTimeout,clearTimeout,Intl,Number,console};
+vm.createContext(source);
+source.window.KAMCHEH_DEMO_DATA={};
+vm.runInContext(fs.readFileSync(__dirname+'/../assets/demo-data.js','utf8'),source);
+vm.runInContext(fs.readFileSync(__dirname+'/../assets/kamcheh.js','utf8'),source);
+const inspect=e=>vm.runInContext(e,source);
+const assert=(cond,msg)=>{if(!cond)throw Error(msg);};
+
+assert(inspect('state.services.length')===6,'6 demo services');
+assert(inspect('state.needs.length')===3,'3 demo needs');
+assert((docs['#kamcheh-services'].innerHTML.match(/class="k-card"/g)||[]).length===6,'render 6 cards');
+inspect("state.category='کناف';render()");
+assert((docs['#kamcheh-services'].innerHTML.match(/class="k-card"/g)||[]).length===1,'category filters cards');
+inspect("state.category='';switchTab('needs')");
+assert((docs['#kamcheh-requests'].innerHTML.match(/class="k-card"/g)||[]).length===3,'switch to requests');
+inspect("state.query='برق';render()");
+assert((docs['#kamcheh-requests'].innerHTML.match(/class="k-card"/g)||[]).length===1,'query filter');
+inspect('state.query="";state.city="مشهد";render()');
+assert((docs['#kamcheh-requests'].innerHTML.match(/class="k-card"/g)||[]).length===2,'city filter');
+assert(inspect("esc('<img src=x onerror=alert(1)>')").startsWith('&lt;img'),'escaped untrusted content');
+console.log('UI model tests passed: demo data, search, category, city, tabs, HTML escaping');

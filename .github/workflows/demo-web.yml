@@ -23,6 +23,8 @@ jobs:
         run: |
           node --check site/assets/config.js
           node --check site/assets/kamcheh.js
+          node --check site/assets/demo-data.js
+          node site/tests/ui-model.cjs
       - run: flutter pub get
       - run: flutter analyze
       - name: Domain tests
