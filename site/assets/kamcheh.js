@@ -2,7 +2,7 @@
    Demo records are never persisted, authenticated, or combined with server data. */
 const cfg=window.KAMCHEH_CONFIG||{};
 const configured=Boolean(cfg.supabaseUrl&&cfg.supabaseAnonKey);
-const state={client:null,session:null,services:[],needs:[],tab:'services',query:'',city:'',category:'',sort:'new',mode:configured?'server':'demo'};
+const state={client:null,session:null,profile:null,services:[],needs:[],tab:'services',query:'',city:'',category:'',sort:'new',mode:configured?'server':'demo'};
 const $=s=>document.querySelector(s);
 const $$=s=>document.querySelectorAll(s);
 const text=v=>String(v??'').trim();
@@ -12,16 +12,50 @@ const toast=message=>{const e=$('#k-toast');if(!e)return;e.textContent=message;e
 function errorMessage(error){return error?.message?.includes('Invalid login')?'اطلاعات ورود معتبر نیست.':(error?.message||'ارتباط با سرور برقرار نشد.');}
 function openDialog(content){const dlg=$('#k-dialog');if(!dlg)return;$('#k-form-content').innerHTML=content;if(!dlg.open)dlg.showModal();}
 function closeDialog(){$('#k-dialog')?.close();}
-function authRequired(){if(!configured){toast('برای ثبت اطلاعات، ابتدا بک‌اند مشترک کمچه باید متصل شود.');return false;}if(!state.session){showLogin();return false;}return true;}
+function authRequired(){if(!configured){toast('برای ثبت اطلاعات، ابتدا بک‌اند مشترک کمچه باید متصل شود.');return false;}if(!state.session){showLogin();return false;}if(!state.profile?.is_complete){showProfileSetup();return false;}return true;}
 function validPhone(raw){let p=String(raw||'').replace(/[۰-۹]/g,c=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(c))).replace(/[٠-٩]/g,c=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(c))).replace(/[\s()-]/g,'');if(p.startsWith('0098'))p='+'+p.slice(2);if(/^09\d{9}$/.test(p))return '+98'+p.slice(1);if(/^9\d{9}$/.test(p))return '+98'+p;if(/^\+989\d{9}$/.test(p))return p;return null;}
+
+async function fetchProfile(){
+ if(!state.client||!state.session){state.profile=null;return;}
+ try{
+  const {data,error}=await state.client.from('profiles')
+   .select('id,display_name,city,specialty,is_complete')
+   .eq('id',state.session.user.id).maybeSingle();
+  if(error)throw error;state.profile=data||null;
+ }catch(_){state.profile=null;toast('دریافت پروفایل انجام نشد.');}
+}
+function showProfileSetup(){
+ if(!state.session)return showLogin();
+ const previous=state.profile||{};
+ openDialog('<h3>پروفایل کمچه</h3><p>برای ثبت آگهی فقط نام، شهر و تخصص لازم است. مشاهده بازار بدون تکمیل پروفایل هم ممکن است.</p>'+
+ '<label for="k-name">نام نمایشی</label><input id="k-name" maxlength="120" required>'+
+ '<label for="k-my-city">شهر</label><input id="k-my-city" maxlength="100" required>'+
+ '<label for="k-specialty">حوزه فعالیت</label><input id="k-specialty" maxlength="120" required>'+
+ '<button type="button" class="btn btn-primary" id="k-profile-save">ذخیره پروفایل</button>');
+ $('#k-name').value=previous.display_name||'';
+ $('#k-my-city').value=previous.city||'';
+ $('#k-specialty').value=previous.specialty||'';
+ $('#k-profile-save').onclick=async()=>{
+  const name=text($('#k-name').value),city=text($('#k-my-city').value),specialty=text($('#k-specialty').value);
+  if(name.length<2||city.length<2||specialty.length<2){toast('نام، شهر و تخصص حداقل دو حرف داشته باشند.');return;}
+  const btn=$('#k-profile-save');btn.disabled=true;
+  try{
+   const {error}=await state.client.from('profiles').upsert({
+    id:state.session.user.id,display_name:name,city,specialty,is_complete:true
+   });if(error)throw error;
+   await fetchProfile();closeDialog();toast('پروفایل ذخیره شد.');
+  }catch(error){toast(errorMessage(error));}finally{btn.disabled=false;}
+ };
+}
+
 function showLogin(){
  if(!configured){toast('ورود پس از اتصال دیتابیس و پیامک فعال می‌شود.');return;}
  if(state.session)return showAccount();
  openDialog('<h3>ورود به کمچه</h3><p>شماره موبایل و کد یک‌بارمصرف</p><label for="k-phone">شماره موبایل</label><input id="k-phone" required type="tel" dir="ltr" placeholder="09123456789" autocomplete="tel"><button type="button" class="btn btn-primary" id="k-otp">ارسال کد</button><div id="k-otp-area"></div>');
- $('#k-otp').onclick=async()=>{const phone=validPhone($('#k-phone').value);if(!phone){toast('شماره موبایل معتبر وارد کن.');return;}const b=$('#k-otp');b.disabled=true;try{const {error}=await state.client.auth.signInWithOtp({phone});if(error)throw error;$('#k-otp-area').innerHTML='<label for="k-code">کد پیامکی</label><input id="k-code" type="text" inputmode="numeric" dir="ltr" autocomplete="one-time-code"><button type="button" class="btn btn-primary" id="k-verify">تأیید و ورود</button>';$('#k-verify').onclick=async()=>{try{const code=$('#k-code').value.replace(/\s/g,'');const {error}=await state.client.auth.verifyOtp({phone,token:code,type:'sms'});if(error)throw error;closeDialog();toast('ورود انجام شد.');updateAccountButton();}catch(e){toast(errorMessage(e));}};}catch(e){toast(errorMessage(e));b.disabled=false;}};
+ $('#k-otp').onclick=async()=>{const phone=validPhone($('#k-phone').value);if(!phone){toast('شماره موبایل معتبر وارد کن.');return;}const b=$('#k-otp');b.disabled=true;try{const {error}=await state.client.auth.signInWithOtp({phone});if(error)throw error;$('#k-otp-area').innerHTML='<label for="k-code">کد پیامکی</label><input id="k-code" type="text" inputmode="numeric" dir="ltr" autocomplete="one-time-code"><button type="button" class="btn btn-primary" id="k-verify">تأیید و ورود</button>';$('#k-verify').onclick=async()=>{try{const code=$('#k-code').value.replace(/\s/g,'');const {error}=await state.client.auth.verifyOtp({phone,token:code,type:'sms'});if(error)throw error;closeDialog();toast('ورود انجام شد.');updateAccountButton();await fetchProfile();if(!state.profile?.is_complete)showProfileSetup();}catch(e){toast(errorMessage(e));}};}catch(e){toast(errorMessage(e));b.disabled=false;}};
 }
 function updateAccountButton(){const el=$('[data-k-action="account"] span:last-child');if(el)el.textContent=state.session?'حساب من':'ورود';}
-function showAccount(){if(!state.session)return showLogin();const phone=esc(state.session.user.phone||'حساب کاربری');openDialog(`<h3>حساب کمچه</h3><p>شماره موبایل: <b dir="ltr">${phone}</b></p><button id="k-signout" class="k-outline" style="width:100%" type="button">خروج از حساب</button>`);$('#k-signout').onclick=async()=>{await state.client.auth.signOut();closeDialog();toast('خروج انجام شد.');updateAccountButton();};}
+function showAccount(){if(!state.session)return showLogin();const phone=esc(state.session.user.phone||'حساب کاربری');openDialog(`<h3>حساب کمچه</h3><p>شماره موبایل: <b dir="ltr">${phone}</b></p><button id="k-edit-profile" class="btn btn-primary" style="width:100%" type="button">ویرایش پروفایل</button><button id="k-signout" class="k-outline" style="width:100%" type="button">خروج از حساب</button>`);$('#k-edit-profile').onclick=showProfileSetup;$('#k-signout').onclick=async()=>{await state.client.auth.signOut();state.profile=null;closeDialog();toast('خروج انجام شد.');updateAccountButton();};}
 function showPostNeed(){
  if(!authRequired())return;
  openDialog('<h3>ثبت درخواست کار</h3><p>نیاز اجرایی پروژه را ثبت کن.</p><label for="k-title">عنوان</label><input id="k-title" required maxlength="140" placeholder="مثلاً اکیپ قالب‌بندی برای ساختمان چهارطبقه"><label for="k-details">شرح کار</label><textarea id="k-details" required maxlength="3000"></textarea><label for="k-post-city">شهر</label><select id="k-post-city"><option>مشهد</option><option>طرقبه</option><option>شاندیز</option><option>گلبهار</option><option>چناران</option></select><label for="k-category">تخصص مورد نیاز</label><input id="k-category" maxlength="80" placeholder="مثلاً اسکلت و بتن"><label for="k-amount">بودجه تقریبی (تومان؛ اختیاری)</label><input type="number" min="0" id="k-amount"><button id="k-submit" type="button" class="btn btn-primary">ثبت درخواست</button>');
@@ -117,8 +151,8 @@ async function start(){
   const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
   state.client=createClient(cfg.supabaseUrl,cfg.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true}});
   const {data}=await state.client.auth.getSession();state.session=data?.session||null;
-  state.client.auth.onAuthStateChange((_event,session)=>{state.session=session;updateAccountButton();});
-  updateAccountButton();await refresh();
+  state.client.auth.onAuthStateChange((_event,session)=>{state.session=session;if(!session)state.profile=null;else setTimeout(()=>fetchProfile(),0);updateAccountButton();});
+  updateAccountButton();await fetchProfile();await refresh();
  }catch(e){showMode('اتصال بک‌اند در دسترس نیست.');toast(errorMessage(e));}
 }
 start();
