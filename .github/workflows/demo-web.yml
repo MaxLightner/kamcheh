@@ -30,7 +30,7 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - name: Domain tests
-        run: flutter test test/kamcheh_test.dart test/stages_14_17_test.dart test/stages_7_13_test.dart test/structure_test.dart test/package2_test.dart test/package3_test.dart
+        run: flutter test test/kamcheh_test.dart test/stages_14_17_test.dart test/stages_7_13_test.dart test/structure_test.dart test/package2_test.dart test/package3_test.dart test/squaring_tool_test.dart
       - name: Build existing Flutter web application
         run: flutter build web --base-href "/kamcheh/app/" --no-web-resources-cdn
       - name: Assemble desktop website and app
