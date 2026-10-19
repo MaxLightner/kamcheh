@@ -451,10 +451,11 @@ class _AppShellState extends State<AppShell> {
           'activities',
           'applicants',
           'request',
-          'post'
+          'post',
+          'squaring'
         ].contains(value)) {
       ensureAccess(() => go(value),
-          activity: !['inbox', 'settings'].contains(value));
+          activity: !['inbox', 'settings', 'squaring'].contains(value));
       return;
     }
     if (!canAct &&
