@@ -27,6 +27,20 @@ extension AccountHomeUi on _AppShellState {
                     TextButton(
                         onPressed: enterSampleAccount,
                         child: const Text('مشاهده حساب نمونه')),
+                    const SizedBox(height: 10),
+                    Row(children: [
+                      Expanded(child: OutlinedButton.icon(
+                        onPressed: () => go('squaring'),
+                        icon: const Icon(Icons.square_foot_outlined, size: 18),
+                        label: const Text('گونیا سازی', style: TextStyle(fontSize: 12)),
+                      )),
+                      const SizedBox(width: 8),
+                      Expanded(child: OutlinedButton.icon(
+                        onPressed: () => go('digitalMeter'),
+                        icon: const Icon(Icons.straighten, size: 18),
+                        label: const Text('متر دیجیتال', style: TextStyle(fontSize: 12)),
+                      )),
+                    ]),
                     const Spacer(),
                     TextButton.icon(
                         onPressed: () => go('rules'),
@@ -148,6 +162,15 @@ extension AccountHomeUi on _AppShellState {
                     action(Icons.square_foot_outlined, 'گونیا سازی',
                         () => go('squaring'))
                   ]),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () => go('digitalMeter'),
+                      icon: const Icon(Icons.straighten, size: 19),
+                      label: const Text('متر دیجیتال (AR)'),
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Row(children: [
                     action(Icons.flag_outlined, 'گزارش‌های من',
