@@ -53,6 +53,17 @@ const ink = Color(0xFF222329);
 const muted = Color(0xFF777B84);
 const line = Color(0xFFE9EAED);
 
+const bool kamchehPreviewBuild =
+    bool.fromEnvironment('KAMCHEH_PREVIEW', defaultValue: true);
+
+bool shouldUseCloudMode({
+  required bool backendReady,
+  required bool previewBuild,
+  required bool requestedDemo,
+  required bool requestedCloud,
+}) =>
+    backendReady && !requestedDemo && (requestedCloud || !previewBuild);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (backendConfigured) {
@@ -62,6 +73,7 @@ Future<void> main() async {
     );
   }
   if (!backendConfigured &&
+      !kamchehPreviewBuild &&
       !const bool.fromEnvironment('KAMCHEH_DEMO') &&
       Uri.base.queryParameters['demo'] != '1') {
     runApp(const MaterialApp(
@@ -145,12 +157,98 @@ class SakhtyarApp extends StatelessWidget {
             ),
           ),
         ),
-        home: backendConfigured
-            ? const CloudAppShell()
-            : AppShell(
-                startWithDemoAccount: startWithDemoAccount,
-                persistDemo: persistDemo),
+        home: KamchehModeHost(
+          startWithDemoAccount: startWithDemoAccount,
+          persistDemo: persistDemo,
+        ),
       );
+}
+
+/// The published preview deliberately keeps the full local demo available.
+/// Switching modes never migrates or mixes local demo data with live Supabase.
+class KamchehModeHost extends StatefulWidget {
+  const KamchehModeHost({
+    super.key,
+    required this.startWithDemoAccount,
+    required this.persistDemo,
+  });
+  final bool startWithDemoAccount;
+  final bool persistDemo;
+
+  @override
+  State<KamchehModeHost> createState() => _KamchehModeHostState();
+}
+
+class _KamchehModeHostState extends State<KamchehModeHost> {
+  late bool cloudMode = shouldUseCloudMode(
+    backendReady: backendConfigured,
+    previewBuild: kamchehPreviewBuild,
+    requestedDemo: Uri.base.queryParameters['demo'] == '1',
+    requestedCloud: Uri.base.queryParameters['live'] == '1',
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    if (!backendConfigured) {
+      return AppShell(
+        startWithDemoAccount: widget.startWithDemoAccount,
+        persistDemo: widget.persistDemo,
+      );
+    }
+
+    return Column(children: [
+      Material(
+        color: cloudMode
+            ? const Color(0xFFEAF4EF)
+            : const Color(0xFFFFF2E1),
+        child: SafeArea(
+          bottom: false,
+          child: SizedBox(
+            height: 42,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(children: [
+                Icon(
+                  cloudMode ? Icons.cloud_done_outlined : Icons.science_outlined,
+                  size: 18,
+                  color: cloudMode ? const Color(0xFF246443) : ink,
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    cloudMode
+                        ? 'حالت آنلاین · داده‌های واقعی'
+                        : 'پیش‌نمایش · داده‌ها فقط روی این دستگاه',
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 11, color: ink),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => setState(() => cloudMode = !cloudMode),
+                  child: Text(
+                    cloudMode ? 'بازگشت به دمو' : 'حالت آنلاین',
+                    style: const TextStyle(fontSize: 11),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ),
+      ),
+      Expanded(
+        child: MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          child: cloudMode
+              ? const CloudAppShell()
+              : AppShell(
+                  startWithDemoAccount: widget.startWithDemoAccount,
+                  persistDemo: widget.persistDemo,
+                ),
+        ),
+      ),
+    ]);
+  }
 }
 
 String fa(Object value) => value.toString().replaceAllMapped(
@@ -685,7 +783,7 @@ class _AppShellState extends State<AppShell> {
               bottomNavigationBar: page == 'chat'
                   ? null
                   : Column(mainAxisSize: MainAxisSize.min, children: [
-                      if (page == 'home' && !backendConfigured)
+                      if (page == 'home')
                         Padding(
                             padding: const EdgeInsets.fromLTRB(12, 6, 12, 0),
                             child: SizedBox(

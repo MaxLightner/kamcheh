@@ -7,7 +7,7 @@ The unrelated Menosaz project was not modified.
 ## Architecture
 The desktop website (`site/`) and Flutter frontend (`lib/cloud/`) use one Supabase Auth, PostgreSQL database and Storage. Public configuration is generated from `config/public_backend.json` by `node scripts/configure-backend.cjs`; Flutter uses `--dart-define-from-file=config/public_backend.json`. Only a publishable key is included. Server secrets must never be committed.
 
-Production never falls back to local demo accounts. The historical demo is explicitly separate. Offline caching is read-only public directory/listing data; private messages, identity attachments, contracts and accounting are not cached by this layer.
+The published PREVIEW intentionally opens the existing local demo first, preserving sample accounts, listings, requests, bids, chat, contracts and accounting. The top switch opens real Supabase mode. Demo data remain on this device and never migrate to the shared database; real mode never substitutes demo content on empty or failed queries. For a production-first build use `--dart-define=KAMCHEH_PREVIEW=false`. Offline caching is read-only public directory/listing data; private messages, identity attachments, contracts and accounting are not cached by this layer.
 
 ## Applied remotely
 Migration `kamcheh_shared_backend` created 15 public tables with RLS, authenticated state-transition RPCs and private attachment buckets. The security advisor returned no findings immediately after applying the schema. Contracts preserve signed revisions; coordination is distinct from starting/finishing work.
