@@ -173,6 +173,9 @@ class _AccountingDashboardState extends State<AccountingDashboard> {
     final names = <String>{...?widget.contacts[group],
       ...entries.where((e) => _ledgerGroup(e.category) == group && e.party.isNotEmpty)
         .map((e) => e.party)}.toList()..sort();
+    if (debts.any((e) => _ledgerGroup(e.category) == group && e.party.isEmpty)) {
+      names.add('بدون طرف حساب (قدیمی)');
+    }
     return names.where((name) => name.contains(contactQuery.trim())).toList();
   }
 
@@ -216,11 +219,13 @@ class _AccountingDashboardState extends State<AccountingDashboard> {
   }
 
   List<Widget> _partyAccount() {
-    final selected = debts.where((d) => _ledgerGroup(d.category) == group && d.party == party)
+    final selected = debts.where((d) => _ledgerGroup(d.category) == group &&
+      (party == 'بدون طرف حساب (قدیمی)' ? d.party.isEmpty : d.party == party))
       .toList()..sort((a, b) => a.date.compareTo(b.date));
     final open = selected.where((d) => (remaining[d.id] ?? 0) > 0).toList();
     final total = open.fold<int>(0, (sum, d) => sum + (remaining[d.id] ?? 0));
-    final history = entries.where((e) => e.party == party &&
+    final history = entries.where((e) =>
+      (party == 'بدون طرف حساب (قدیمی)' ? e.party.isEmpty : e.party == party) &&
       _ledgerGroup(e.category) == group && !_isDebt(e) && !_isForecast(e)).toList();
     return [
       _label('۳. حساب $party'),
@@ -348,6 +353,7 @@ class _AccountingDashboardState extends State<AccountingDashboard> {
 
   Future<void> _addDebt() async {
     if (group == null || party == null) return;
+    if (party == 'بدون طرف حساب (قدیمی)') return;
     final draft = await _record('ثبت طلب برای $party');
     if (draft == null || !mounted) return;
     widget.onEntry(Expense(draft.title, group!, draft.amount, false,
@@ -357,7 +363,8 @@ class _AccountingDashboardState extends State<AccountingDashboard> {
 
   Future<void> _pay() async {
     if (group == null || party == null) return;
-    final payable = debts.where((d) => d.party == party &&
+    final payable = debts.where((d) =>
+      (party == 'بدون طرف حساب (قدیمی)' ? d.party.isEmpty : d.party == party) &&
       _ledgerGroup(d.category) == group && (remaining[d.id] ?? 0) > 0).toList();
     final payment = await showModalBottomSheet<_AccountingPaymentDraft>(
       context: context, isScrollControlled: true, useSafeArea: true,
@@ -365,7 +372,8 @@ class _AccountingDashboardState extends State<AccountingDashboard> {
       builder: (_) => _AccountingPaymentSheet(debts: payable, remaining: remaining));
     if (payment == null || !mounted) return;
     widget.onEntry(Expense('پرداخت به $party', group!, payment.amount, true,
-      party: party!, accountType: 'پرداخت', source: payment.source,
+      party: party == 'بدون طرف حساب (قدیمی)' ? '' : party!,
+      accountType: 'پرداخت', source: payment.source,
       allocations: payment.allocations, date: payment.date,
       photoBase64: payment.photo));
   }
@@ -428,7 +436,7 @@ class _AccountingDashboardState extends State<AccountingDashboard> {
           }
           return Padding(padding: EdgeInsets.fromLTRB(18, 16, 18,
             MediaQuery.viewInsetsOf(ctx).bottom + 22),
-            child: Column(mainAxisSize: MainAxisSize.min,
+            child: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 const Text('گزارش حسابداری',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -449,7 +457,7 @@ class _AccountingDashboardState extends State<AccountingDashboard> {
                 const Divider(),
                 for (final g in groupSums.entries) _summaryLine(g.key, g.value),
                 if (list.isEmpty) const Text('در این بازه تراکنشی وجود ندارد.'),
-              ]));
+              ])));
         }));
   }
 
