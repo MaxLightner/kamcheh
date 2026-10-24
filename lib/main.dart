@@ -24,7 +24,6 @@ import 'digital_meter.dart';
 import 'file_delivery.dart';
 import 'dart:convert';
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:file_selector/file_selector.dart';
 import 'work_repository.dart';
 import 'demo_store.dart';
