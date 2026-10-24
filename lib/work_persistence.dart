@@ -150,9 +150,13 @@ extension WorkPersistence on _AppShellState {
                         'type': v.accountType,
                         'group': v.category,
                         'stage': v.stage,
-                        'receipt': v.income
+                        'receipt': v.income,
+                        'party': v.party,
+                        'allocations': v.allocations,
+                        'photoBase64': v.photoBase64
                       })
                   .toList(),
+              'accountingContacts': e.value.accountingContacts,
               'reviews': e.value.workReviews
                   .map((r) => {
                         'peer': r.peer,
@@ -229,6 +233,11 @@ extension WorkPersistence on _AppShellState {
           }
           w.drafts.addAll((x['contracts'] as List)
               .map((d) => contractFrom(Map<String, dynamic>.from(d))));
+          for (final contact in Map<String, dynamic>.from(
+                  x['accountingContacts'] ?? const <String, dynamic>{})
+              .entries) {
+            w.accountingContacts[contact.key] = List<String>.from(contact.value);
+          }
           for (final v in x['accounting'] ?? []) {
             w.expenses.add(Expense(
                 v['description'], v['group'], v['amount'], v['type'] != 'بدهی',
@@ -236,6 +245,9 @@ extension WorkPersistence on _AppShellState {
                 source: v['source'] ?? '',
                 stage: v['stage'] ?? '',
                 accountType: v['type'],
+                party: v['party'] ?? '',
+                allocations: Map<String, int>.from(v['allocations'] ?? const {}),
+                photoBase64: v['photoBase64'],
                 date: DateTime.parse(v['date']),
                 restoredId: v['id']));
           }

@@ -64,6 +64,23 @@ extension AccountingUi on _AppShellState {
   }
 
   List<Widget> accountingView() {
+    return [
+      AccountingDashboard(
+        key: ValueKey(actorId),
+        entries: expenses,
+        contacts: workspace.accountingContacts,
+        tab: accountingTab,
+        onTab: (tab) => update(() => accountingTab = tab),
+        onEntry: (entry) => update(() => expenses.insert(0, entry)),
+        onContact: (group, name) => update(() {
+          final values = workspace.accountingContacts.putIfAbsent(group, () => []);
+          if (!values.contains(name)) values.add(name);
+        }),
+      )
+    ];
+  }
+
+  List<Widget> legacyAccountingView() {
     final costs = expenses.where((e) => !e.income).toList()
       ..sort((a, b) => b.date.compareTo(a.date));
     final receipts = expenses.where((e) => e.income).toList()

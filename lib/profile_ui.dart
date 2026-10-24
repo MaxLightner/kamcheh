@@ -16,6 +16,7 @@ class AccountWorkspace {
   final threads = <ChatThread>[];
   final drafts = <ContractDraft>[];
   final expenses = <Expense>[];
+  final accountingContacts = <String, List<String>>{};
   AccountWorkspace();
   factory AccountWorkspace.sample() {
     final w = AccountWorkspace()..profile = UserProfile.sample();
@@ -27,14 +28,16 @@ class AccountWorkspace {
       ..removeWhere((id, r) => !w.createdAds.any((a) => a.id == id)));
     w.threads.addAll(sampleThreads());
     w.expenses.addAll([
-      Expense('خرید شن', 'حمل و مصالح', 18000000, true,
-          source: 'نقدی', stage: 'فنداسیون'),
-      Expense('اجاره دوربین', 'تجهیزات و نیازمندی کارگاه', 3500000, true,
-          source: 'بانک ملی', stage: 'فنداسیون'),
-      Expense('دستمزد داربست', 'حقوق پرسنل', 24500000, false, stage: 'نما'),
+      Expense('خرید شن', 'مصالح و حمل', 18000000, true,
+          source: 'نقدی', stage: 'فنداسیون', party: 'مصالح فروشی سازه'),
+      Expense('اجاره دوربین', 'تجهیزات کارگاه', 3500000, true,
+          source: 'بانک ملی', stage: 'فنداسیون', party: 'تجهیزات نوین'),
+      Expense('دستمزد داربست', 'پرسنلی و کارگری', 24500000, false,
+          stage: 'نما', party: 'رضا احمدی'),
       Expense('دریافت تنخواه اولیه', '', 50000000, true,
           income: true, source: 'بانک ملی')
     ]);
+    w.accountingContacts['پرسنلی و کارگری'] = ['رضا احمدی'];
     w.drafts.add(ContractDraft('اجرای داربست', {
       'طرفین': 'مهدی احمدی · داربست رضایی',
       'موضوع و محل': 'نصب و اجاره داربست — مشهد، الهیه',

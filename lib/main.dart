@@ -4,6 +4,7 @@ import 'cloud/backend.dart';
 import 'cloud/cloud_shell.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shamsi_date/shamsi_date.dart';
 import 'network_data.dart';
 import 'marketplace.dart';
 import 'feed_filter.dart';
@@ -29,6 +30,7 @@ import 'demo_store.dart';
 import 'service_listing.dart';
 import 'request_filter.dart';
 import 'persian_calendar.dart';
+import 'accounting_engine.dart';
 import 'demo_migration.dart';
 import 'listing_gallery.dart';
 
@@ -47,6 +49,7 @@ part 'message_details_ui.dart';
 part 'contract_ui.dart';
 part 'account_home_ui.dart';
 part 'accounting_ui.dart';
+part 'accounting_dashboard.dart';
 
 const red = Color(0xFFAF282B);
 const ink = Color(0xFF222329);
@@ -320,15 +323,21 @@ class Expense {
       {this.income = false,
       this.source = '',
       this.stage = '',
+      this.party = '',
+      Map<String, int>? allocations,
+      this.photoBase64,
       String? accountType,
       DateTime? date,
       String? restoredId})
       : accountType = accountType ?? (paid ? 'تسویه' : 'بدهی'),
+        allocations = allocations ?? <String, int>{},
         date = date ?? DateTime.now(),
         id = restoredId ??
             'expense-${DateTime.now().microsecondsSinceEpoch}-${_counter++}';
   static int _counter = 0;
-  final String id, title, category, source, stage, accountType;
+  final String id, title, category, source, stage, accountType, party;
+  final Map<String, int> allocations;
+  final String? photoBase64;
   final int amount;
   final bool paid, income;
   final DateTime date;
@@ -1107,9 +1116,11 @@ class _AppShellState extends State<AppShell> {
         }, outlined: true, icon: Icons.add),
         section('حساب پروژه'),
         pair(
-          'هزینه‌های ثبت‌شده',
-          money(
-              expenses.where((e) => !e.income).fold(0, (n, e) => n + e.amount)),
+          'هزینه‌های پرداخت‌شده',
+          money(expenses
+              .where((e) => !e.income &&
+                  !['بدهی', 'کسور', 'پیش‌بینی'].contains(e.accountType))
+              .fold<int>(0, (n, e) => n + e.amount)),
         ),
         button('مشاهده دفتر مالی', () => go('ledger'), outlined: true),
         section('افراد مرتبط'),
