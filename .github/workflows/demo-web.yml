@@ -31,6 +31,7 @@ jobs:
           node site/tests/ui-model.cjs
           node --check site/ar-meter/app.mjs
           node --check site/ar-meter/measure-core.mjs
+          node --check scripts/version-flutter-web.cjs
           node --test site/ar-meter/measure-core.test.mjs
       - run: flutter pub get
       - run: flutter analyze
@@ -38,6 +39,8 @@ jobs:
         run: flutter test test/preview_mode_test.dart test/kamcheh_test.dart test/stages_14_17_test.dart test/stages_7_13_test.dart test/structure_test.dart test/package2_test.dart test/package3_test.dart test/squaring_tool_test.dart test/accounting_engine_test.dart
       - name: Build existing Flutter web application
         run: flutter build web --dart-define-from-file=config/public_backend.json --base-href "/kamcheh/app/" --no-web-resources-cdn
+      - name: Version Flutter assets to avoid stale app cache
+        run: node scripts/version-flutter-web.cjs
       - name: Assemble desktop website and app
         run: |
           rm -rf public
