@@ -128,6 +128,8 @@ void main() {
     await t.pumpAndSettle();
     await tap(t, 'تأیید و ورود');
     expect(find.byType(DemoLogin), findsNothing);
+    await t.scrollUntilVisible(find.text('قوانین کمچه'), 180,
+        scrollable: find.byType(Scrollable).first);
     await tap(t, 'قوانین کمچه');
     expect(find.text(rulesText), findsOneWidget);
     expect(t.takeException(), isNull);
