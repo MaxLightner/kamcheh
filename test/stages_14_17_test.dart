@@ -101,13 +101,15 @@ void main() {
     expect(find.textContaining('تعداد کیسه:'), findsNothing);
     expect(find.text('عدد مثبت و معتبر وارد کن.'), findsOneWidget);
   });
-  testWidgets('new tools stay in the existing account menu', (tester) async {
+  testWidgets('tools stay in the dedicated tools tab', (tester) async {
     await tester.pumpWidget(const SakhtyarApp(startWithDemoAccount: true));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('صفحه من').last);
+    await tester.tap(find.text('ابزارها').last);
     await tester.pumpAndSettle();
     expect(find.text('حسابداری'), findsOneWidget);
-    expect(find.text('گزارش‌های من'), findsOneWidget);
+    expect(find.text('گزارش‌ها'), findsOneWidget);
+    await tester.ensureVisible(find.text('حسابداری'), alignment: 0.25);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('حسابداری'));
     await tester.pumpAndSettle();
     expect(find.text('هزینه‌ها'), findsOneWidget);
@@ -131,6 +133,9 @@ void main() {
         subjectProfileId: 'demo-person-1',
         authorProfileId: 'profile-sample'));
     await tester.tap(find.text('پروفایل‌ها'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('داربست رضایی').first,
+        alignment: 0.3);
     await tester.pumpAndSettle();
     await tester.tap(find.text('داربست رضایی').first);
     await tester.pumpAndSettle();

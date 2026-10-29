@@ -123,13 +123,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
-  testWidgets('squaring and digital meter are in guest and signed-in My Page',
+  testWidgets('squaring and digital meter are in guest and signed-in tools',
       (tester) async {
     await tester.pumpWidget(const SakhtyarApp());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('صفحه من').last);
+    await tester.tap(find.text('ابزارها').last);
     await tester.pumpAndSettle();
-    expect(find.text('گونیا سازی'), findsOneWidget);
+    expect(find.text('گونیا'), findsOneWidget);
     expect(find.text('متر دیجیتال'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
@@ -137,11 +137,11 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpWidget(const SakhtyarApp(startWithDemoAccount: true));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('صفحه من').last);
+    await tester.tap(find.text('ابزارها').last);
     await tester.pumpAndSettle();
-    expect(find.text('گونیا سازی'), findsOneWidget);
-    expect(find.text('ماشین حساب مصالح'), findsOneWidget);
-    expect(find.text('متر دیجیتال (AR)'), findsOneWidget);
+    expect(find.text('گونیا'), findsOneWidget);
+    expect(find.text('ماشین‌حساب'), findsOneWidget);
+    expect(find.text('متر دیجیتال'), findsOneWidget);
     expect(find.text('حسابداری'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

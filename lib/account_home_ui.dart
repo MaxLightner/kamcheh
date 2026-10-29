@@ -42,6 +42,12 @@ extension AccountHomeUi on _AppShellState {
               'گزارش‌های حساب کاربری', 'reports'),
         ],
       ),
+      const Divider(height: 28),
+      TextButton.icon(
+        onPressed: () => go('rules'),
+        icon: const Icon(Icons.policy_outlined, size: 18),
+        label: const Text('قوانین کمچه'),
+      ),
     ],
   );
 

@@ -110,12 +110,12 @@ void main() {
       'new account must accept demo rules and rules stay available when logged out',
       (t) async {
     await start(t);
-    await tap(t, 'صفحه من');
+    await tap(t, 'ابزارها');
     await tap(t, 'قوانین کمچه');
     expect(find.text(rulesText), findsOneWidget);
     await t.tap(find.byTooltip('بازگشت'));
     await t.pumpAndSettle();
-    await tap(t, 'ورود با شماره موبایل');
+    await tap(t, 'ورود / ثبت‌نام');
     await t.enterText(find.byKey(const ValueKey('login-phone')), '09351234567');
     await tap(t, 'دریافت کد');
     await t.enterText(find.byKey(const ValueKey('login-code')), '123456');
@@ -133,10 +133,11 @@ void main() {
   testWidgets('crew manager can open members and remove without consent',
       (t) async {
     await start(t, demo: true);
-    await tap(t, 'صفحه من');
+    await tap(t, 'ابزارها');
     expect(find.text('حساب پروژه'), findsNothing);
     expect(find.text('پروژه‌های من'), findsNothing);
-    await tap(t, 'پروفایل عمومی من');
+    await tap(t, 'پروفایل‌ها');
+    await tap(t, 'پروفایل من');
     await tap(t, 'مدیریت اعضا و دعوت‌ها');
     expect(find.text('عضو تأییدشده'), findsOneWidget);
     expect(find.text('منتظر تأیید عضو'), findsOneWidget);
