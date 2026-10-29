@@ -263,6 +263,7 @@ extension KamchehUi on _AppShellState {
               .contains(query);
     }).toList();
     return [
+      if (!embedded) profileManagementCard(),
       if (!embedded)
         TextButton.icon(
             onPressed: chooseRegion,

@@ -484,7 +484,7 @@ class _AppShellState extends State<AppShell> {
     'chat': 'گفت‌وگو',
     'inbox': 'پیام‌ها',
     'activities': 'درخواست‌ها و پیشنهادهای من',
-    'me': 'صفحه من',
+    'me': 'ابزارها',
     'ownProfile': 'معرفی و نمونه‌کارهای من',
     'post': 'آگهی‌های من',
     'detail': 'جزئیات آگهی',
@@ -714,9 +714,7 @@ class _AppShellState extends State<AppShell> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 460),
             child: Scaffold(
-              appBar: page == 'home'
-                  ? null
-                  : AppBar(
+              appBar: AppBar(
                       backgroundColor: Colors.white,
                       surfaceTintColor: Colors.white,
                       automaticallyImplyLeading: false,
@@ -741,8 +739,8 @@ class _AppShellState extends State<AppShell> {
                               ),
                             )
                           : null,
-                      actions: page == 'chat'
-                          ? [
+                      actions: [
+                        if (page == 'chat')
                               PopupMenuButton<String>(
                                 tooltip: 'امکانات گفت‌وگو',
                                 onSelected: (v) {
@@ -769,9 +767,9 @@ class _AppShellState extends State<AppShell> {
                                       value: 'contract',
                                       child: Text('تنظیم قرارداد'))
                                 ],
-                              )
-                            ]
-                          : null,
+                              ),
+                        accountHeaderAction(),
+                      ],
                       shape: const Border(bottom: BorderSide(color: line)),
                     ),
               body: loadingDemo
@@ -828,9 +826,9 @@ class _AppShellState extends State<AppShell> {
                             label: 'پیام‌ها',
                           ),
                           NavigationDestination(
-                            icon: Icon(Icons.person_outline_rounded),
-                            selectedIcon: Icon(Icons.person, color: red),
-                            label: 'صفحه من',
+                            icon: Icon(Icons.handyman_outlined),
+                            selectedIcon: Icon(Icons.handyman, color: red),
+                            label: 'ابزارها',
                           ),
                         ],
                       ),

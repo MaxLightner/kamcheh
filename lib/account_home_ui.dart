@@ -1,207 +1,208 @@
 part of 'main.dart';
 
 extension AccountHomeUi on _AppShellState {
-  Widget accountHome() => LayoutBuilder(builder: (context, constraints) {
-        final compact = constraints.maxHeight < 570;
-        if (!signedIn)
-          return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Spacer(),
-                    const Icon(Icons.person_outline, size: 74, color: red),
-                    const SizedBox(height: 16),
-                    const Text('به کمچه خوش آمدی',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    const Text(
-                        'آگهی‌ها و افراد را ببین؛ برای فعالیت وارد حساب شو.',
-                        textAlign: TextAlign.center),
-                    const SizedBox(height: 20),
-                    button('ورود با شماره موبایل',
-                        () => ensureAccess(() => selectTab(4), activity: false),
-                        icon: Icons.login),
-                    TextButton(
-                        onPressed: enterSampleAccount,
-                        child: const Text('مشاهده حساب نمونه')),
-                    const SizedBox(height: 10),
-                    Row(children: [
-                      Expanded(child: OutlinedButton.icon(
-                        onPressed: () => go('squaring'),
-                        icon: const Icon(Icons.square_foot_outlined, size: 18),
-                        label: const Text('گونیا سازی', style: TextStyle(fontSize: 12)),
-                      )),
-                      const SizedBox(width: 8),
-                      Expanded(child: OutlinedButton.icon(
-                        onPressed: () => go('digitalMeter'),
-                        icon: const Icon(Icons.straighten, size: 18),
-                        label: const Text('متر دیجیتال', style: TextStyle(fontSize: 12)),
-                      )),
-                    ]),
-                    const Spacer(),
-                    TextButton.icon(
-                        onPressed: () => go('rules'),
-                        icon: const Icon(Icons.policy_outlined),
-                        label: const Text('قوانین کمچه')),
-                    small(
-                        'ورود در این نسخه نمایشی است؛ پیامک واقعی ارسال نمی‌شود.'),
-                  ]));
-        final views =
-            profileRepository.profileViews[myProfile.id]?.values.toList() ??
-                <DateTime>[];
-        final today = DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day);
-        Widget stat(String value, String title) => Expanded(
-                child: Column(children: [
-              Text(value,
-                  style: TextStyle(
-                      fontSize: compact ? 17 : 21,
-                      fontWeight: FontWeight.bold,
-                      color: red)),
-              Text(title, style: const TextStyle(fontSize: 10, color: muted))
-            ]));
-        Widget action(IconData icon, String title, VoidCallback tap) =>
-            Expanded(
-                child: OutlinedButton.icon(
-                    onPressed: tap,
-                    style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                            vertical: compact ? 8 : 14, horizontal: 6),
-                        side: const BorderSide(color: line),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                    icon: Icon(icon, size: 18),
-                    label: Text(title, style: const TextStyle(fontSize: 12))));
-        return SingleChildScrollView(
-            child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+  Widget accountHome() => ListView(
+    padding: const EdgeInsets.fromLTRB(12, 14, 12, 24),
+    children: [
+      const Text('ابزارهای کمچه',
+          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 4),
+      small('ابزارهای عمومی بدون ورود فعال هستند.'),
+      section('اندازه‌گیری و محاسبه'),
+      GridView.count(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 2,
+        childAspectRatio: 1.3,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+        children: [
+          toolCard(Icons.square_foot_outlined, 'گونیا',
+              'محاسبه و رند کردن اضلاع', 'squaring'),
+          toolCard(Icons.straighten_outlined, 'متر دیجیتال',
+              'اندازه‌گیری با دوربین AR', 'digitalMeter'),
+          toolCard(Icons.calculate_outlined, 'ماشین‌حساب',
+              'متره و برآورد مصالح', 'estimate'),
+        ],
+      ),
+      section('مدیریت پروژه'),
+      GridView.count(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 2,
+        childAspectRatio: 1.3,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+        children: [
+          toolCard(Icons.account_balance_wallet_outlined, 'حسابداری',
+              'دفتر کل، هزینه‌ها و پیش‌بینی', 'ledger'),
+          toolCard(Icons.description_outlined, 'قراردادها',
+              'تنظیم و آرشیو قرارداد', 'contracts'),
+          toolCard(Icons.flag_outlined, 'گزارش‌ها',
+              'گزارش‌های حساب کاربری', 'reports'),
+        ],
+      ),
+    ],
+  );
+
+  Widget toolCard(IconData icon, String title, String subtitle, String route) =>
+      Card(
+        margin: EdgeInsets.zero,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: line),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () => go(route),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                      padding: EdgeInsets.all(compact ? 12 : 18),
-                      decoration: BoxDecoration(
-                          color: const Color(0xFFFFF5F3),
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(color: const Color(0xFFF6E5E3))),
-                      child: Column(children: [
-                        Row(children: [
-                          editableAvatar(radius: compact ? 35 : 46),
-                          const SizedBox(width: 14),
-                          Expanded(
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                Text(myName.isEmpty ? 'حساب من' : myName,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: compact ? 17 : 20,
-                                        fontWeight: FontWeight.bold)),
-                                Text(myProfile.specialty,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontSize: 13)),
-                                Text(
-                                    myProfile.coverage?.label ??
-                                        myProfile.city ??
-                                        'محدوده مشخص نشده',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        fontSize: 11, color: muted)),
-                                Text(
-                                    myProfile.available
-                                        ? '● آماده همکاری'
-                                        : '● فعلاً در دسترس نیست',
-                                    style: const TextStyle(
-                                        fontSize: 10, color: muted)),
-                              ]))
-                        ]),
-                        SizedBox(height: compact ? 12 : 18),
-                        InkWell(
-                            onTap: () => go('profileStats'),
-                            borderRadius: BorderRadius.circular(10),
-                            child: Row(children: [
-                              stat(fa(views.length), 'بازدید پروفایل'),
-                              stat(
-                                  fa(views
-                                      .where((v) => !v.isBefore(today))
-                                      .length),
-                                  'بازدید امروز'),
-                              stat(fa(myProfile.photos.length), 'نمونه‌کار')
-                            ]))
-                      ])),
-                  const SizedBox(height: 8),
-                  if (!myProfile.complete)
-                    button(
-                        'تکمیل پروفایل', () => editMyProfile(completing: true)),
-                  Row(children: [
-                    action(Icons.person_outline, 'پروفایل عمومی من',
-                        () => go('ownProfile')),
-                    const SizedBox(width: 8),
-                    action(Icons.visibility_outlined, 'پیش‌نمایش پروفایل',
-                        () => go('profilePreview'))
-                  ]),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    action(Icons.description_outlined, 'قراردادهای من',
-                        () => go('contracts')),
-                    const SizedBox(width: 8),
-                    action(Icons.account_balance_wallet_outlined, 'حسابداری',
-                        () => go('ledger'))
-                  ]),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    action(Icons.calculate_outlined, 'ماشین حساب مصالح',
-                        () => go('estimate')),
-                    const SizedBox(width: 8),
-                    action(Icons.square_foot_outlined, 'گونیا سازی',
-                        () => go('squaring'))
-                  ]),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () => go('digitalMeter'),
-                      icon: const Icon(Icons.straighten, size: 19),
-                      label: const Text('متر دیجیتال (AR)'),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    action(Icons.flag_outlined, 'گزارش‌های من',
-                        () => go('reports')),
-                    const SizedBox(width: 8),
-                    action(Icons.switch_account_outlined, 'حساب‌های نمونه',
-                        switchDemoAccount)
-                  ]),
-                  const Divider(height: 12),
-                  Row(children: [
-                    Expanded(
-                        child: TextButton.icon(
-                            onPressed: () => go('settings'),
-                            icon: const Icon(Icons.settings_outlined, size: 17),
-                            label: const Text('تنظیمات',
-                                style: TextStyle(fontSize: 11)))),
-                    Expanded(
-                        child: TextButton.icon(
-                            onPressed: () => go('rules'),
-                            icon: const Icon(Icons.policy_outlined, size: 17),
-                            label: const Text('قوانین کمچه',
-                                style: TextStyle(fontSize: 11)))),
-                    Expanded(
-                        child: TextButton.icon(
-                            onPressed: logout,
-                            icon: const Icon(Icons.logout, size: 17),
-                            label: const Text('خروج',
-                                style: TextStyle(fontSize: 11)))),
-                  ]),
-                ])));
-      });
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: red, size: 26),
+                const SizedBox(height: 8),
+                Text(title,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 3),
+                Text(subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 11, color: muted)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  Widget profileManagementCard() {
+    if (!signedIn) {
+      return Card(
+        margin: const EdgeInsets.only(bottom: 12),
+        color: const Color(0xFFFFF7F6),
+        elevation: 0,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text('پروفایل من',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              small('برای ساخت و مدیریت پروفایل خود وارد شو.'),
+              button('ورود / ثبت‌نام',
+                  () => ensureAccess(() {}, activity: false),
+                  icon: Icons.login),
+              if (kamchehPreviewBuild)
+                TextButton(
+                    onPressed: () {
+                      enterSampleAccount();
+                      selectTab(1);
+                    },
+                    child: const Text('مشاهده حساب نمونه')),
+            ],
+          ),
+        ),
+      );
+    }
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      color: const Color(0xFFFFF7F6),
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(children: [
+              editableAvatar(radius: 24),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(myName.trim().isEmpty ? 'پروفایل من' : myName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold)),
+                    small(myProfile.complete
+                        ? myProfile.specialty + ' · ' + (myProfile.city ?? '')
+                        : 'پروفایل کامل نشده است'),
+                  ],
+                ),
+              ),
+            ]),
+            const SizedBox(height: 8),
+            Wrap(spacing: 6, runSpacing: 2, children: [
+              TextButton.icon(
+                  onPressed: () => editMyProfile(
+                      completing: !myProfile.complete),
+                  icon: const Icon(Icons.edit_outlined, size: 18),
+                  label: Text(myProfile.complete ? 'ویرایش' : 'تکمیل پروفایل')),
+              TextButton.icon(
+                  onPressed: () => go('ownProfile'),
+                  icon: const Icon(Icons.person_outline, size: 18),
+                  label: const Text('پروفایل من')),
+              TextButton.icon(
+                  onPressed: () => go('profilePreview'),
+                  icon: const Icon(Icons.visibility_outlined, size: 18),
+                  label: const Text('پیش‌نمایش')),
+              TextButton.icon(
+                  onPressed: () => go('settings'),
+                  icon: const Icon(Icons.settings_outlined, size: 18),
+                  label: const Text('تنظیمات')),
+            ]),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget accountHeaderAction() {
+    if (!signedIn) {
+      return TextButton(
+        onPressed: () => ensureAccess(() {}, activity: false),
+        child: const Text('ورود / ثبت‌نام',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+      );
+    }
+    return PopupMenuButton<String>(
+      tooltip: 'حساب کاربری',
+      onSelected: (value) {
+        if (value == 'profile') selectTab(1);
+        if (value == 'settings') go('settings');
+        if (value == 'logout') logout();
+        if (value == 'switch') switchDemoAccount();
+      },
+      itemBuilder: (_) => [
+        const PopupMenuItem(value: 'profile', child: Text('پروفایل من')),
+        const PopupMenuItem(value: 'settings', child: Text('تنظیمات پروفایل')),
+        if (widget.persistDemo)
+          const PopupMenuItem(value: 'switch', child: Text('تغییر حساب نمونه')),
+        const PopupMenuItem(value: 'logout', child: Text('خروج')),
+      ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          const Icon(Icons.account_circle_outlined, size: 20),
+          const SizedBox(width: 4),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 105),
+            child: Text(myName.trim().isEmpty ? 'حساب من' : myName,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    fontSize: 12, fontWeight: FontWeight.bold)),
+          ),
+          const Icon(Icons.arrow_drop_down, size: 17),
+        ]),
+      ),
+    );
+  }
 
   Future<void> chooseProfileCover() async {
     final owner = actorId;

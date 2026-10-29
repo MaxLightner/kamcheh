@@ -5,6 +5,8 @@ import 'package:file_selector/file_selector.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../persian_calendar.dart';
 import '../squaring_tool.dart';
+import '../estimate.dart';
+import '../digital_meter.dart';
 import '../contract_document.dart';
 import '../file_delivery.dart';
 import 'backend.dart';
@@ -574,80 +576,242 @@ class _CloudAppShellState extends State<CloudAppShell> {
                   : t['participant_a'])),
               onTap: () => openThread(t))),
         ];
-  List<Widget> account() => !backend.loggedIn
-      ? [
-          const SizedBox(height: 30),
-          const Icon(Icons.person_outline, size: 70, color: _red),
-          const SizedBox(height: 16),
-          const Text('یک حساب برای سایت و اپ کمچه',
-              textAlign: TextAlign.center),
-          FilledButton(
-              onPressed: login, child: const Text('ورود با شماره موبایل')),
-          OutlinedButton(
-              onPressed: () => Navigator.of(context).push<void>(
-                  MaterialPageRoute(
-                      builder: (_) => Scaffold(
-                          appBar: AppBar(title: const Text('گونیا سازی')),
-                          body: const SingleChildScrollView(
-                              padding: EdgeInsets.all(12),
-                              child: SquaringTool())))),
-              child: const Text('گونیا سازی')),
-        ]
-      : [
-          const CircleAvatar(
-              radius: 44, child: Icon(Icons.person_outline, size: 44)),
-          const SizedBox(height: 12),
-          Text(backend.profile?['display_name'] ?? 'حساب من',
-              textAlign: TextAlign.center,
-              style:
-                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          Text(backend.profile?['specialty'] ?? '',
-              textAlign: TextAlign.center),
-          ListTile(
-              leading: const Icon(Icons.edit_outlined),
-              title: const Text('ویرایش پروفایل'),
-              onTap: editProfile),
-          ListTile(
-              leading: const Icon(Icons.description_outlined),
-              title: const Text('قراردادهای من'),
-              onTap: () => Navigator.of(context).push<void>(MaterialPageRoute(
-                  builder: (_) => BackendContracts(backend: backend)))),
-          ListTile(
-              leading: const Icon(Icons.account_balance_wallet_outlined),
-              title: const Text('حسابداری'),
-              onTap: () => Navigator.of(context).push<void>(MaterialPageRoute(
-                  builder: (_) => BackendAccounting(backend: backend)))),
-          ListTile(
-              leading: const Icon(Icons.campaign_outlined),
-              title: const Text('آگهی‌ها و درخواست‌های من'),
-              onTap: showMine),
-          const Divider(),
-          ListTile(
-              leading: const Icon(Icons.policy_outlined),
-              title: const Text('قوانین کمچه'),
-              onTap: () => showDialog<void>(
-                  context: context,
-                  builder: (c) => AlertDialog(
-                          title: const Text('قوانین کمچه'),
-                          content: const SingleChildScrollView(
-                              child: Text(cloudRules)),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(c),
-                                child: const Text('بستن'))
-                          ]))),
-          ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('خروج از حساب'),
-              onTap: busy
-                  ? null
-                  : () => run(() async {
-                        await backend.logout();
-                        connections = [];
-                        threads = [];
-                        await reload();
-                      })),
-        ];
+  void openPublicTool(String title, Widget tool) {
+    Navigator.of(context).push<void>(MaterialPageRoute(
+        builder: (_) => Scaffold(
+            appBar: AppBar(title: Text(title)),
+            body: SingleChildScrollView(
+                padding: const EdgeInsets.all(12), child: tool))));
+  }
+
+  Future<void> openCloudContracts() async {
+    if (!await login() || !mounted) return;
+    await Navigator.of(context).push<void>(MaterialPageRoute(
+        builder: (_) => BackendContracts(backend: backend)));
+  }
+
+  Future<void> openCloudAccounting() async {
+    if (!await login() || !mounted) return;
+    await Navigator.of(context).push<void>(MaterialPageRoute(
+        builder: (_) => BackendAccounting(backend: backend)));
+  }
+
+  Widget cloudTool(IconData icon, String title, String description,
+      VoidCallback onTap) =>
+      Card(
+        margin: EdgeInsets.zero,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: const BorderSide(color: Color(0xFFE9EAED))),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, size: 26, color: _red),
+                const SizedBox(height: 8),
+                Text(title,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 3),
+                Text(description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 11, color: Colors.grey)),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  List<Widget> account() => [
+        const Text('ابزارهای کمچه',
+            style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        const Text('ابزارهای عمومی بدون ورود فعال هستند.',
+            style: TextStyle(fontSize: 12, color: Colors.grey)),
+        const SizedBox(height: 14),
+        const Text('اندازه‌گیری و محاسبه',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            childAspectRatio: 1.3,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            children: [
+              cloudTool(Icons.square_foot_outlined, 'گونیا', 'محاسبه اضلاع',
+                  () => openPublicTool('گونیا سازی', const SquaringTool())),
+              cloudTool(Icons.straighten_outlined, 'متر دیجیتال',
+                  'اندازه‌گیری با دوربین AR',
+                  () => launchDigitalMeter(context)),
+              cloudTool(Icons.calculate_outlined, 'ماشین‌حساب',
+                  'متره و برآورد مصالح',
+                  () => openPublicTool('برآورد مصالح', const MaterialEstimator())),
+            ]),
+        const SizedBox(height: 16),
+        const Text('مدیریت پروژه',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            childAspectRatio: 1.3,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            children: [
+              cloudTool(Icons.account_balance_wallet_outlined, 'حسابداری',
+                  'دفتر کل و هزینه‌ها', openCloudAccounting),
+              cloudTool(Icons.description_outlined, 'قراردادها',
+                  'تنظیم و آرشیو قرارداد', openCloudContracts),
+              cloudTool(Icons.campaign_outlined, 'آگهی‌های من',
+                  'آگهی‌ها و درخواست‌های ثبت‌شده',
+                  () async {
+                    if (await login() && mounted) await showMine();
+                  }),
+            ]),
+      ];
+
+  List<Widget> profileEntry() {
+    if (!backend.loggedIn) {
+      return [
+        Card(
+            margin: const EdgeInsets.only(bottom: 12),
+            color: const Color(0xFFFFF7F6),
+            child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Text('پروفایل من',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 6),
+                      const Text('برای ساخت و مدیریت پروفایل خود وارد شو.'),
+                      FilledButton(
+                          onPressed: login,
+                          child: const Text('ورود / ثبت‌نام')),
+                    ]))),
+      ];
+    }
+    return [
+      Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          color: const Color(0xFFFFF7F6),
+          child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(children: [
+                      const CircleAvatar(
+                          child: Icon(Icons.person_outline)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                            Text(backend.profile?['display_name'] ?? 'پروفایل من',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                            Text(backend.profile?['specialty'] ?? 'تخصص ثبت نشده',
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.grey)),
+                          ]))
+                    ]),
+                    const SizedBox(height: 6),
+                    Wrap(spacing: 6, runSpacing: 3, children: [
+                      TextButton.icon(
+                          onPressed: editProfile,
+                          icon: const Icon(Icons.edit_outlined, size: 18),
+                          label: const Text('ویرایش پروفایل')),
+                      TextButton.icon(
+                          onPressed: () {
+                            final p = people.where(
+                                (p) => p['id'] == backend.actor).firstOrNull;
+                            if (p != null) {
+                              showPerson(p);
+                            } else if (backend.profile != null) {
+                              showPerson(Map<String, dynamic>.from(
+                                  backend.profile!));
+                            }
+                          },
+                          icon: const Icon(Icons.visibility_outlined, size: 18),
+                          label: const Text('نمایش پروفایل')),
+                    ]),
+                  ]))),
+    ];
+  }
+
+  Future<void> logoutCloud() => run(() async {
+        await backend.logout();
+        connections = [];
+        threads = [];
+        await reload();
+      });
+
+  Widget headerAccount() {
+    if (!backend.loggedIn) {
+      return TextButton(
+        onPressed: login,
+        child: const Text('ورود / ثبت‌نام',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+      );
+    }
+    return PopupMenuButton<String>(
+      tooltip: 'حساب کاربری',
+      onSelected: (value) {
+        if (value == 'profile') setState(() => tab = 1);
+        if (value == 'edit') editProfile();
+        if (value == 'logout') logoutCloud();
+        if (value == 'rules') {
+          showDialog<void>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                  title: const Text('قوانین کمچه'),
+                  content: const SingleChildScrollView(
+                      child: Text(cloudRules)),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        child: const Text('بستن'))
+                  ]));
+        }
+      },
+      itemBuilder: (_) => const [
+        PopupMenuItem(value: 'profile', child: Text('پروفایل من')),
+        PopupMenuItem(value: 'edit', child: Text('تنظیمات پروفایل')),
+        PopupMenuItem(value: 'rules', child: Text('قوانین کمچه')),
+        PopupMenuItem(value: 'logout', child: Text('خروج')),
+      ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          const Icon(Icons.account_circle_outlined, size: 20),
+          const SizedBox(width: 4),
+          ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 100),
+              child: Text(backend.profile?['display_name'] ?? 'حساب من',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.bold))),
+          const Icon(Icons.arrow_drop_down, size: 16),
+        ]),
+      ),
+    );
+  }
+
   Future<void> showMine() async {
     final s = await backend.mine('service_listings'),
         n = await backend.mine('work_needs');
@@ -681,13 +845,14 @@ class _CloudAppShellState extends State<CloudAppShell> {
             'پروفایل‌ها',
             'درخواست‌ها',
             'پیام‌ها',
-            'صفحه من'
+            'ابزارها'
           ][tab]),
           actions: [
             IconButton(
                 tooltip: 'به‌روزرسانی',
                 onPressed: busy ? null : reload,
-                icon: const Icon(Icons.refresh))
+                icon: const Icon(Icons.refresh)),
+            headerAccount(),
           ]),
       body: Center(
           child: ConstrainedBox(
@@ -724,6 +889,7 @@ class _CloudAppShellState extends State<CloudAppShell> {
                               onTap: () => showListing(r, tab == 2)))),
                     ],
                     if (tab == 1) ...[
+                      ...profileEntry(),
                       if (people.isEmpty && !loading)
                         const Padding(
                             padding: EdgeInsets.all(30),
@@ -783,7 +949,7 @@ class _CloudAppShellState extends State<CloudAppShell> {
               NavigationDestination(
                   icon: Icon(Icons.chat_bubble_outline), label: 'پیام‌ها'),
               NavigationDestination(
-                  icon: Icon(Icons.person_outline), label: 'صفحه من')
+                  icon: Icon(Icons.handyman_outlined), label: 'ابزارها')
             ])
       ]),
     );

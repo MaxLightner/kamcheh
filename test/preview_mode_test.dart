@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sakhtyar/main.dart';
 
@@ -51,4 +52,45 @@ void main() {
       );
     });
   });
+  testWidgets('tools are separate from profile settings on mobile',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(
+        const SakhtyarApp(startWithDemoAccount: true));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('ابزارها').last);
+    await tester.pumpAndSettle();
+    expect(find.text('گونیا'), findsOneWidget);
+    expect(find.text('متر دیجیتال'), findsOneWidget);
+    expect(find.text('حسابداری'), findsOneWidget);
+    expect(find.text('پروفایل عمومی من'), findsNothing);
+
+    await tester.tap(find.text('پروفایل‌ها').last);
+    await tester.pumpAndSettle();
+    expect(find.text('پروفایل من'), findsWidgets);
+    expect(find.text('پیش‌نمایش'), findsOneWidget);
+    expect(find.text('تنظیمات'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('public tools and header login work without an account',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(const SakhtyarApp());
+    await tester.pumpAndSettle();
+    expect(find.text('ورود / ثبت‌نام'), findsOneWidget);
+    await tester.tap(find.text('ابزارها').last);
+    await tester.pumpAndSettle();
+    expect(find.text('گونیا'), findsOneWidget);
+    expect(find.text('ورود / ثبت‌نام'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
 }
