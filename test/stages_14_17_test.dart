@@ -108,7 +108,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('حسابداری'), findsOneWidget);
     expect(find.text('گزارش‌ها'), findsOneWidget);
-    await tester.ensureVisible(find.text('حسابداری'), alignment: 0.25);
+    await Scrollable.ensureVisible(tester.element(find.text('حسابداری')),
+        alignment: 0.25);
     await tester.pumpAndSettle();
     await tester.tap(find.text('حسابداری'));
     await tester.pumpAndSettle();
@@ -134,7 +135,8 @@ void main() {
         authorProfileId: 'profile-sample'));
     await tester.tap(find.text('پروفایل‌ها'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('داربست رضایی').first,
+    await Scrollable.ensureVisible(
+        tester.element(find.text('داربست رضایی').first),
         alignment: 0.3);
     await tester.pumpAndSettle();
     await tester.tap(find.text('داربست رضایی').first);
