@@ -106,8 +106,12 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('ابزارها').last);
     await tester.pumpAndSettle();
-    expect(find.text('حسابداری'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('گزارش‌ها'), 180,
+        scrollable: find.byType(Scrollable).first);
     expect(find.text('گزارش‌ها'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('حسابداری'), -180,
+        scrollable: find.byType(Scrollable).first);
+    expect(find.text('حسابداری'), findsOneWidget);
     await Scrollable.ensureVisible(tester.element(find.text('حسابداری')),
         alignment: 0.25);
     await tester.pumpAndSettle();

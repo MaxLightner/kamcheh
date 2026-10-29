@@ -142,6 +142,8 @@ void main() {
     expect(find.text('گونیا'), findsOneWidget);
     expect(find.text('ماشین‌حساب'), findsOneWidget);
     expect(find.text('متر دیجیتال'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('حسابداری'), 180,
+        scrollable: find.byType(Scrollable).first);
     expect(find.text('حسابداری'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

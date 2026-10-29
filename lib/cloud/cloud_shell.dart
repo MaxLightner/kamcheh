@@ -643,7 +643,7 @@ class _CloudAppShellState extends State<CloudAppShell> {
             crossAxisCount: 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            childAspectRatio: 1.3,
+            childAspectRatio: 1.0,
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
             children: [
@@ -664,7 +664,7 @@ class _CloudAppShellState extends State<CloudAppShell> {
             crossAxisCount: 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            childAspectRatio: 1.3,
+            childAspectRatio: 1.0,
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
             children: [

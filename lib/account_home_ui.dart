@@ -13,7 +13,7 @@ extension AccountHomeUi on _AppShellState {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: 2,
-        childAspectRatio: 1.3,
+        childAspectRatio: 1.0,
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         children: [
@@ -30,7 +30,7 @@ extension AccountHomeUi on _AppShellState {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: 2,
-        childAspectRatio: 1.3,
+        childAspectRatio: 1.0,
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         children: [

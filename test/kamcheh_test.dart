@@ -111,6 +111,8 @@ void main() {
       (t) async {
     await start(t);
     await tap(t, 'ابزارها');
+    await t.scrollUntilVisible(find.text('قوانین کمچه'), 180,
+        scrollable: find.byType(Scrollable).first);
     await tap(t, 'قوانین کمچه');
     expect(find.text(rulesText), findsOneWidget);
     await t.tap(find.byTooltip('بازگشت'));
